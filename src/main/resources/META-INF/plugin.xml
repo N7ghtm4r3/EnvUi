@@ -27,7 +27,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow
                 id="EnvUi"
-                factoryClass="com.tecknobit.envui.EnvUiOpener"
+                factoryClass="com.tecknobit.envui.EnvUiWindow"
                 icon="icons/pluginIcon.svg"
                 anchor="right"
         />
