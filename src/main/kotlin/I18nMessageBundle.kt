@@ -7,22 +7,30 @@ import java.util.function.Supplier
 
 private const val BUNDLE = "messages.I18nMessageBundle"
 
-internal object MyMessageBundle {
-    private val instance = DynamicBundle(MyMessageBundle::class.java, BUNDLE)
+internal object I18nMessageBundle {
+    private val instance = DynamicBundle(I18nMessageBundle::class.java, BUNDLE)
 
     @JvmStatic
     fun message(
-        key: @PropertyKey(resourceBundle = BUNDLE) String,
+        @PropertyKey(resourceBundle = BUNDLE)
+        key: String,
         vararg params: Any?,
     ): @Nls String {
-        return instance.getMessage(key, *params)
+        return instance.getMessage(
+            key = key,
+            *params
+        )
     }
 
     @JvmStatic
     fun lazyMessage(
-        @PropertyKey(resourceBundle = BUNDLE) key: String,
+        @PropertyKey(resourceBundle = BUNDLE)
+        key: String,
         vararg params: Any?,
     ): Supplier<@Nls String> {
-        return instance.getLazyMessage(key, *params)
+        return instance.getLazyMessage(
+            key = key,
+            *params
+        )
     }
 }
