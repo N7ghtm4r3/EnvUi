@@ -1,10 +1,14 @@
 package com.tecknobit.envui.components
 
 import com.intellij.ui.SimpleTextAttributes
+import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBList
 import com.tecknobit.envui.I18nMessageBundle
 import com.tecknobit.envui.data.EnvSource
+import java.awt.Component
 import javax.swing.DefaultListModel
+import javax.swing.JList
+import javax.swing.ListCellRenderer
 
 class EnvSourcesList(
     private val sources: List<EnvSource>,
@@ -13,12 +17,12 @@ class EnvSourcesList(
     private val listModel = DefaultListModel<EnvSource>()
 
     init {
-        configComponent()
+        configureComponent()
 
         attachModel()
     }
 
-    private fun configComponent() {
+    private fun configureComponent() {
         emptyText.text = I18nMessageBundle.message("envui.no.sources.message")
 
         emptyText.secondaryComponent.append(
@@ -33,6 +37,15 @@ class EnvSourcesList(
         listModel.addAll(sources)
 
         model = listModel
+        cellRenderer = obtainCellRender()
+    }
+
+    private fun obtainCellRender(): ListCellRenderer<EnvSource> {
+        return ListCellRenderer { list, envSource, index, isSelected, cellHasFocus ->
+            EnvSourceCard(
+                envSource = envSource
+            )
+        }
     }
 
 }
