@@ -1,13 +1,11 @@
 package com.tecknobit.envui.components
 
 import com.intellij.ui.SimpleTextAttributes
-import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBList
 import com.tecknobit.envui.I18nMessageBundle
 import com.tecknobit.envui.data.EnvSource
-import java.awt.Component
+import com.tecknobit.envui.theme.bordersWithInnerPadding
 import javax.swing.DefaultListModel
-import javax.swing.JList
 import javax.swing.ListCellRenderer
 
 class EnvSourcesList(
@@ -17,9 +15,15 @@ class EnvSourcesList(
     private val listModel = DefaultListModel<EnvSource>()
 
     init {
+        setupTheme()
+
         configureComponent()
 
         attachModel()
+    }
+
+    private fun setupTheme() {
+        border = bordersWithInnerPadding()
     }
 
     private fun configureComponent() {
@@ -44,7 +48,10 @@ class EnvSourcesList(
         return ListCellRenderer { list, envSource, index, isSelected, cellHasFocus ->
             EnvSourceCard(
                 envSource = envSource
-            )
+            ).apply {
+                accessibleContext.accessibleName = envSource.name
+                accessibleContext.accessibleDescription = envSource.path
+            }
         }
     }
 

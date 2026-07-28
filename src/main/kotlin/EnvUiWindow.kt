@@ -29,7 +29,10 @@ class EnvUiWindow : ToolWindowFactory {
 
     private fun windowContent(): DialogPanel {
         val list = EnvSourcesList(
-            listOf(EnvSource("f", "f", lastEdit = 1L))
+            listOf(
+                EnvSource("src/.env", ".env", lastEdit = 1L),
+                EnvSource("src/.env", ".env", lastEdit = 1L)
+            )
         )
 
         return panel {
