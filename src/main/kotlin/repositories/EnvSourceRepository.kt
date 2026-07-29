@@ -21,7 +21,12 @@ class EnvSourceRepository(
             GlobalSearchScope.projectScope(project)
         )
 
-        return virtualFiles.map { EnvSource(it) }
+        return virtualFiles.map {
+            EnvSource(
+                project = project,
+                source = it
+            )
+        }
     }
 
 }

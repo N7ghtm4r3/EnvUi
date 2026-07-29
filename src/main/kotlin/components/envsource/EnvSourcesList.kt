@@ -1,8 +1,9 @@
-package com.tecknobit.envui.components
+package com.tecknobit.envui.components.envsource
 
 import com.intellij.ui.SimpleTextAttributes
 import com.intellij.ui.components.JBList
 import com.tecknobit.envui.I18nMessageBundle
+import com.tecknobit.envui.components.EnvUiComponent
 import com.tecknobit.envui.data.EnvSource
 import com.tecknobit.envui.theme.bordersWithInnerPadding
 import javax.swing.DefaultListModel
@@ -10,23 +11,19 @@ import javax.swing.ListCellRenderer
 
 class EnvSourcesList(
     private val sources: List<EnvSource>,
-) : JBList<EnvSource>() {
+) : JBList<EnvSource>(), EnvUiComponent {
 
     private val listModel = DefaultListModel<EnvSource>()
 
     init {
-        setupTheme()
-
         configureComponent()
 
-        attachModel()
+        setupTheme()
+
+        arrangeContent()
     }
 
-    private fun setupTheme() {
-        border = bordersWithInnerPadding()
-    }
-
-    private fun configureComponent() {
+    override fun configureComponent() {
         emptyText.text = I18nMessageBundle.message("envui.no.sources.message")
 
         emptyText.secondaryComponent.append(
@@ -35,6 +32,14 @@ class EnvSourcesList(
         ) {
             //TODO: TO ADD REAL ACTION
         }
+    }
+
+    override fun setupTheme() {
+        border = bordersWithInnerPadding()
+    }
+
+    override fun arrangeContent() {
+        attachModel()
     }
 
     private fun attachModel() {
