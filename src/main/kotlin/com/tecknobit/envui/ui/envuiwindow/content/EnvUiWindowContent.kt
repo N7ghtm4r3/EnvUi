@@ -21,14 +21,13 @@ fun EnvUiWindowContent(
     project: Project,
 ) {
     val jvmResourceReaderClassLoader = JvmResourceReader(EnvUiWindow::class.java.classLoader)
+    val sources by viewModel.sources.collectAsStateWithLifecycle()
+
+    LaunchedEffect(project) {
+        viewModel.retrieveSources()
+    }
 
     CompositionLocalProvider(LocalResourceReader provides jvmResourceReaderClassLoader) {
-        val sources by viewModel.sources.collectAsStateWithLifecycle()
-
-        LaunchedEffect(project) {
-            viewModel.retrieveSources()
-        }
-
         EnvSourcesList(
             sources = sources
         )
