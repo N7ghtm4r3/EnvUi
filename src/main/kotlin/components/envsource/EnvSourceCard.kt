@@ -5,7 +5,7 @@ import com.intellij.ui.components.JBLabel
 import com.tecknobit.envui.I18nMessageBundle
 import com.tecknobit.envui.components.Badge
 import com.tecknobit.envui.components.EnvUiComponent
-import com.tecknobit.envui.components.addToPanel
+import com.tecknobit.envui.components.util.addToPanel
 import com.tecknobit.envui.data.EnvSource
 import com.tecknobit.envui.theme.roundedBorder
 import java.awt.BorderLayout

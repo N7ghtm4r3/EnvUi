@@ -1,5 +1,6 @@
 package com.tecknobit.envui.components
 
+import com.tecknobit.envui.components.util.withAlpha
 import com.tecknobit.envui.theme.roundedBorder
 import java.awt.Color
 import javax.swing.JLabel
