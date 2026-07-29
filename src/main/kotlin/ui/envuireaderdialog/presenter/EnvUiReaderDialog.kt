@@ -1,6 +1,7 @@
-package com.tecknobit.envui
+package com.tecknobit.envui.ui.envuireaderdialog.presenter
 
 import com.intellij.openapi.ui.DialogWrapper
+import com.tecknobit.envui.I18nMessageBundle
 import java.awt.Label
 import javax.swing.JComponent
 import javax.swing.JPanel
