@@ -9,7 +9,12 @@ import com.intellij.ui.content.ContentFactory
 import com.intellij.ui.dsl.builder.Align
 import com.intellij.ui.dsl.builder.panel
 import com.tecknobit.envui.components.envsource.EnvSourcesList
+import com.tecknobit.envui.envui.generated.resources.Res
+import com.tecknobit.envui.envui.generated.resources.envui_window_title
 import com.tecknobit.envui.repositories.EnvSourceRepository
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.jewel.bridge.addComposeTab
+import org.jetbrains.jewel.ui.component.Text
 
 class EnvUiWindow : ToolWindowFactory {
 
@@ -23,6 +28,12 @@ class EnvUiWindow : ToolWindowFactory {
         project: Project,
         toolWindow: ToolWindow,
     ) {
+        toolWindow.addComposeTab {
+            Text(
+                text = stringResource(Res.string.envui_window_title)
+            )
+        }
+
         val contentFactory = ContentFactory.getInstance()
 
         DumbService.getInstance(project).runWhenSmart {

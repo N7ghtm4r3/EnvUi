@@ -1,0 +1,7 @@
+<resources>
+    <string name="envui_window_title">Env Sources</string>
+    <string name="envui_no_sources_message">No sources available</string>
+    <string name="envui_no_sources_action_message">Add one</string>
+    <string name="envui_dialog_title">Read</string>
+    <string name="envui_card_module_root">Module root</string>
+</resources>
