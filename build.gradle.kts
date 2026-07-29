@@ -12,8 +12,6 @@ plugins {
 dependencies {
     testImplementation(libs.junit)
 
-    implementation(compose.components.resources)
-
     // IntelliJ Platform Gradle Plugin Dependencies Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
     intellijPlatform {
         intellijIdea("2025.3.5")
@@ -23,4 +21,9 @@ dependencies {
         bundledPlugin("com.intellij.properties")
         composeUI()
     }
+}
+
+compose.resources {
+    packageOfResClass = "com.tecknobit.envui.generated.resources"
+    generateResClass = always
 }
