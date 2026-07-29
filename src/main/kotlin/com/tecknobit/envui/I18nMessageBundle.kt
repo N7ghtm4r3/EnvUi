@@ -1,4 +1,4 @@
-package com.tecknobit.envui
+package com.tecknobit.envui.com.tecknobit.envui
 
 import com.intellij.DynamicBundle
 import org.jetbrains.annotations.Nls
