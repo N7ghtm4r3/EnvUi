@@ -8,7 +8,7 @@ import com.intellij.ui.content.ContentFactory
 import com.intellij.ui.dsl.builder.Align
 import com.intellij.ui.dsl.builder.panel
 import com.tecknobit.envui.components.EnvSourcesList
-import com.tecknobit.envui.data.EnvSource
+import com.tecknobit.envui.repositories.EnvSourceRepository
 
 class EnvUiWindow : ToolWindowFactory {
 
@@ -23,16 +23,24 @@ class EnvUiWindow : ToolWindowFactory {
         toolWindow: ToolWindow,
     ) {
         val contentFactory = ContentFactory.getInstance()
-        val content = contentFactory.createContent(windowContent(), "", true)
+
+        val windowContent = windowContent(
+            project = project
+        )
+
+        val content = contentFactory.createContent(windowContent, "", true)
         toolWindow.contentManager.addContent(content)
     }
 
-    private fun windowContent(): DialogPanel {
+    private fun windowContent(
+        project: Project,
+    ): DialogPanel {
+        val envSourceRepository = EnvSourceRepository(
+            project = project
+        )
+
         val list = EnvSourcesList(
-            listOf(
-                EnvSource("src/.env", ".env", lastEdit = 1L),
-                EnvSource("src/.env", ".env", lastEdit = 1L)
-            )
+            sources = envSourceRepository.retrieveEnvs()
         )
 
         return panel {
