@@ -40,7 +40,6 @@
         <module name="intellij.platform.compose"/>
         <module name="intellij.libraries.skiko"/>
         <module name="intellij.libraries.compose.foundation.desktop"/>
-        <module name="intellij.libraries.compose.runtime.desktop"/>
 
         <module name="intellij.platform.jewel.foundation"/>
         <module name="intellij.platform.jewel.ui"/>

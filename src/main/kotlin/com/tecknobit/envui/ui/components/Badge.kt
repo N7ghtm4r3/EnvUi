@@ -8,11 +8,57 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import org.jetbrains.jewel.foundation.theme.LocalTextStyle
 import org.jetbrains.jewel.ui.component.Text
 
-val BadgeRadiusDefault = 12.dp
+val BadgeRadiusDefault = 10.dp
+
+@Composable
+fun BadgeTitle(
+    modifier: Modifier = Modifier,
+    text: String,
+    shape: Shape = RoundedCornerShape(
+        size = BadgeRadiusDefault
+    ),
+    textStyle: TextStyle = LocalTextStyle.current,
+    color: Color,
+) {
+    Badge(
+        modifier = modifier,
+        text = text,
+        shape = shape,
+        textStyle = textStyle.copy(
+            fontSize = 16.sp
+        ),
+        color = color
+    )
+}
+
+@Composable
+fun BadgeLabel(
+    modifier: Modifier = Modifier,
+    text: String,
+    shape: Shape = RoundedCornerShape(
+        size = 6.dp
+    ),
+    textStyle: TextStyle = LocalTextStyle.current,
+    color: Color,
+) {
+    Badge(
+        modifier = modifier,
+        text = text,
+        shape = shape,
+        textStyle = textStyle.copy(
+            fontSize = 12.sp
+        ),
+        color = color
+    )
+}
 
 @Composable
 fun Badge(
@@ -21,7 +67,8 @@ fun Badge(
     shape: Shape = RoundedCornerShape(
         size = BadgeRadiusDefault
     ),
-    color: androidx.compose.ui.graphics.Color,
+    textStyle: TextStyle = LocalTextStyle.current,
+    color: Color,
 ) {
     Box(
         modifier = modifier
@@ -30,7 +77,7 @@ fun Badge(
             )
             .background(
                 color = color.copy(
-                    alpha = 0.1f
+                    alpha = 0.3f
                 )
             ),
         contentAlignment = Alignment.Center
@@ -42,7 +89,8 @@ fun Badge(
                     horizontal = 4.dp
                 ),
             text = text,
-            color = color
+            color = color,
+            style = textStyle
         )
     }
 }

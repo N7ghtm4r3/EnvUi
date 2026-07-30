@@ -34,7 +34,10 @@ fun EnvSourcesList(
                 modifier = modifier
                     .animateItem()
                     .fillMaxWidth(),
-                envSource = envSource
+                envSource = envSource,
+                onClick = {
+
+                }
             )
         }
     }

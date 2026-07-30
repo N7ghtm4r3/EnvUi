@@ -4,4 +4,5 @@
     <string name="envui_no_sources_action_message">Add one</string>
     <string name="envui_dialog_title">Read</string>
     <string name="envui_card_module_root">Module root</string>
+    <string name="envui_card_open_source">Open source in IDE</string>
 </resources>
