@@ -5,7 +5,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 
 data class EnvSource(
-    private val project: Project,
+    val project: Project,
     val source: VirtualFile,
 ) {
 

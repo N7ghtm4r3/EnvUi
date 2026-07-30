@@ -1,7 +1,6 @@
 package com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuireaderdialog.presenter
 
 import com.intellij.openapi.ui.DialogWrapper
-import com.tecknobit.envui.com.tecknobit.envui.I18nMessageBundle
 import java.awt.Label
 import javax.swing.JComponent
 import javax.swing.JPanel
@@ -11,9 +10,6 @@ class EnvUiReaderDialog : DialogWrapper(
 ) {
 
     init {
-        title = I18nMessageBundle.message(
-            key = "envui.dialog.title"
-        )
 
         super.init()
     }

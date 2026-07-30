@@ -4,7 +4,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -16,13 +16,14 @@ import com.intellij.ui.JBColor.GRAY
 import com.tecknobit.envui.com.tecknobit.envui.ui.components.BadgeLabel
 import com.tecknobit.envui.com.tecknobit.envui.ui.components.BadgeTitle
 import com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
+import com.tecknobit.envui.com.tecknobit.envui.ui.utils.resolveIcon
 import com.tecknobit.envui.com.tecknobit.envui.ui.utils.toComposeColor
-import com.tecknobit.envui.generated.resources.Res
-import com.tecknobit.envui.generated.resources.envui_card_module_root
-import com.tecknobit.envui.generated.resources.envui_card_open_source
+import com.tecknobit.envui.com.tecknobit.envui.util.revealInProjectView
+import com.tecknobit.envui.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.jewel.ui.component.Icon
 import org.jetbrains.jewel.ui.component.IconButton
+import org.jetbrains.jewel.ui.icon.IconKey
 import org.jetbrains.jewel.ui.icons.AllIconsKeys
 
 @Composable
@@ -64,7 +65,8 @@ fun EnvSourceCard(
             ParentFolder(
                 modifier = Modifier
                     .padding(
-                        all = 10.dp
+                        top = 10.dp,
+                        start = 5.dp
                     ),
                 envSource = envSource
             )
@@ -87,8 +89,19 @@ private fun CardHeader(
         ) {
             envSource.module?.let {
                 BadgeTitle(
+                    icon = {
+                        Icon(
+                            key = AllIconsKeys.Nodes.Module,
+                            contentDescription = stringResource(Res.string.env_source_module)
+                        )
+                    },
                     text = it.name,
-                    color = BLUE.toComposeColor()
+                    color = BLUE.toComposeColor(),
+                    onClick = {
+                        it.revealInProjectView(
+                            project = envSource.project
+                        )
+                    }
                 )
             }
         }
@@ -100,11 +113,11 @@ private fun CardHeader(
         ) {
             IconButton(
                 onClick = {
-                    //TODO OPEN FILE IN IDE AND RELATED FOLDER IN PROJECT STRUCTURE
+                    // TODO: TO OPEN DIALOG
                 }
             ) {
                 Icon(
-                    key = AllIconsKeys.General.ProjectStructure,
+                    key = AllIconsKeys.Actions.Preview,
                     contentDescription = stringResource(Res.string.envui_card_open_source)
                 )
             }
@@ -117,8 +130,16 @@ private fun ParentFolder(
     modifier: Modifier = Modifier,
     envSource: EnvSource,
 ) {
+    val project = envSource.project
     val moduleContainer = envSource.module?.name
     val parentFolder = envSource.containerFolder
+
+    var iconKey: IconKey by remember { mutableStateOf(AllIconsKeys.Nodes.Folder) }
+    LaunchedEffect(envSource.path) {
+        iconKey = parentFolder.resolveIcon(
+            project = project
+        )
+    }
 
     Row(
         modifier = modifier
@@ -126,11 +147,22 @@ private fun ParentFolder(
         val name = parentFolder?.name
 
         BadgeLabel(
+            icon = {
+                Icon(
+                    key = iconKey,
+                    contentDescription = stringResource(Res.string.env_source_parent_folder)
+                )
+            },
             text = if (parentFolder == null || moduleContainer == name)
                 stringResource(Res.string.envui_card_module_root)
             else
                 name!!,
-            color = GRAY.toComposeColor()
+            color = GRAY.toComposeColor(),
+            onClick = {
+                parentFolder.revealInProjectView(
+                    project = project
+                )
+            }
         )
     }
 }
