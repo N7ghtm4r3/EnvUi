@@ -14,21 +14,22 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.jewel.foundation.theme.LocalTextStyle
 import org.jetbrains.jewel.ui.component.Text
 
-val BadgeRadiusDefault = 10.dp
+val DefaultBadgeShape = RoundedCornerShape(
+    size = 6.dp
+)
 
 @Composable
 fun BadgeTitle(
     modifier: Modifier = Modifier,
     icon: @Composable (() -> Unit)? = null,
     text: String,
-    shape: Shape = RoundedCornerShape(
-        size = BadgeRadiusDefault
-    ),
+    shape: Shape = DefaultBadgeShape,
     textStyle: TextStyle = LocalTextStyle.current,
     color: Color,
     onClick: (() -> Unit)? = null,
@@ -51,9 +52,7 @@ fun BadgeLabel(
     modifier: Modifier = Modifier,
     icon: @Composable (() -> Unit)? = null,
     text: String,
-    shape: Shape = RoundedCornerShape(
-        size = 6.dp
-    ),
+    shape: Shape = DefaultBadgeShape,
     textStyle: TextStyle = LocalTextStyle.current,
     color: Color,
     onClick: (() -> Unit)? = null,
@@ -76,9 +75,7 @@ fun Badge(
     modifier: Modifier = Modifier,
     icon: @Composable (() -> Unit)? = null,
     text: String,
-    shape: Shape = RoundedCornerShape(
-        size = BadgeRadiusDefault
-    ),
+    shape: Shape = DefaultBadgeShape,
     textStyle: TextStyle = LocalTextStyle.current,
     color: Color,
     onClick: (() -> Unit)? = null,
@@ -113,7 +110,9 @@ fun Badge(
             Text(
                 text = text,
                 color = color,
-                style = textStyle
+                style = textStyle,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }

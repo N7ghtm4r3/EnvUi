@@ -7,4 +7,5 @@
     <string name="envui_card_open_source">View source</string>
     <string name="env_source_module">Env source's module</string>
     <string name="env_source_parent_folder">Env source's parent folder</string>
+    <string name="last_edit">Last edit</string>
 </resources>

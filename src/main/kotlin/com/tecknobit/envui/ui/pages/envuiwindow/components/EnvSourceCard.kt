@@ -9,7 +9,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.intellij.ui.JBColor
 import com.intellij.ui.JBColor.BLUE
 import com.intellij.ui.JBColor.GRAY
@@ -18,11 +20,13 @@ import com.tecknobit.envui.com.tecknobit.envui.ui.components.BadgeTitle
 import com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 import com.tecknobit.envui.com.tecknobit.envui.ui.utils.resolveIcon
 import com.tecknobit.envui.com.tecknobit.envui.ui.utils.toComposeColor
+import com.tecknobit.envui.com.tecknobit.envui.ui.utils.toDateString
 import com.tecknobit.envui.com.tecknobit.envui.util.revealInProjectView
 import com.tecknobit.envui.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.jewel.ui.component.Icon
 import org.jetbrains.jewel.ui.component.IconButton
+import org.jetbrains.jewel.ui.component.Text
 import org.jetbrains.jewel.ui.icon.IconKey
 import org.jetbrains.jewel.ui.icons.AllIconsKeys
 
@@ -62,7 +66,7 @@ fun EnvSourceCard(
                 envSource = envSource
             )
 
-            ParentFolder(
+            CardContent(
                 modifier = Modifier
                     .padding(
                         top = 10.dp,
@@ -117,10 +121,37 @@ private fun CardHeader(
                 }
             ) {
                 Icon(
+                    modifier = Modifier
+                        .size(26.dp),
                     key = AllIconsKeys.Actions.Preview,
                     contentDescription = stringResource(Res.string.envui_card_open_source)
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun CardContent(
+    modifier: Modifier = Modifier,
+    envSource: EnvSource,
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        ParentFolder(
+            envSource = envSource
+        )
+
+        Column(
+            modifier = Modifier
+                .weight(1f),
+            horizontalAlignment = Alignment.End
+        ) {
+            LastEdit(
+                envSource = envSource
+            )
         }
     }
 }
@@ -163,6 +194,43 @@ private fun ParentFolder(
                     project = project
                 )
             }
+        )
+    }
+}
+
+@Composable
+private fun LastEdit(
+    envSource: EnvSource,
+) {
+    val source = envSource.source
+    val lastEditText = stringResource(Res.string.last_edit)
+
+    Column(
+        horizontalAlignment = Alignment.End,
+        verticalArrangement = Arrangement.spacedBy(3.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(5.dp)
+        ) {
+            Icon(
+                key = AllIconsKeys.General.History,
+                contentDescription = lastEditText
+            )
+
+            Text(
+                text = lastEditText,
+                fontSize = 10.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+
+        Text(
+            text = source.timeStamp.toDateString(),
+            fontSize = 11.sp,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }
