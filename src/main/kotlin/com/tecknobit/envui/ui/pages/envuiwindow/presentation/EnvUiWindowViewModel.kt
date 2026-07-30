@@ -1,10 +1,10 @@
-package com.tecknobit.envui.com.tecknobit.envui.ui.envuiwindow.presentation
+package com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuiwindow.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.intellij.openapi.project.Project
 import com.tecknobit.envui.com.tecknobit.envui.repositories.EnvSourceRepository
-import com.tecknobit.envui.com.tecknobit.envui.ui.envuiwindow.data.EnvSource
+import com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

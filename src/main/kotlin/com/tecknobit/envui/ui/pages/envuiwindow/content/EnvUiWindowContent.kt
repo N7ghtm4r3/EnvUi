@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalResourceApi::class)
 
-package com.tecknobit.envui.com.tecknobit.envui.ui.envuiwindow.content
+package com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuiwindow.content
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -8,9 +8,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.intellij.openapi.project.Project
-import com.tecknobit.envui.com.tecknobit.envui.ui.envuiwindow.components.EnvSourcesList
-import com.tecknobit.envui.com.tecknobit.envui.ui.envuiwindow.presentation.EnvUiWindowViewModel
-import com.tecknobit.envui.com.tecknobit.envui.ui.envuiwindow.presenter.EnvUiWindow
+import com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuiwindow.components.EnvSourcesList
+import com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuiwindow.presentation.EnvUiWindowViewModel
+import com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuiwindow.presenter.EnvUiWindow
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.JvmResourceReader
 import org.jetbrains.compose.resources.LocalResourceReader

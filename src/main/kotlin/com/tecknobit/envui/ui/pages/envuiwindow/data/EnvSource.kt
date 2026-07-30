@@ -1,4 +1,4 @@
-package com.tecknobit.envui.com.tecknobit.envui.ui.envuiwindow.data
+package com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuiwindow.data
 
 import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.project.Project
