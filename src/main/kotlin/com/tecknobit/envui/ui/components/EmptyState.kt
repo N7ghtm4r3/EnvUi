@@ -8,8 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.intellij.ui.JBColor
-import com.tecknobit.envui.com.tecknobit.envui.ui.utils.toComposeColor
+import com.tecknobit.envui.com.tecknobit.envui.ui.theme.EnvUiTheme
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.jewel.ui.component.Icon
@@ -39,7 +38,7 @@ fun EmptyState(
                 modifier = Modifier
                     .size(iconSize),
                 key = icon,
-                tint = JBColor.namedColor("Component.accentColor").toComposeColor(),
+                tint = EnvUiTheme.primary,
                 contentDescription = text
             )
 

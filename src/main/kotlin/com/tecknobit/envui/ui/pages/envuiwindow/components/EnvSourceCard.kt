@@ -12,12 +12,11 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.intellij.ui.JBColor
-import com.intellij.ui.JBColor.BLUE
 import com.intellij.ui.JBColor.GRAY
 import com.tecknobit.envui.com.tecknobit.envui.ui.components.Badge
 import com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuireaderdialog.presenter.EnvUiReaderDialog
 import com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
+import com.tecknobit.envui.com.tecknobit.envui.ui.theme.EnvUiTheme
 import com.tecknobit.envui.com.tecknobit.envui.ui.utils.resolveIcon
 import com.tecknobit.envui.com.tecknobit.envui.ui.utils.toComposeColor
 import com.tecknobit.envui.com.tecknobit.envui.ui.utils.toDateString
@@ -46,9 +45,7 @@ fun EnvSourceCard(
             )
             .border(
                 width = 2.dp,
-                color = JBColor
-                    .border()
-                    .toComposeColor(),
+                color = EnvUiTheme.border,
                 shape = shape
             )
             .clickable(
@@ -100,7 +97,7 @@ private fun CardHeader(
                     },
                     text = it.name,
                     textSize = 12.sp,
-                    color = BLUE.toComposeColor(),
+                    color = EnvUiTheme.primary,
                     onClick = {
                         it.revealInProjectView(
                             project = envSource.project
