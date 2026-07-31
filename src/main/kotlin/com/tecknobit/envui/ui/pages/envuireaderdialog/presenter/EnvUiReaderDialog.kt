@@ -1,25 +1,31 @@
 package com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuireaderdialog.presenter
 
 import com.intellij.openapi.ui.DialogWrapper
-import java.awt.Label
+import com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
+import org.jetbrains.jewel.bridge.compose
+import org.jetbrains.jewel.ui.component.Text
 import javax.swing.JComponent
-import javax.swing.JPanel
 
-class EnvUiReaderDialog : DialogWrapper(
+class EnvUiReaderDialog(
+    envSource: EnvSource,
+) : DialogWrapper(
     true
 ) {
 
     init {
+        title = envSource.name + " TODO"
 
         super.init()
     }
 
     override fun createCenterPanel(): JComponent {
-        val panel = JPanel()
-
-        panel.add(Label("gweg"))
-
-        return panel
+        return compose(
+            focusOnClickInside = true
+        ) {
+            Text(
+                text = "gag"
+            )
+        }
     }
 
 }

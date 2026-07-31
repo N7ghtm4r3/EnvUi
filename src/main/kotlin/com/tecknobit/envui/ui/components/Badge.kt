@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.jewel.foundation.theme.LocalTextStyle
@@ -25,58 +26,15 @@ val DefaultBadgeShape = RoundedCornerShape(
 )
 
 @Composable
-fun BadgeTitle(
-    modifier: Modifier = Modifier,
-    icon: @Composable (() -> Unit)? = null,
-    text: String,
-    shape: Shape = DefaultBadgeShape,
-    textStyle: TextStyle = LocalTextStyle.current,
-    color: Color,
-    onClick: (() -> Unit)? = null,
-) {
-    Badge(
-        modifier = modifier,
-        icon = icon,
-        text = text,
-        shape = shape,
-        textStyle = textStyle.copy(
-            fontSize = 16.sp
-        ),
-        color = color,
-        onClick = onClick
-    )
-}
-
-@Composable
-fun BadgeLabel(
-    modifier: Modifier = Modifier,
-    icon: @Composable (() -> Unit)? = null,
-    text: String,
-    shape: Shape = DefaultBadgeShape,
-    textStyle: TextStyle = LocalTextStyle.current,
-    color: Color,
-    onClick: (() -> Unit)? = null,
-) {
-    Badge(
-        modifier = modifier,
-        icon = icon,
-        text = text,
-        shape = shape,
-        textStyle = textStyle.copy(
-            fontSize = 12.sp
-        ),
-        color = color,
-        onClick = onClick
-    )
-}
-
-@Composable
 fun Badge(
     modifier: Modifier = Modifier,
     icon: @Composable (() -> Unit)? = null,
     text: String,
+    textSize: TextUnit = 14.sp,
     shape: Shape = DefaultBadgeShape,
-    textStyle: TextStyle = LocalTextStyle.current,
+    textStyle: TextStyle = LocalTextStyle.current.copy(
+        fontSize = textSize
+    ),
     color: Color,
     onClick: (() -> Unit)? = null,
 ) {

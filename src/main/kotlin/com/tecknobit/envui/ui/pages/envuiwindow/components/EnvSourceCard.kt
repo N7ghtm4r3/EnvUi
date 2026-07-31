@@ -15,8 +15,8 @@ import androidx.compose.ui.unit.sp
 import com.intellij.ui.JBColor
 import com.intellij.ui.JBColor.BLUE
 import com.intellij.ui.JBColor.GRAY
-import com.tecknobit.envui.com.tecknobit.envui.ui.components.BadgeLabel
-import com.tecknobit.envui.com.tecknobit.envui.ui.components.BadgeTitle
+import com.tecknobit.envui.com.tecknobit.envui.ui.components.Badge
+import com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuireaderdialog.presenter.EnvUiReaderDialog
 import com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 import com.tecknobit.envui.com.tecknobit.envui.ui.utils.resolveIcon
 import com.tecknobit.envui.com.tecknobit.envui.ui.utils.toComposeColor
@@ -59,7 +59,7 @@ fun EnvSourceCard(
         Column(
             modifier = Modifier
                 .padding(
-                    all = 10.dp
+                    all = 12.dp
                 )
         ) {
             CardHeader(
@@ -69,8 +69,7 @@ fun EnvSourceCard(
             CardContent(
                 modifier = Modifier
                     .padding(
-                        top = 10.dp,
-                        start = 5.dp
+                        top = 15.dp
                     ),
                 envSource = envSource
             )
@@ -92,7 +91,7 @@ private fun CardHeader(
                 .weight(2f)
         ) {
             envSource.module?.let {
-                BadgeTitle(
+                Badge(
                     icon = {
                         Icon(
                             key = AllIconsKeys.Nodes.Module,
@@ -100,6 +99,7 @@ private fun CardHeader(
                         )
                     },
                     text = it.name,
+                    textSize = 12.sp,
                     color = BLUE.toComposeColor(),
                     onClick = {
                         it.revealInProjectView(
@@ -117,7 +117,11 @@ private fun CardHeader(
         ) {
             IconButton(
                 onClick = {
-                    // TODO: TO OPEN DIALOG
+                    val envUiReaderDialog = EnvUiReaderDialog(
+                        envSource = envSource
+                    )
+
+                    envUiReaderDialog.show()
                 }
             ) {
                 Icon(
@@ -177,7 +181,7 @@ private fun ParentFolder(
     ) {
         val name = parentFolder?.name
 
-        BadgeLabel(
+        Badge(
             icon = {
                 Icon(
                     key = iconKey,
@@ -188,12 +192,13 @@ private fun ParentFolder(
                 stringResource(Res.string.envui_card_module_root)
             else
                 name!!,
+            textSize = 16.sp,
             color = GRAY.toComposeColor(),
             onClick = {
                 parentFolder.revealInProjectView(
                     project = project
                 )
-            }
+            },
         )
     }
 }
