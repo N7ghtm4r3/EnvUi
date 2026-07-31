@@ -1,6 +1,7 @@
 package com.tecknobit.envui.com.tecknobit.envui.repositories
 
 import com.intellij.openapi.application.readAction
+import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.project.Project
 import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.GlobalSearchScope
@@ -16,19 +17,31 @@ class EnvSourceRepository(
 
     }
 
-    suspend fun retrieveEnvs(): List<EnvSource> {
+    suspend fun retrieveEnvs(
+        filters: String,
+    ): List<EnvSource> {
         return readAction {
             val virtualFiles = FilenameIndex.getVirtualFilesByName(
                 ENV_EXT,
                 GlobalSearchScope.projectScope(project)
             )
 
-            virtualFiles.map {
+            val sources = virtualFiles.map { file ->
                 EnvSource(
                     project = project,
-                    source = it
+                    module = ModuleUtilCore.findModuleForFile(file, project),
+                    source = file
                 )
             }
+
+            sources.filter { source ->
+                val containerFolder = source.containerFolder
+                val module = source.module
+                val containerFolderMatches = containerFolder.name.contains(filters)
+                val moduleMatches = module?.name?.contains(filters) == true
+
+                containerFolderMatches || moduleMatches
+            }.sortedByDescending { source -> source.source.timeStamp }
         }
     }
 

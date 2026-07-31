@@ -8,4 +8,5 @@
     <string name="env_source_module">Env source's module</string>
     <string name="env_source_parent_folder">Env source's parent folder</string>
     <string name="last_edit">Last edit</string>
+    <string name="search_by_folder_or_module">Search by folder or module</string>
 </resources>
