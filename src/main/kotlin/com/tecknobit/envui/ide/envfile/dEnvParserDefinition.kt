@@ -26,11 +26,14 @@ class dEnvParserDefinition : ParserDefinition {
     }
 
     override fun getCommentTokens(): TokenSet {
-        return TokenSet.EMPTY
+        return TokenSet.create(EnvGeneratedTypes.COMMENT)
     }
 
     override fun getStringLiteralElements(): TokenSet {
-        return TokenSet.EMPTY
+        return TokenSet.create(
+            EnvGeneratedTypes.VALUE,
+            EnvGeneratedTypes.QUOTED_VALUE,
+        )
     }
 
     override fun createElement(

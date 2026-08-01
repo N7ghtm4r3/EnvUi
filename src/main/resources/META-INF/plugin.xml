@@ -38,6 +38,7 @@
 
         <fileType
                 name="dEnv"
+                language="dEnv"
                 implementationClass="com.tecknobit.envui.ide.envfile.dEnvFileType"
                 fieldName="INSTANCE"
                 patterns="*.env;.env"/>

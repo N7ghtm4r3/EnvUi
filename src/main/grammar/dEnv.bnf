@@ -4,18 +4,25 @@
   psiPackage="com.tecknobit.envui.ide.envfile"
   psiImplPackage="com.tecknobit.envui.ide.envfile.impl"
   elementTypeHolderClass="com.tecknobit.envui.ide.envfile.EnvGeneratedTypes"
+
+  tokens = [
+    EQUALS='='
+    EXPORT='export'
+  ]
 }
 
 file ::= statement*
 
-statement ::= property | comment_entry | empty_line
+statement ::= property NEW_LINE?
+            | comment_entry NEW_LINE?
+            | empty_line
 
-property ::= key_entry "=" value_entry
+empty_line ::= NEW_LINE
+
+property ::= EXPORT? key_entry EQUALS value_entry? comment_entry?
 
 key_entry ::= KEY
 
 value_entry ::= VALUE | QUOTED_VALUE
 
 comment_entry ::= COMMENT
-
-empty_line ::= NEW_LINE
