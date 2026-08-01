@@ -31,6 +31,17 @@
                 icon="icons/pluginIcon.svg"
                 anchor="right"
         />
+
+        <lang.parserDefinition
+                language="dEnv"
+                implementationClass="com.tecknobit.envui.ide.envfile.EnvParserDefinition"/>
+
+        <fileType
+                name="dEnv"
+                implementationClass="com.tecknobit.envui.ide.envfile.EnvFileType"
+                fieldName=".env"
+                patterns="*.env;.env"/>
+
     </extensions>
 
     <dependencies>

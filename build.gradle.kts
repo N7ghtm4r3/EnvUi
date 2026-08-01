@@ -27,3 +27,9 @@ compose.resources {
     packageOfResClass = "com.tecknobit.envui.generated.resources"
     generateResClass = always
 }
+
+sourceSets {
+    main {
+        java.srcDir("src/main/generated")
+    }
+}

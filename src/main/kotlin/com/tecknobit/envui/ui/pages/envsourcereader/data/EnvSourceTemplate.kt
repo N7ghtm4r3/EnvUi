@@ -1,0 +1,5 @@
+package com.tecknobit.envui.com.tecknobit.envui.ui.pages.envsourcereader.data
+
+data class EnvSourceTemplate(
+    val fields: List<EnvTemplateField> = emptyList(),
+)
