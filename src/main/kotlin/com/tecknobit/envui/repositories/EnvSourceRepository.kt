@@ -4,9 +4,9 @@ import com.intellij.openapi.application.readAction
 import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.psi.search.FilenameIndex
+import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
-import com.tecknobit.envui.constants.ENV_EXTENSION
+import com.tecknobit.envui.ide.envfile.dEnvFileType
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 
 class EnvSourceRepository(
@@ -17,8 +17,8 @@ class EnvSourceRepository(
         filters: String,
     ): List<EnvSource> {
         return readAction {
-            val virtualFiles = FilenameIndex.getVirtualFilesByName(
-                ENV_EXTENSION,
+            val virtualFiles = FileTypeIndex.getFiles(
+                dEnvFileType,
                 GlobalSearchScope.projectScope(project)
             )
 

@@ -47,14 +47,14 @@ tasks {
     generateParser {
         sourceFile.set(file("src/main/grammar/dEnv.bnf"))
         targetRootOutputDir.set(file("src/main/gen"))
-        pathToParser.set("/com/tecknobit/envui/ide/envfile/EnvParser.java")
+        pathToParser.set("/com/tecknobit/envui/ide/envfile/dEnvParser.java")
         pathToPsiRoot.set("/com/tecknobit/envui/ide/envfile")
         purgeOldFiles.set(true)
     }
 
     generateLexer {
         dependsOn(generateParser)
-        sourceFile.set(file("src/main/grammar/_EnvLexer.flex"))
+        sourceFile.set(file("src/main/grammar/_dEnvLexer.flex"))
         targetOutputDir.set(file("src/main/gen/com/tecknobit/envui/ide/envfile"))
         purgeOldFiles.set(false)
     }

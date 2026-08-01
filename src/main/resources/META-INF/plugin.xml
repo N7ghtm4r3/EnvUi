@@ -34,11 +34,11 @@
 
         <lang.parserDefinition
                 language="dEnv"
-                implementationClass="com.tecknobit.envui.ide.envfile.EnvParserDefinition"/>
+                implementationClass="com.tecknobit.envui.ide.envfile.dEnvParserDefinition"/>
 
         <fileType
                 name="dEnv"
-                implementationClass="com.tecknobit.envui.ide.envfile.EnvFileType"
+                implementationClass="com.tecknobit.envui.ide.envfile.dEnvFileType"
                 fieldName="INSTANCE"
                 patterns="*.env;.env"/>
     </extensions>

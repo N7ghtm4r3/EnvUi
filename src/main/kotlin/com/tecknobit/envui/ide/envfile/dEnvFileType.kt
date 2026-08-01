@@ -6,7 +6,7 @@ import com.intellij.openapi.util.NlsSafe
 import org.jetbrains.annotations.NonNls
 import javax.swing.Icon
 
-object EnvFileType : LanguageFileType(dEnvLanguage) {
+object dEnvFileType : LanguageFileType(dEnvLanguage) {
 
     override fun getName(): @NonNls String {
         return "dEnv"

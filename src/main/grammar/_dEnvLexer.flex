@@ -10,13 +10,13 @@ import static com.tecknobit.envui.ide.envfile.EnvGeneratedTypes.*;
 %%
 
 %{
-  public _EnvLexer() {
+  public _dEnvLexer() {
     this((java.io.Reader)null);
   }
 %}
 
 %public
-%class _EnvLexer
+%class _dEnvLexer
 %implements FlexLexer
 %function advance
 %type IElementType

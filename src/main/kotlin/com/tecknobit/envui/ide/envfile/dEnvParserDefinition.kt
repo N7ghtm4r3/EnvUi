@@ -11,10 +11,10 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.tree.TokenSet
 
-class EnvParserDefinition : ParserDefinition {
+class dEnvParserDefinition : ParserDefinition {
 
     override fun createLexer(project: Project?): Lexer {
-        return EnvLexerAdapter()
+        return dEnvLexerAdapter()
     }
 
     override fun createParser(p0: Project?): PsiParser {
@@ -22,7 +22,7 @@ class EnvParserDefinition : ParserDefinition {
     }
 
     override fun getFileNodeType(): IFileElementType {
-        return EnvTypes.FILE
+        return dEnvTypes.FILE
     }
 
     override fun getCommentTokens(): TokenSet {
@@ -36,7 +36,7 @@ class EnvParserDefinition : ParserDefinition {
     override fun createElement(
         node: ASTNode,
     ): PsiElement {
-        return EnvPsiElement(
+        return dEnvPsiElement(
             node = node
         )
     }
@@ -44,7 +44,7 @@ class EnvParserDefinition : ParserDefinition {
     override fun createFile(
         fileViewProvider: FileViewProvider,
     ): PsiFile {
-        return EnvFile(
+        return dEnvFile(
             viewProvider = fileViewProvider
         )
     }
