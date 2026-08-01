@@ -39,9 +39,7 @@ class dEnvParserDefinition : ParserDefinition {
     override fun createElement(
         node: ASTNode,
     ): PsiElement {
-        return dEnvPsiElement(
-            node = node
-        )
+        return EnvGeneratedTypes.Factory.createElement(node)
     }
 
     override fun createFile(

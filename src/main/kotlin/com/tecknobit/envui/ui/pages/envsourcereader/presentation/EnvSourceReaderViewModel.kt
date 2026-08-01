@@ -20,7 +20,7 @@ class EnvSourceReaderViewModel(
 
     fun mapSourceTemplate() {
         viewModelScope.launch {
-            println(envSource.source.readText())
+            println(envSource.ps())
         }
     }
 
