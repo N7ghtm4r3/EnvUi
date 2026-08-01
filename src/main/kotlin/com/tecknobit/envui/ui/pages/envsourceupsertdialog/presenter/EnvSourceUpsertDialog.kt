@@ -1,4 +1,4 @@
-package com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuireaderdialog.presenter
+package com.tecknobit.envui.com.tecknobit.envui.ui.pages.envsourceupsertdialog.presenter
 
 import com.intellij.openapi.ui.DialogWrapper
 import com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
@@ -6,15 +6,13 @@ import org.jetbrains.jewel.bridge.compose
 import org.jetbrains.jewel.ui.component.Text
 import javax.swing.JComponent
 
-class EnvUiReaderDialog(
-    envSource: EnvSource,
+class EnvSourceUpsertDialog(
+    envSource: EnvSource? = null,
 ) : DialogWrapper(
     true
 ) {
 
     init {
-        title = envSource.name + " TODO"
-
         super.init()
     }
 

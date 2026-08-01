@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.intellij.ui.JBColor.GRAY
 import com.tecknobit.envui.com.tecknobit.envui.ui.components.Badge
-import com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuireaderdialog.presenter.EnvUiReaderDialog
+import com.tecknobit.envui.com.tecknobit.envui.ui.pages.envsourcereaderdialog.presenter.EnvSourceReaderDialog
 import com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 import com.tecknobit.envui.com.tecknobit.envui.ui.theme.EnvUiTheme
 import com.tecknobit.envui.com.tecknobit.envui.ui.utils.resolveIcon
@@ -114,7 +114,7 @@ private fun CardHeader(
         ) {
             IconButton(
                 onClick = {
-                    val envUiReaderDialog = EnvUiReaderDialog(
+                    val envUiReaderDialog = EnvSourceReaderDialog(
                         envSource = envSource
                     )
 

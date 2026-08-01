@@ -2,6 +2,7 @@
 
 package com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuiwindow.content
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -28,6 +29,7 @@ fun EnvUiWindowContent(
 ) {
     val jvmResourceReaderClassLoader = JvmResourceReader(EnvUiWindow::class.java.classLoader)
     val windowState by viewModel.windowState.collectAsStateWithLifecycle()
+    val sources = windowState.sources
 
     LaunchedEffect(project) {
         viewModel.retrieveSources()
@@ -41,22 +43,26 @@ fun EnvUiWindowContent(
                 ),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            DebouncedInput(
-                modifier = Modifier
-                    .fillMaxWidth(0.5f),
-                initialValue = windowState.query.value,
-                placeholder = Res.string.search_by_folder_or_module,
-                onDebounce = {
-                    viewModel.filterSources(
-                        query = it
-                    )
-                }
-            )
+            AnimatedVisibility(
+                visible = sources != null
+            ) {
+                DebouncedInput(
+                    modifier = Modifier
+                        .fillMaxWidth(0.5f),
+                    initialValue = windowState.query.value,
+                    placeholder = Res.string.search_by_folder_or_module,
+                    onDebounce = {
+                        viewModel.filterSources(
+                            query = it
+                        )
+                    }
+                )
+            }
 
             EnvSourcesList(
                 modifier = Modifier
                     .fillMaxSize(),
-                sources = windowState.sources
+                sources = sources
             )
         }
     }

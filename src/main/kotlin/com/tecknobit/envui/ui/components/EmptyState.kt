@@ -2,6 +2,7 @@ package com.tecknobit.envui.com.tecknobit.envui.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -46,7 +47,14 @@ fun EmptyState(
                 text = text
             )
 
-            action?.let { it() }
+            Column(
+                modifier = Modifier
+                    .padding(
+                        top = 25.dp
+                    )
+            ) {
+                action?.let { it() }
+            }
         }
     }
 }
