@@ -12,4 +12,6 @@
     <string name="loading_sources">Loading sources</string>
     <string name="source">Source</string>
     <string name="template">Template</string>
+    <string name="delete_template_field">Delete template field</string>
+    <string name="add">Add</string>
 </resources>

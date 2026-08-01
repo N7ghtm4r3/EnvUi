@@ -14,7 +14,7 @@ import com.tecknobit.envui.generated.resources.Res
 import com.tecknobit.envui.generated.resources.source
 import com.tecknobit.envui.generated.resources.template
 import com.tecknobit.envui.ui.helpers.StringResourcesProvider
-import com.tecknobit.envui.ui.pages.envsourcereader.components.EnvTemplateFielsEditor
+import com.tecknobit.envui.ui.pages.envsourcereader.components.EnvTemplateFieldsEditor
 import com.tecknobit.envui.ui.pages.envsourcereader.presentation.EnvSourceReaderViewModel
 import com.tecknobit.envui.ui.pages.envsourcereader.states.EnvSourceReaderState
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
@@ -133,11 +133,7 @@ class EnvSourceReaderDialog(
                 text = "Create template"
             )
 
-            EnvTemplateFielsEditor(
-                modifier = Modifier
-                    .padding(
-                        vertical = 16.dp
-                    ),
+            EnvTemplateFieldsEditor(
                 envSourceTemplate = sourceTemplate,
                 onSave = { newTemplate ->
 

@@ -12,6 +12,9 @@ object EnvUiTheme {
     val border: Color
         get() = nativeColorFromUi("Component.borderColor")
 
+    val error: Color
+        get() = nativeColorFromUi("Component.errorFocusColor")
+
     private fun nativeColorFromUi(
         colorKey: String
     ): Color {
