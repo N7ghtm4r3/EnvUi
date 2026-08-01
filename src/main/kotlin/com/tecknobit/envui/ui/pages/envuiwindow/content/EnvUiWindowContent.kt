@@ -33,6 +33,8 @@ fun EnvUiWindowContent(
 
     LaunchedEffect(project) {
         viewModel.retrieveSources()
+
+        viewModel.monitorFileTreeChanges()
     }
 
     CompositionLocalProvider(LocalResourceReader provides jvmResourceReaderClassLoader) {
