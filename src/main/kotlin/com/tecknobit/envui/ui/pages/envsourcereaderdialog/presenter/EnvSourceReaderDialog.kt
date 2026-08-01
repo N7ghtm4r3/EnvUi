@@ -1,9 +1,28 @@
 package com.tecknobit.envui.com.tecknobit.envui.ui.pages.envsourcereaderdialog.presenter
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.intellij.openapi.ui.DialogWrapper
+import com.tecknobit.envui.com.tecknobit.envui.I18nMessageBundle
+import com.tecknobit.envui.com.tecknobit.envui.ui.helpers.StringResourcesProvider
 import com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
+import com.tecknobit.envui.generated.resources.Res
+import com.tecknobit.envui.generated.resources.source
+import com.tecknobit.envui.generated.resources.template
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.jewel.bridge.compose
+import org.jetbrains.jewel.ui.component.SegmentedControl
+import org.jetbrains.jewel.ui.component.SegmentedControlButtonData
 import org.jetbrains.jewel.ui.component.Text
+import java.awt.Dimension
 import javax.swing.JComponent
 
 class EnvSourceReaderDialog(
@@ -13,19 +32,92 @@ class EnvSourceReaderDialog(
 ) {
 
     init {
-        title = envSource.name + " TODO"
+        title = I18nMessageBundle.message(
+            key = "envui.dialog.read.env",
+            envSource.module!!.name
+        )
 
         super.init()
     }
 
     override fun createCenterPanel(): JComponent {
         return compose(
-            focusOnClickInside = true
+            focusOnClickInside = true,
+            config = {
+                preferredSize = Dimension(600, 500)
+            }
         ) {
-            Text(
-                text = "gag"
+            StringResourcesProvider(
+                context = EnvSourceReaderDialog::class,
+                content = {
+                    val workingOnSource = remember { mutableStateOf(true) }
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                    ) {
+                        TabControls(
+                            workingOnSource = workingOnSource
+                        )
+
+                        AnimatedContent(
+                            modifier = Modifier
+                                .padding(
+                                    all = 16.dp
+                                ),
+                            targetState = workingOnSource.value
+                        ) { workingOnSource ->
+                            if (workingOnSource)
+                                SourceContent()
+                            else
+                                TemplateContent()
+                        }
+                    }
+                }
             )
         }
+    }
+
+    @Composable
+    private fun TabControls(
+        workingOnSource: MutableState<Boolean>,
+    ) {
+        SegmentedControl(
+            buttons = listOf(
+                SegmentedControlButtonData(
+                    selected = workingOnSource.value,
+                    onSelect = { workingOnSource.value = true },
+                    content = {
+                        Text(
+                            text = stringResource(Res.string.source)
+                        )
+                    }
+                ),
+                SegmentedControlButtonData(
+                    selected = !workingOnSource.value,
+                    onSelect = { workingOnSource.value = false },
+                    content = {
+                        Text(
+                            text = stringResource(Res.string.template)
+                        )
+                    }
+                )
+            )
+        )
+    }
+
+    @Composable
+    private fun SourceContent() {
+        Text(
+            text = "g"
+        )
+    }
+
+    @Composable
+    private fun TemplateContent() {
+        Text(
+            text = "ag"
+        )
     }
 
 }

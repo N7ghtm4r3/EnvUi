@@ -10,4 +10,6 @@
     <string name="last_edit">Last edit</string>
     <string name="search_by_folder_or_module">Search by folder or module</string>
     <string name="loading_sources">Loading sources</string>
+    <string name="source">Source</string>
+    <string name="template">Template</string>
 </resources>
