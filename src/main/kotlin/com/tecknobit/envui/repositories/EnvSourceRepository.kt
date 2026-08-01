@@ -4,6 +4,7 @@ import com.intellij.openapi.application.readAction
 import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.tecknobit.envui.ide.envfile.dEnvFileType
@@ -32,11 +33,14 @@ class EnvSourceRepository(
     private fun Collection<VirtualFile?>.toEnvSources(
         project: Project,
     ): List<EnvSource> {
+        val psiManager = PsiManager.getInstance(project)
+
         return this.map { file ->
             EnvSource(
                 project = project,
-                module = ModuleUtilCore.findModuleForFile(file!!, project),
-                source = file
+                source = file!!,
+                module = ModuleUtilCore.findModuleForFile(file, project),
+                psiSource = psiManager.findFile(file)!!
             )
         }
     }

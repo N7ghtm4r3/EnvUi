@@ -2,7 +2,6 @@ package com.tecknobit.envui.ui.pages.envsourcereader.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.intellij.openapi.vfs.readText
 import com.tecknobit.envui.ui.pages.envsourcereader.states.EnvSourceReaderState
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +19,7 @@ class EnvSourceReaderViewModel(
 
     fun mapSourceTemplate() {
         viewModelScope.launch {
-            println(envSource.ps())
+            println(envSource.psiEnvSource.properties())
         }
     }
 

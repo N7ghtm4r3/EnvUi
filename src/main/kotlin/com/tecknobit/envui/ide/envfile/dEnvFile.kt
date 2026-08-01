@@ -2,6 +2,8 @@ package com.tecknobit.envui.ide.envfile
 
 import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.psi.FileViewProvider
+import com.intellij.psi.util.PsiTreeUtil
+import org.jetbrains.annotations.Unmodifiable
 
 class dEnvFile(
     viewProvider: FileViewProvider,
@@ -11,5 +13,12 @@ class dEnvFile(
 ) {
 
     override fun getFileType() = dEnvFileType
+
+    fun properties(): @Unmodifiable Collection<dEnvPsiElement> {
+        return PsiTreeUtil.findChildrenOfType(
+            this,
+            dEnvPsiElement::class.java
+        )
+    }
 
 }
