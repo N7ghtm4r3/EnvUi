@@ -1,4 +1,4 @@
-package com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuiwindow.content
+package com.tecknobit.envui.ui.pages.envuiwindow.content
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
@@ -9,11 +9,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.intellij.openapi.project.Project
-import com.tecknobit.envui.com.tecknobit.envui.ui.components.DebouncedInput
-import com.tecknobit.envui.com.tecknobit.envui.ui.helpers.StringResourcesProvider
-import com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuiwindow.components.EnvSourcesList
-import com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuiwindow.presentation.EnvUiWindowViewModel
-import com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuiwindow.presenter.EnvUiWindow
+import com.tecknobit.envui.ui.components.DebouncedInput
+import com.tecknobit.envui.ui.helpers.StringResourcesProvider
+import com.tecknobit.envui.ui.pages.envuiwindow.components.EnvSourcesList
+import com.tecknobit.envui.ui.pages.envuiwindow.presentation.EnvUiWindowViewModel
+import com.tecknobit.envui.ui.pages.envuiwindow.presenter.EnvUiWindow
 import com.tecknobit.envui.generated.resources.Res
 import com.tecknobit.envui.generated.resources.search_by_folder_or_module
 

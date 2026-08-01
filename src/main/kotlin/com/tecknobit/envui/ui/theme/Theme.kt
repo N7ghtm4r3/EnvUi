@@ -1,7 +1,7 @@
-package com.tecknobit.envui.com.tecknobit.envui.ui.theme
+package com.tecknobit.envui.ui.theme
 
 import androidx.compose.ui.graphics.Color
-import com.tecknobit.envui.com.tecknobit.envui.ui.utils.toComposeColor
+import com.tecknobit.envui.ui.utils.toComposeColor
 import javax.swing.UIManager
 
 object EnvUiTheme {

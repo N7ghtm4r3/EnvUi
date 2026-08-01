@@ -6,6 +6,15 @@ plugins {
     alias(libs.plugins.kotlin)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.grammarKit)
+}
+
+repositories {
+    mavenCentral()
+
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin.html
@@ -30,6 +39,31 @@ compose.resources {
 
 sourceSets {
     main {
-        java.srcDir("src/main/generated")
+        java.srcDir("src/main/gen")
+    }
+}
+
+tasks {
+    generateParser {
+        sourceFile.set(file("src/main/grammar/dEnv.bnf"))
+        targetRootOutputDir.set(file("src/main/gen"))
+        pathToParser.set("/com/tecknobit/envui/ide/envfile/EnvParser.java")
+        pathToPsiRoot.set("/com/tecknobit/envui/ide/envfile")
+        purgeOldFiles.set(true)
+    }
+
+    generateLexer {
+        dependsOn(generateParser)
+        sourceFile.set(file("src/main/grammar/_EnvLexer.flex"))
+        targetOutputDir.set(file("src/main/gen/com/tecknobit/envui/ide/envfile"))
+        purgeOldFiles.set(false)
+    }
+
+    compileKotlin {
+        dependsOn(generateLexer)
+    }
+
+    compileJava {
+        dependsOn(generateLexer)
     }
 }

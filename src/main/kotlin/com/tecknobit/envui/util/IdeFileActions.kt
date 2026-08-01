@@ -1,4 +1,4 @@
-package com.tecknobit.envui.com.tecknobit.envui.util
+package com.tecknobit.envui.util
 
 import com.intellij.ide.projectView.ProjectView
 import com.intellij.openapi.fileEditor.FileEditorManager

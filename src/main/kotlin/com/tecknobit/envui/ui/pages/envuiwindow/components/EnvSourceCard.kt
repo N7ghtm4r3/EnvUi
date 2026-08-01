@@ -1,4 +1,4 @@
-package com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuiwindow.components
+package com.tecknobit.envui.ui.pages.envuiwindow.components
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -13,14 +13,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.intellij.ui.JBColor.GRAY
-import com.tecknobit.envui.com.tecknobit.envui.ui.components.Badge
-import com.tecknobit.envui.com.tecknobit.envui.ui.pages.envsourcereader.presenter.EnvSourceReaderDialog
-import com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
-import com.tecknobit.envui.com.tecknobit.envui.ui.theme.EnvUiTheme
-import com.tecknobit.envui.com.tecknobit.envui.ui.utils.resolveIcon
-import com.tecknobit.envui.com.tecknobit.envui.ui.utils.toComposeColor
-import com.tecknobit.envui.com.tecknobit.envui.ui.utils.toDateString
-import com.tecknobit.envui.com.tecknobit.envui.util.revealInProjectView
+import com.tecknobit.envui.ui.components.Badge
+import com.tecknobit.envui.ui.pages.envsourcereader.presenter.EnvSourceReaderDialog
+import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
+import com.tecknobit.envui.ui.theme.EnvUiTheme
+import com.tecknobit.envui.ui.utils.resolveIcon
+import com.tecknobit.envui.ui.utils.toComposeColor
+import com.tecknobit.envui.ui.utils.toDateString
+import com.tecknobit.envui.util.revealInProjectView
 import com.tecknobit.envui.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.jewel.ui.component.Icon

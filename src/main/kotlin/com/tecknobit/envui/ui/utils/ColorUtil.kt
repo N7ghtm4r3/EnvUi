@@ -1,4 +1,4 @@
-package com.tecknobit.envui.com.tecknobit.envui.ui.utils
+package com.tecknobit.envui.ui.utils
 
 import androidx.compose.ui.graphics.Color as ComposeColor
 

@@ -1,4 +1,4 @@
-package com.tecknobit.envui.com.tecknobit.envui.ui.helpers
+package com.tecknobit.envui.ui.helpers
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider

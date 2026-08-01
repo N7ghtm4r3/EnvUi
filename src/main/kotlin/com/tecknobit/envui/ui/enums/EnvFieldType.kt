@@ -1,4 +1,4 @@
-package com.tecknobit.envui.com.tecknobit.envui.ui.enums
+package com.tecknobit.envui.ui.enums
 
 enum class EnvFieldType {
 

@@ -1,4 +1,4 @@
-package com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuiwindow.presentation
+package com.tecknobit.envui.ui.pages.envuiwindow.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -6,8 +6,8 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.openapi.vfs.newvfs.BulkFileListener
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent
-import com.tecknobit.envui.com.tecknobit.envui.repositories.EnvSourceRepository
-import com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuiwindow.states.EnvUiWindowState
+import com.tecknobit.envui.repositories.EnvSourceRepository
+import com.tecknobit.envui.ui.pages.envuiwindow.states.EnvUiWindowState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

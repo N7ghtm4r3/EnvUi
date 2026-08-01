@@ -17,11 +17,11 @@ object EnvFileType : LanguageFileType(dEnvLanguage) {
     }
 
     override fun getDefaultExtension(): @NlsSafe String {
-        return ".env"
+        return "env"
     }
 
     override fun getIcon(): Icon? {
-        TODO("Not yet implemented")
+        return null //TODO: TO SET
     }
 
 }

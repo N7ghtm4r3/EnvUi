@@ -1,0 +1,21 @@
+{
+  parserClass="com.tecknobit.envui.ide.envfile.EnvParser"
+  parserUtilClass="com.intellij.lang.parser.GeneratedParserUtilBase"
+  psiPackage="com.tecknobit.envui.ide.envfile"
+  psiImplPackage="com.tecknobit.envui.ide.envfile.impl"
+  elementTypeHolderClass="com.tecknobit.envui.ide.envfile.EnvGeneratedTypes"
+}
+
+file ::= statement*
+
+statement ::= property | comment_entry | empty_line
+
+property ::= key_entry "=" value_entry
+
+key_entry ::= KEY
+
+value_entry ::= VALUE | QUOTED_VALUE
+
+comment_entry ::= COMMENT
+
+empty_line ::= NEW_LINE

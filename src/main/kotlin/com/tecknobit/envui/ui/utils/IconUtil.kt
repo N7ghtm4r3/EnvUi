@@ -1,4 +1,4 @@
-package com.tecknobit.envui.com.tecknobit.envui.ui.utils
+package com.tecknobit.envui.ui.utils
 
 import com.intellij.openapi.application.readAction
 import com.intellij.openapi.project.Project

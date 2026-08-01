@@ -1,10 +1,10 @@
-package com.tecknobit.envui.com.tecknobit.envui.ui.pages.envsourcereader.components
+package com.tecknobit.envui.ui.pages.envsourcereader.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
-import com.tecknobit.envui.com.tecknobit.envui.ui.pages.envsourcereader.data.EnvSourceTemplate
+import com.tecknobit.envui.ui.pages.envsourcereader.data.EnvSourceTemplate
 import org.jetbrains.jewel.ui.component.TextField
 
 @Composable

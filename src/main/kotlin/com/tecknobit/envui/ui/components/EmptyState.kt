@@ -1,4 +1,4 @@
-package com.tecknobit.envui.com.tecknobit.envui.ui.components
+package com.tecknobit.envui.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,7 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.tecknobit.envui.com.tecknobit.envui.ui.theme.EnvUiTheme
+import com.tecknobit.envui.ui.theme.EnvUiTheme
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.jewel.ui.component.Icon

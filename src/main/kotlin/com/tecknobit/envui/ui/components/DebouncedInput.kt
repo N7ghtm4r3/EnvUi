@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalJewelApi::class)
 
-package com.tecknobit.envui.com.tecknobit.envui.ui.components
+package com.tecknobit.envui.ui.components
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.*

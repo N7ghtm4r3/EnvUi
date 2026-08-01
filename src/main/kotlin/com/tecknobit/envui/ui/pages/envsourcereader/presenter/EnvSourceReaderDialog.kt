@@ -1,4 +1,4 @@
-package com.tecknobit.envui.com.tecknobit.envui.ui.pages.envsourcereader.presenter
+package com.tecknobit.envui.ui.pages.envsourcereader.presenter
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
@@ -12,12 +12,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.intellij.openapi.ui.DialogWrapper
-import com.tecknobit.envui.com.tecknobit.envui.I18nMessageBundle
-import com.tecknobit.envui.com.tecknobit.envui.ui.helpers.StringResourcesProvider
-import com.tecknobit.envui.com.tecknobit.envui.ui.pages.envsourcereader.components.EnvTemplateFielsEditor
-import com.tecknobit.envui.com.tecknobit.envui.ui.pages.envsourcereader.presentation.EnvSourceReaderViewModel
-import com.tecknobit.envui.com.tecknobit.envui.ui.pages.envsourcereader.states.EnvSourceReaderState
-import com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
+import com.tecknobit.envui.I18nMessageBundle
+import com.tecknobit.envui.ui.helpers.StringResourcesProvider
+import com.tecknobit.envui.ui.pages.envsourcereader.components.EnvTemplateFielsEditor
+import com.tecknobit.envui.ui.pages.envsourcereader.presentation.EnvSourceReaderViewModel
+import com.tecknobit.envui.ui.pages.envsourcereader.states.EnvSourceReaderState
+import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 import com.tecknobit.envui.generated.resources.Res
 import com.tecknobit.envui.generated.resources.source
 import com.tecknobit.envui.generated.resources.template

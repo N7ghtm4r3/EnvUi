@@ -1,4 +1,4 @@
-package com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuiwindow.components
+package com.tecknobit.envui.ui.pages.envuiwindow.components
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
@@ -10,9 +10,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.tecknobit.envui.com.tecknobit.envui.ui.components.EmptyState
-import com.tecknobit.envui.com.tecknobit.envui.ui.pages.envsourceupsertdialog.presenter.EnvSourceUpsertDialog
-import com.tecknobit.envui.com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
+import com.tecknobit.envui.ui.components.EmptyState
+import com.tecknobit.envui.ui.pages.envsourceupsertdialog.presenter.EnvSourceUpsertDialog
+import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 import com.tecknobit.envui.generated.resources.Res
 import com.tecknobit.envui.generated.resources.envui_no_sources_action_message
 import com.tecknobit.envui.generated.resources.envui_no_sources_message

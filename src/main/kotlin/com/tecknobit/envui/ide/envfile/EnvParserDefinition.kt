@@ -13,12 +13,12 @@ import com.intellij.psi.tree.TokenSet
 
 class EnvParserDefinition : ParserDefinition {
 
-    override fun createLexer(p0: Project?): Lexer {
-        TODO("Not yet implemented")
+    override fun createLexer(project: Project?): Lexer {
+        return EnvLexerAdapter()
     }
 
     override fun createParser(p0: Project?): PsiParser {
-        TODO("Not yet implemented")
+        return EnvParser()
     }
 
     override fun getFileNodeType(): IFileElementType {
