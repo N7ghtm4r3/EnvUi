@@ -4,23 +4,20 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.intellij.openapi.ui.DialogWrapper
 import com.tecknobit.envui.I18nMessageBundle
+import com.tecknobit.envui.generated.resources.Res
+import com.tecknobit.envui.generated.resources.source
+import com.tecknobit.envui.generated.resources.template
 import com.tecknobit.envui.ui.helpers.StringResourcesProvider
 import com.tecknobit.envui.ui.pages.envsourcereader.components.EnvTemplateFielsEditor
 import com.tecknobit.envui.ui.pages.envsourcereader.presentation.EnvSourceReaderViewModel
 import com.tecknobit.envui.ui.pages.envsourcereader.states.EnvSourceReaderState
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
-import com.tecknobit.envui.generated.resources.Res
-import com.tecknobit.envui.generated.resources.source
-import com.tecknobit.envui.generated.resources.template
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.jewel.bridge.compose
 import org.jetbrains.jewel.ui.component.SegmentedControl
@@ -30,7 +27,7 @@ import java.awt.Dimension
 import javax.swing.JComponent
 
 class EnvSourceReaderDialog(
-    envSource: EnvSource,
+    private val envSource: EnvSource,
 ) : DialogWrapper(
     true
 ) {
@@ -126,8 +123,10 @@ class EnvSourceReaderDialog(
 
     @Composable
     private fun TemplateContent() {
-        viewModel.mapSourceTemplate()
-        val sourceTemplate = dialogState.template
+        val sourceTemplate by dialogState.template
+        LaunchedEffect(envSource) {
+            viewModel.mapSourceTemplate()
+        }
 
         Column {
             Text(
@@ -135,6 +134,10 @@ class EnvSourceReaderDialog(
             )
 
             EnvTemplateFielsEditor(
+                modifier = Modifier
+                    .padding(
+                        vertical = 16.dp
+                    ),
                 envSourceTemplate = sourceTemplate,
                 onSave = { newTemplate ->
 

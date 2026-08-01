@@ -14,10 +14,10 @@ class dEnvFile(
 
     override fun getFileType() = dEnvFileType
 
-    fun properties(): @Unmodifiable Collection<dEnvPsiElement> {
+    fun properties(): @Unmodifiable Collection<Property> {
         return PsiTreeUtil.findChildrenOfType(
             this,
-            dEnvPsiElement::class.java
+            Property::class.java
         )
     }
 
