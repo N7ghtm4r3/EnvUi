@@ -6,6 +6,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FileTypeIndex
+import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.tecknobit.envui.ide.envfile.dEnvFileType
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
@@ -17,30 +18,30 @@ class EnvSourceRepository(
     suspend fun retrieveEnvs(
         filters: String,
     ): List<EnvSource> {
+        val virtualFilesEnvTemplates = retrieveEnvTemplates()
+
         return readAction {
-            val virtualFiles = FileTypeIndex.getFiles(
+            val globalSearchScope = GlobalSearchScope.projectScope(project)
+            val virtualFilesEnv = FileTypeIndex.getFiles(
                 dEnvFileType,
-                GlobalSearchScope.projectScope(project)
+                globalSearchScope
             )
 
-            virtualFiles.toEnvSourcesWithFilters(
+            virtualFilesEnv.toEnvSourcesWithFilters(
                 project = project,
-                filters = filters
+                filters = filters,
+                templates = virtualFilesEnvTemplates
             )
         }
     }
 
-    private fun Collection<VirtualFile?>.toEnvSources(
-        project: Project,
-    ): List<EnvSource> {
-        val psiManager = PsiManager.getInstance(project)
+    suspend fun retrieveEnvTemplates(): Collection<VirtualFile> {
+        return readAction {
+            val globalSearchScope = GlobalSearchScope.projectScope(project)
 
-        return this.map { file ->
-            EnvSource(
-                project = project,
-                source = file!!,
-                module = ModuleUtilCore.findModuleForFile(file, project),
-                psiSource = psiManager.findFile(file)!!
+            FilenameIndex.getVirtualFilesByName(
+                ".env.template",
+                globalSearchScope
             )
         }
     }
@@ -48,9 +49,11 @@ class EnvSourceRepository(
     private fun Collection<VirtualFile?>.toEnvSourcesWithFilters(
         project: Project,
         filters: String,
+        templates: Collection<VirtualFile?>,
     ): List<EnvSource> {
         val sources = toEnvSources(
-            project = project
+            project = project,
+            templates = templates
         )
 
         return sources.filter { source ->
@@ -62,6 +65,26 @@ class EnvSourceRepository(
             containerFolderMatches || moduleMatches
         }.sortedByDescending { source ->
             source.source.timeStamp
+        }
+    }
+
+    private fun Collection<VirtualFile?>.toEnvSources(
+        project: Project,
+        templates: Collection<VirtualFile?>,
+    ): List<EnvSource> {
+        val psiManager = PsiManager.getInstance(project)
+        return this.map { file ->
+            val template = templates.firstOrNull { template ->
+                template?.parent?.path == file!!.parent.path
+            }
+
+            EnvSource(
+                project = project,
+                source = file!!,
+                module = ModuleUtilCore.findModuleForFile(file, project),
+                psiSource = psiManager.findFile(file)!!,
+                template = template
+            )
         }
     }
 

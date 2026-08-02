@@ -11,6 +11,7 @@ data class EnvSource(
     val source: VirtualFile,
     val module: Module?,
     private val psiSource: PsiFile,
+    val template: VirtualFile? = null,
 ) {
 
     val name = source.name
