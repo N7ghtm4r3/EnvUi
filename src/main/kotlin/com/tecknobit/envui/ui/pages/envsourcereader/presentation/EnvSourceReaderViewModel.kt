@@ -8,6 +8,7 @@ import com.tecknobit.envui.ui.pages.envsourcereader.states.EnvSourceReaderState
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 class EnvSourceReaderViewModel(
     private val envSource: EnvSource,
@@ -30,9 +31,13 @@ class EnvSourceReaderViewModel(
             )
         }
 
-        _dialogState.value.template.value = EnvSourceTemplate(
-            fields = mappedProperties
-        )
+        _dialogState.update {
+            it.copy(
+                template = EnvSourceTemplate(
+                    fields = mappedProperties
+                )
+            )
+        }
     }
 
 }

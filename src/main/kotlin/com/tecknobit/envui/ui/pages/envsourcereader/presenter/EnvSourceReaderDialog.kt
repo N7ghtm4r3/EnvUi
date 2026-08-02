@@ -18,7 +18,6 @@ import com.tecknobit.envui.generated.resources.template
 import com.tecknobit.envui.ui.helpers.StringResourcesProvider
 import com.tecknobit.envui.ui.pages.envsourcereader.components.EnvTemplateFieldsEditor
 import com.tecknobit.envui.ui.pages.envsourcereader.presentation.EnvSourceReaderViewModel
-import com.tecknobit.envui.ui.pages.envsourcereader.states.EnvSourceReaderState
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.jewel.bridge.compose
@@ -37,8 +36,6 @@ class EnvSourceReaderDialog(
     private val viewModel = EnvSourceReaderViewModel(
         envSource = envSource
     )
-
-    private lateinit var dialogState: EnvSourceReaderState
 
     init {
         title = I18nMessageBundle.message(
@@ -59,7 +56,6 @@ class EnvSourceReaderDialog(
             StringResourcesProvider(
                 context = EnvSourceReaderDialog::class,
                 content = {
-                    dialogState = viewModel.dialogState.collectAsStateWithLifecycle().value
                     val workingOnSource = remember { mutableStateOf(true) }
 
                     Column(
@@ -125,7 +121,7 @@ class EnvSourceReaderDialog(
 
     @Composable
     private fun TemplateContent() {
-        val sourceTemplate = dialogState.template
+        val dialogState = viewModel.dialogState.collectAsStateWithLifecycle().value
         LaunchedEffect(envSource) {
             viewModel.mapSourceTemplate()
         }
@@ -137,7 +133,7 @@ class EnvSourceReaderDialog(
             )
 
             EnvTemplateFieldsEditor(
-                envSourceTemplate = sourceTemplate.value,
+                envSourceTemplate = dialogState.template,
                 onSave = { newTemplate ->
 
                 }

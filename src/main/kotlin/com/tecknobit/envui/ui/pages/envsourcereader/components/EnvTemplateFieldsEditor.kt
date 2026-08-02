@@ -39,17 +39,16 @@ fun EnvTemplateFieldsEditor(
     envSourceTemplate: EnvSourceTemplate,
     onSave: (EnvSourceTemplate) -> Unit,
 ) {
-    val fields = remember {
-        mutableStateListOf<EnvTemplateEditorField>().apply {
-            envSourceTemplate.fields.forEach { field ->
-                add(
-                    EnvTemplateEditorField(
-                        key = field.key,
-                        fieldType = field.type,
-                        isFilled = true
-                    )
+    val fields = remember { mutableStateListOf<EnvTemplateEditorField>() }
+    LaunchedEffect(envSourceTemplate) {
+        envSourceTemplate.fields.forEach { field ->
+            fields.add(
+                EnvTemplateEditorField(
+                    key = field.key,
+                    fieldType = field.type,
+                    isFilled = true
                 )
-            }
+            )
         }
     }
 
@@ -237,7 +236,7 @@ private fun DeleteFieldBannerAlert(
 
                 Column(
                     modifier = Modifier
-                        .weight(1f),
+                        .weight(0.3f),
                     horizontalAlignment = Alignment.End
                 ) {
                     Row(
