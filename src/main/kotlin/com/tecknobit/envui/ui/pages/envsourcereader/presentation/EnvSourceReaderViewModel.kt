@@ -40,4 +40,14 @@ class EnvSourceReaderViewModel(
         }
     }
 
+    fun saveNewTemplate(
+        template: EnvSourceTemplate,
+    ) {
+        _dialogState.update {
+            it.copy(
+                template = template
+            )
+        }
+    }
+
 }

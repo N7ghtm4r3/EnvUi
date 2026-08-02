@@ -142,7 +142,9 @@ class EnvSourceReaderDialog(
             EnvTemplateFieldsEditor(
                 envSourceTemplate = dialogState.template,
                 onSave = { newTemplate ->
-
+                    viewModel.saveNewTemplate(
+                        template = newTemplate
+                    )
                 }
             )
         }

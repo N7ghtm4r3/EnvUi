@@ -49,6 +49,8 @@ fun EnvTemplateFieldsEditor(
 ) {
     val fields = remember { mutableStateListOf<EnvTemplateEditorField>() }
     LaunchedEffect(envSourceTemplate) {
+        fields.clear()
+
         envSourceTemplate.fields.forEach { field ->
             fields.add(
                 EnvTemplateEditorField(
