@@ -18,6 +18,7 @@ import com.tecknobit.envui.generated.resources.template
 import com.tecknobit.envui.ui.helpers.StringResourcesProvider
 import com.tecknobit.envui.ui.pages.envsourcereader.components.EnvTemplateFieldsEditor
 import com.tecknobit.envui.ui.pages.envsourcereader.presentation.EnvSourceReaderViewModel
+import com.tecknobit.envui.ui.pages.envsourcereader.states.EnvSourceReaderState
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.jewel.bridge.compose
@@ -53,6 +54,8 @@ class EnvSourceReaderDialog(
                 preferredSize = Dimension(600, 500)
             }
         ) {
+            val dialogState by viewModel.dialogState.collectAsStateWithLifecycle()
+
             StringResourcesProvider(
                 context = EnvSourceReaderDialog::class,
                 content = {
@@ -75,8 +78,11 @@ class EnvSourceReaderDialog(
                         ) { workingOnSource ->
                             if (workingOnSource)
                                 SourceContent()
-                            else
-                                TemplateContent()
+                            else {
+                                TemplateContent(
+                                    dialogState = dialogState
+                                )
+                            }
                         }
                     }
                 }
@@ -120,8 +126,9 @@ class EnvSourceReaderDialog(
     }
 
     @Composable
-    private fun TemplateContent() {
-        val dialogState = viewModel.dialogState.collectAsStateWithLifecycle().value
+    private fun TemplateContent(
+        dialogState: EnvSourceReaderState
+    ) {
         LaunchedEffect(envSource) {
             viewModel.mapSourceTemplate()
         }

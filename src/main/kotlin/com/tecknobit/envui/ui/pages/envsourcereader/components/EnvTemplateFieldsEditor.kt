@@ -26,6 +26,8 @@ import org.jetbrains.jewel.ui.component.*
 import org.jetbrains.jewel.ui.icons.AllIconsKeys
 import kotlin.random.Random
 
+import org.jetbrains.jewel.ui.component.items as menuItems
+
 private data class EnvTemplateEditorField(
     val id: Long = Random.nextLong(),
     var key: String = "",
@@ -189,7 +191,17 @@ private fun FieldTypeSelector() {
     Dropdown(
         modifier = Modifier
             .fillMaxWidth(),
-        menuContent = { },
+        menuContent = {
+            menuItems(
+                items = EnvFieldType.entries,
+                isSelected = { false },
+                onItemClick = {}
+            ) { type ->
+                Text(
+                    text = type.name
+                )
+            }
+        },
         content = {
             Text(
                 text = "fwfw"
@@ -229,10 +241,15 @@ private fun DeleteFieldBannerAlert(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Text(
-                    text = stringResource(Res.string.warning_deleting_template_field),
-                    fontSize = 12.sp
-                )
+                Column(
+                    modifier = Modifier
+                        .weight(2f)
+                ) {
+                    Text(
+                        text = stringResource(Res.string.warning_deleting_template_field),
+                        fontSize = 12.sp
+                    )
+                }
 
                 Column(
                     modifier = Modifier

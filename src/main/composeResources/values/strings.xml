@@ -15,9 +15,7 @@
     <string name="manage_template">Manage template fields</string>
     <string name="delete_template_field">Delete template field</string>
     <string name="add">Add</string>
-    <string name="warning_deleting_template_field">This field has already been filled in associated .env, it will be
-        definitely canceled
-    </string>
+    <string name="warning_deleting_template_field">This field has already been filled in associated .env, it will be definitely canceled</string>
     <string name="confirm">Confirm</string>
     <string name="dismiss">Dismiss</string>
 </resources>
