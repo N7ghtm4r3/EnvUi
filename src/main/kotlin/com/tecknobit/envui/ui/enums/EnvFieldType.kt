@@ -1,17 +1,19 @@
 package com.tecknobit.envui.ui.enums
 
-enum class EnvFieldType {
+enum class EnvFieldType(
+    val displayName: String,
+) {
 
-    STRING,
+    STRING("String"),
 
-    INTEGER,
+    INTEGER("Integer"),
 
-    FLOAT,
+    FLOAT("Float"),
 
-    DOUBLE,
+    DOUBLE("Double"),
 
-    JSON,
+    JSON("Json"),
 
-    ANY
+    ANY("Any")
 
 }

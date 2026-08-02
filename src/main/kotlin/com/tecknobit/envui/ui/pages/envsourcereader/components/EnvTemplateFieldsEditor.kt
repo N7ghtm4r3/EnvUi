@@ -18,6 +18,7 @@ import com.intellij.ui.JBColor
 import com.tecknobit.envui.generated.resources.*
 import com.tecknobit.envui.ui.enums.EnvFieldType
 import com.tecknobit.envui.ui.pages.envsourcereader.data.EnvSourceTemplate
+import com.tecknobit.envui.ui.pages.envsourcereader.data.EnvTemplateField
 import com.tecknobit.envui.ui.theme.EnvUiTheme
 import com.tecknobit.envui.ui.utils.toComposeColor
 import org.jetbrains.compose.resources.stringResource
@@ -25,15 +26,20 @@ import org.jetbrains.jewel.foundation.ExperimentalJewelApi
 import org.jetbrains.jewel.ui.component.*
 import org.jetbrains.jewel.ui.icons.AllIconsKeys
 import kotlin.random.Random
-
 import org.jetbrains.jewel.ui.component.items as menuItems
 
 private data class EnvTemplateEditorField(
     val id: Long = Random.nextLong(),
-    var key: String = "",
-    var fieldType: EnvFieldType = EnvFieldType.ANY,
+    private val _key: String = "",
+    private val _fieldType: EnvFieldType = EnvFieldType.ANY,
     val isFilled: Boolean = false,
-)
+) {
+
+    var key by mutableStateOf(_key)
+
+    var fieldType by mutableStateOf(_fieldType)
+
+}
 
 @Composable
 fun EnvTemplateFieldsEditor(
@@ -46,8 +52,8 @@ fun EnvTemplateFieldsEditor(
         envSourceTemplate.fields.forEach { field ->
             fields.add(
                 EnvTemplateEditorField(
-                    key = field.key,
-                    fieldType = field.type,
+                    _key = field.key,
+                    _fieldType = field.type,
                     isFilled = true
                 )
             )
@@ -64,9 +70,20 @@ fun EnvTemplateFieldsEditor(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         stickyHeader {
-            AddEntryButton(
+            Actions(
                 onAdd = {
                     fields.add(EnvTemplateEditorField())
+                },
+                onSaveEnabled = isTemplateChanged(
+                    initialTemplate = envSourceTemplate,
+                    draftEditorFields = fields
+                ),
+                onSave = {
+                    val newEnvSourceTemplate = EnvSourceTemplate(
+                        fields = fields.toEnvTemplateFields()
+                    )
+
+                    onSave(newEnvSourceTemplate)
                 }
             )
         }
@@ -87,21 +104,57 @@ fun EnvTemplateFieldsEditor(
     }
 }
 
+private fun isTemplateChanged(
+    initialTemplate: EnvSourceTemplate,
+    draftEditorFields: List<EnvTemplateEditorField>,
+): Boolean {
+    val initialTemplateFields = initialTemplate.fields
+    val draftFields = draftEditorFields.toEnvTemplateFields()
+    val allKeysValid = draftEditorFields.firstOrNull { it.key.isBlank() } == null
+
+    return (initialTemplateFields != draftFields) && allKeysValid
+}
+
+private fun List<EnvTemplateEditorField>.toEnvTemplateFields(): List<EnvTemplateField> {
+    return map {
+        EnvTemplateField(
+            key = it.key,
+            type = it.fieldType
+        )
+    }
+}
+
 @Composable
-private fun AddEntryButton(
+private fun Actions(
     onAdd: () -> Unit,
+    onSaveEnabled: Boolean,
+    onSave: () -> Unit,
 ) {
     Row (
         modifier = Modifier
             .fillMaxWidth()
-            .background(JBColor.background().toComposeColor())
+            .background(JBColor.background().toComposeColor()),
+        horizontalArrangement = Arrangement.End
     ) {
-        DefaultButton(
-            onClick = onAdd
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Text(
-                text = stringResource(Res.string.add)
-            )
+            OutlinedButton(
+                onClick = onAdd
+            ) {
+                Text(
+                    text = stringResource(Res.string.add)
+                )
+            }
+
+            DefaultButton(
+                enabled = onSaveEnabled,
+                onClick = onSave
+            ) {
+                Text(
+                    text = stringResource(Res.string.save)
+                )
+            }
         }
     }
 }
@@ -137,7 +190,9 @@ private fun TemplateFieldEntry(
                     .weight(2f),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                FieldTypeSelector()
+                FieldTypeSelector(
+                    field = field
+                )
             }
 
             Column(
@@ -181,30 +236,39 @@ private fun FieldKeyInput(
         value = textFieldValue,
         onValueChange = {
             textFieldValue = it
+
             field.key = it.text
         }
     )
 }
 
 @Composable
-private fun FieldTypeSelector() {
+private fun FieldTypeSelector(
+    field: EnvTemplateEditorField,
+) {
+    var selectedFieldType by remember { mutableStateOf(field.fieldType) }
+
     Dropdown(
         modifier = Modifier
             .fillMaxWidth(),
         menuContent = {
             menuItems(
                 items = EnvFieldType.entries,
-                isSelected = { false },
-                onItemClick = {}
+                isSelected = { selectedFieldType == it },
+                onItemClick = {
+                    selectedFieldType = it
+
+                    field.fieldType = it
+                }
             ) { type ->
                 Text(
-                    text = type.name
+                    text = type.displayName
                 )
             }
         },
         content = {
             Text(
-                text = "fwfw"
+                text = selectedFieldType.displayName
             )
         }
     )
