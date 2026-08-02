@@ -5,13 +5,14 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiFile
 import com.tecknobit.envui.ide.envfile.dEnvFile
+import com.tecknobit.envui.ide.envfiletemplate.dEnvTemplateFile
 
 data class EnvSource(
     val project: Project,
     val source: VirtualFile,
     val module: Module?,
-    private val psiSource: PsiFile,
-    val template: VirtualFile? = null,
+    private val _psiSource: PsiFile,
+    private val _templateSource: PsiFile? = null,
 ) {
 
     val name = source.name
@@ -20,6 +21,8 @@ data class EnvSource(
 
     val containerFolder = source.parent
 
-    val psiEnvSource = psiSource as dEnvFile
+    val psiEnvSource = _psiSource as dEnvFile
+
+    val psiEnvTemplateSource = _templateSource as dEnvTemplateFile?
 
 }

@@ -42,6 +42,17 @@
                 implementationClass="com.tecknobit.envui.ide.envfile.dEnvFileType"
                 fieldName="INSTANCE"
                 patterns="*.env;.env"/>
+
+        <lang.parserDefinition
+                language="dEnvTemplate"
+                implementationClass="com.tecknobit.envui.ide.envfiletemplate.dEnvTemplateParserDefinition"/>
+
+        <fileType
+                name="dEnvTemplate"
+                language="dEnvTemplate"
+                implementationClass="com.tecknobit.envui.ide.envfiletemplate.dEnvTemplateFileType"
+                fieldName="INSTANCE"
+                patterns=".env.template"/>
     </extensions>
 
     <dependencies>

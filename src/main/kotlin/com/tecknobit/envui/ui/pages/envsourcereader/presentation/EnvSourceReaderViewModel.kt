@@ -20,7 +20,12 @@ class EnvSourceReaderViewModel(
     val dialogState = _dialogState.asStateFlow()
 
     fun mapSourceTemplate() {
-        val properties = envSource.psiEnvSource.properties()
+        val template = envSource.psiEnvTemplateSource
+        if (template == null) {
+            TODO("TO CREATE")
+        }
+
+        val properties = template.properties()
         val mappedProperties = mutableListOf<EnvTemplateField>()
         properties.forEach { property ->
             mappedProperties.add(

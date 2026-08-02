@@ -6,9 +6,9 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FileTypeIndex
-import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.tecknobit.envui.ide.envfile.dEnvFileType
+import com.tecknobit.envui.ide.envfiletemplate.dEnvTemplateFileType
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 
 class EnvSourceRepository(
@@ -38,9 +38,8 @@ class EnvSourceRepository(
     suspend fun retrieveEnvTemplates(): Collection<VirtualFile> {
         return readAction {
             val globalSearchScope = GlobalSearchScope.projectScope(project)
-
-            FilenameIndex.getVirtualFilesByName(
-                ".env.template",
+            FileTypeIndex.getFiles(
+                dEnvTemplateFileType,
                 globalSearchScope
             )
         }
@@ -82,8 +81,11 @@ class EnvSourceRepository(
                 project = project,
                 source = file!!,
                 module = ModuleUtilCore.findModuleForFile(file, project),
-                psiSource = psiManager.findFile(file)!!,
-                template = template
+                _psiSource = psiManager.findFile(file)!!,
+                _templateSource = if(template != null)
+                    psiManager.findFile(template)
+                else
+                    null
             )
         }
     }
