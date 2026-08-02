@@ -6,11 +6,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.intellij.openapi.ui.DialogWrapper
 import com.tecknobit.envui.I18nMessageBundle
 import com.tecknobit.envui.generated.resources.Res
+import com.tecknobit.envui.generated.resources.manage_template
 import com.tecknobit.envui.generated.resources.source
 import com.tecknobit.envui.generated.resources.template
 import com.tecknobit.envui.ui.helpers.StringResourcesProvider
@@ -71,7 +73,7 @@ class EnvSourceReaderDialog(
                         AnimatedContent(
                             modifier = Modifier
                                 .padding(
-                                    all = 16.dp
+                                    top = 16.dp
                                 ),
                             targetState = workingOnSource.value
                         ) { workingOnSource ->
@@ -123,18 +125,19 @@ class EnvSourceReaderDialog(
 
     @Composable
     private fun TemplateContent() {
-        val sourceTemplate by dialogState.template
+        val sourceTemplate = dialogState.template
         LaunchedEffect(envSource) {
             viewModel.mapSourceTemplate()
         }
 
         Column {
             Text(
-                text = "Create template"
+                text = stringResource(Res.string.manage_template),
+                fontWeight = FontWeight.Bold
             )
 
             EnvTemplateFieldsEditor(
-                envSourceTemplate = sourceTemplate,
+                envSourceTemplate = sourceTemplate.value,
                 onSave = { newTemplate ->
 
                 }
