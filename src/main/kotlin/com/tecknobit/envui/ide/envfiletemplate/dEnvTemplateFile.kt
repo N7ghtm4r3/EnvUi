@@ -1,14 +1,11 @@
 package com.tecknobit.envui.ide.envfiletemplate
 
-import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.psi.FileViewProvider
-import com.intellij.psi.util.PsiTreeUtil
-import com.tecknobit.envui.ide.envfile.Property
-import org.jetbrains.annotations.Unmodifiable
+import com.tecknobit.envui.ide.dEnvFileBase
 
 class dEnvTemplateFile(
     viewProvider: FileViewProvider,
-) : PsiFileBase(
+) : dEnvFileBase(
     viewProvider,
     dEnvTemplateLanguage
 ) {
@@ -20,12 +17,5 @@ class dEnvTemplateFile(
     }
 
     override fun getFileType() = dEnvTemplateFileType
-
-    fun properties(): @Unmodifiable Collection<Property> {
-        return PsiTreeUtil.findChildrenOfType(
-            this,
-            Property::class.java
-        )
-    }
 
 }

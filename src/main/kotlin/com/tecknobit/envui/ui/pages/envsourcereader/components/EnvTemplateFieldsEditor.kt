@@ -48,6 +48,8 @@ fun EnvTemplateFieldsEditor(
     onSave: (EnvSourceTemplate) -> Unit,
 ) {
     val fields = remember { mutableStateListOf<EnvTemplateEditorField>() }
+    val removedFields = remember { hashSetOf<String>() }
+
     LaunchedEffect(envSourceTemplate) {
         fields.clear()
 
@@ -82,7 +84,8 @@ fun EnvTemplateFieldsEditor(
                 ),
                 onSave = {
                     val newEnvSourceTemplate = EnvSourceTemplate(
-                        fields = fields.toEnvTemplateFields()
+                        fields = fields.toEnvTemplateFields(),
+                        removedFields = removedFields
                     )
 
                     onSave(newEnvSourceTemplate)
@@ -100,6 +103,8 @@ fun EnvTemplateFieldsEditor(
                 field = field,
                 onDelete = {
                     fields.removeIf { field.id == it.id }
+
+                    removedFields.add(field.key)
                 }
             )
         }

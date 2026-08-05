@@ -9,6 +9,8 @@ import com.tecknobit.envui.ui.pages.envsourcereader.data.EnvSourceTemplate
 import com.tecknobit.envui.ui.pages.envsourcereader.data.EnvTemplateField
 import com.tecknobit.envui.ui.pages.envsourcereader.states.EnvSourceReaderState
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
+import com.tecknobit.envui.util.updateKeysFromTemplate
+import com.tecknobit.envui.util.updateSourceFromTemplate
 import com.tecknobit.envui.util.writeKeys
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -56,9 +58,7 @@ class EnvSourceReaderViewModel(
 
         return runWriteAction {
             val template = directory.createFile(ENV_TEMPLATE_FILENAME) as dEnvTemplateFile
-            template.writeKeys(
-                keys = envSource.keys()
-            )
+            template.writeKeys()
 
             template
         }
@@ -72,6 +72,14 @@ class EnvSourceReaderViewModel(
                 template = template
             )
         }
+
+        envSource.psiEnvTemplateSource!!.updateKeysFromTemplate(
+            templateKeys = template.fields
+        )
+
+        envSource.psiEnvSource.updateSourceFromTemplate(
+            template = template
+        )
     }
 
 }
