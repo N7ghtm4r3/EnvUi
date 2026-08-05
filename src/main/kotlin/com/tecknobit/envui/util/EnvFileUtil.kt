@@ -35,17 +35,19 @@ fun dEnvFile.updateSourceFromTemplate(
     template: EnvSourceTemplate
 ) {
     val currentSourceProperties = properties()
-    val templateKeys = template.fields
-    val treadAsNegativeOffset = currentSourceProperties.size > templateKeys.size
+    val templateFields = template.fields
+    val treatAsNegativeOffset = currentSourceProperties.size > templateFields.size
     val removedKeys = template.removedFields
     var mappingOffset = 0
+    val updatedKeys = hashSetOf<String>()
 
     var content = buildString {
         currentSourceProperties.forEachIndexed { index, field ->
             val existingKey = field.keyEntry.text
 
             if(!removedKeys.contains(existingKey)) {
-                var entry = "${templateKeys[index + mappingOffset].key}="
+                val entryKey = templateFields[index + mappingOffset].key
+                var entry = "${entryKey}="
                 val valueEntry  = field.valueEntry
 
                 valueEntry?.let {
@@ -54,9 +56,9 @@ fun dEnvFile.updateSourceFromTemplate(
 
                 append(entry)
                 append("\n")
-                mappingOffset = 0
+                updatedKeys.add(entryKey)
             } else {
-                if(treadAsNegativeOffset)
+                if(treatAsNegativeOffset)
                     mappingOffset--
                 else
                     mappingOffset++
@@ -64,11 +66,16 @@ fun dEnvFile.updateSourceFromTemplate(
         }
     }
 
-    //TODO: START FROM CONSUMED KEYS
-    content += templateKeys.joinToString(
-        separator = "\n",
-        transform = { key -> "${key.key}=" }
-    )
+    content += buildString {
+        templateFields.forEach { templateField ->
+            val key = templateField.key
+
+            if(!updatedKeys.contains(key)) {
+                append("${key}=")
+                append("\n")
+            }
+        }
+    }
 
     writeContent(
         content = content

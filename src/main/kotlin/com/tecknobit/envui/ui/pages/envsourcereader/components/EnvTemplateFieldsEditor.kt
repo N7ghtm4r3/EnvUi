@@ -84,7 +84,9 @@ fun EnvTemplateFieldsEditor(
                 ),
                 onSave = {
                     val newEnvSourceTemplate = EnvSourceTemplate(
-                        fields = fields.toEnvTemplateFields(),
+                        fields = fields
+                            .removeDuplicates()
+                            .toEnvTemplateFields(),
                         removedFields = removedFields
                     )
 
@@ -129,6 +131,17 @@ private fun List<EnvTemplateEditorField>.toEnvTemplateFields(): List<EnvTemplate
             type = it.fieldType
         )
     }
+}
+
+private fun List<EnvTemplateEditorField>.removeDuplicates(): List<EnvTemplateEditorField> {
+    val sanitizedFields = mutableListOf<EnvTemplateEditorField>()
+    forEach { templateEditorField ->
+        val containsField = sanitizedFields.firstOrNull { templateEditorField.key == it.key } != null
+        if(!containsField)
+            sanitizedFields.add(templateEditorField)
+    }
+
+    return sanitizedFields
 }
 
 @Composable
