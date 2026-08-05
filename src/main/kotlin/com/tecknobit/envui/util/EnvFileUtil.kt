@@ -36,7 +36,6 @@ fun dEnvFile.updateSourceFromTemplate(
 ) {
     val currentSourceProperties = properties()
     val templateFields = template.fields
-    val treatAsNegativeOffset = currentSourceProperties.size > templateFields.size
     val removedKeys = template.removedFields
     var mappingOffset = 0
     val updatedKeys = hashSetOf<String>()
@@ -57,12 +56,8 @@ fun dEnvFile.updateSourceFromTemplate(
                 append(entry)
                 append("\n")
                 updatedKeys.add(entryKey)
-            } else {
-                if(treatAsNegativeOffset)
-                    mappingOffset--
-                else
-                    mappingOffset++
-            }
+            } else
+                mappingOffset--
         }
     }
 

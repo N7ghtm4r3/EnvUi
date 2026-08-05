@@ -33,6 +33,7 @@ private data class EnvTemplateEditorField(
     private val _key: String = "",
     private val _fieldType: EnvFieldType = EnvFieldType.ANY,
     val isFilled: Boolean = false,
+    val changed: MutableState<Boolean> = mutableStateOf(false)
 ) {
 
     var key by mutableStateOf(_key)
@@ -221,6 +222,7 @@ private fun TemplateFieldEntry(
                 horizontalAlignment = Alignment.End
             ) {
                 DeleteFieldButton(
+                    enabled = !field.changed.value,
                     onDelete = {
                         if (field.isFilled)
                             deleteField.value = true
@@ -242,6 +244,7 @@ private fun TemplateFieldEntry(
 private fun FieldKeyInput(
     field: EnvTemplateEditorField,
 ) {
+    val initialFieldKeyValue = remember(field.id) { field.key }
     var textFieldValue by remember {
         mutableStateOf(
             TextFieldValue(
@@ -258,6 +261,7 @@ private fun FieldKeyInput(
             textFieldValue = it
 
             field.key = it.text
+            field.changed.value = initialFieldKeyValue != it.text
         }
     )
 }
@@ -296,9 +300,11 @@ private fun FieldTypeSelector(
 
 @Composable
 private fun DeleteFieldButton(
+    enabled: Boolean,
     onDelete: () -> Unit,
 ) {
     IconButton(
+        enabled = enabled,
         onClick = onDelete
     ) {
         Icon(
