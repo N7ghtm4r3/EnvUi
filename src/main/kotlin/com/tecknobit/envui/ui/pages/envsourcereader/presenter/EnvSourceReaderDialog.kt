@@ -107,7 +107,11 @@ class EnvSourceReaderDialog(
                 ),
                 SegmentedControlButtonData(
                     selected = !workingOnSource.value,
-                    onSelect = { workingOnSource.value = false },
+                    onSelect = {
+                        viewModel.mapSourceTemplate()
+
+                        workingOnSource.value = false
+                    },
                     content = {
                         Text(
                             text = stringResource(Res.string.template)
@@ -129,10 +133,6 @@ class EnvSourceReaderDialog(
     private fun TemplateContent(
         dialogState: EnvSourceReaderState
     ) {
-        LaunchedEffect(envSource) {
-            viewModel.mapSourceTemplate()
-        }
-
         Column {
             Text(
                 text = stringResource(Res.string.manage_template),

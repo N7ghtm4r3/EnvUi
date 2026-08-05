@@ -13,6 +13,12 @@ class dEnvTemplateFile(
     dEnvTemplateLanguage
 ) {
 
+    companion object {
+
+        const val ENV_TEMPLATE_FILENAME = ".env.template"
+
+    }
+
     override fun getFileType() = dEnvTemplateFileType
 
     fun properties(): @Unmodifiable Collection<Property> {
