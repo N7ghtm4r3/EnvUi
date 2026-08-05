@@ -23,6 +23,6 @@ data class EnvSource(
 
     val psiEnvSource = _psiSource as dEnvFile
 
-    val psiEnvTemplateSource = _templateSource as dEnvTemplateFile?
+    var psiEnvTemplateSource = _templateSource as dEnvTemplateFile?
 
 }

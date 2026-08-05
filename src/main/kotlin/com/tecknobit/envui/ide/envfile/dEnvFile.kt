@@ -21,4 +21,11 @@ class dEnvFile(
         )
     }
 
+    fun keys(): @Unmodifiable Collection<KeyEntry> {
+        return PsiTreeUtil.findChildrenOfType(
+            this,
+            KeyEntry::class.java
+        )
+    }
+
 }
