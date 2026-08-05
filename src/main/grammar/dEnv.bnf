@@ -4,8 +4,8 @@
   psiPackage="com.tecknobit.envui.ide.envfile"
   psiImplPackage="com.tecknobit.envui.ide.envfile.impl"
   elementTypeHolderClass="com.tecknobit.envui.ide.envfile.EnvGeneratedTypes"
-  elementTypeClass="com.tecknobit.envui.ide.envfile.dEnvElementType"
-  tokenTypeClass="com.tecknobit.envui.ide.envfile.dEnvTokenType"
+  elementTypeClass="com.tecknobit.envui.ide.languages.envfile.dEnvElementType"
+  tokenTypeClass="com.tecknobit.envui.ide.languages.envfile.dEnvTokenType"
 
   tokens = [
     EQUALS='='

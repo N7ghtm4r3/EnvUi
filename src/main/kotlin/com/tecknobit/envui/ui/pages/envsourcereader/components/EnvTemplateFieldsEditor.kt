@@ -8,15 +8,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.intellij.ui.JBColor
 import com.tecknobit.envui.generated.resources.*
 import com.tecknobit.envui.ui.enums.EnvFieldType
+import com.tecknobit.envui.ui.enums.EnvFieldType.ANY
 import com.tecknobit.envui.ui.pages.envsourcereader.data.EnvSourceTemplate
 import com.tecknobit.envui.ui.pages.envsourcereader.data.EnvTemplateField
 import com.tecknobit.envui.ui.theme.EnvUiTheme
@@ -31,7 +34,7 @@ import org.jetbrains.jewel.ui.component.items as menuItems
 private data class EnvTemplateEditorField(
     val id: Long = Random.nextLong(),
     private val _key: String = "",
-    private val _fieldType: EnvFieldType = EnvFieldType.ANY,
+    private val _fieldType: EnvFieldType = ANY,
     val isFilled: Boolean = false,
     val changed: MutableState<Boolean> = mutableStateOf(false)
 ) {
@@ -257,6 +260,9 @@ private fun FieldKeyInput(
         modifier = Modifier
             .fillMaxWidth(),
         value = textFieldValue,
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Next
+        ),
         onValueChange = {
             textFieldValue = it
 

@@ -1,4 +1,4 @@
-package com.tecknobit.envui.ide.envfiletemplate
+package com.tecknobit.envui.ide.languages.envfiletemplate
 
 import com.intellij.lang.Language
 

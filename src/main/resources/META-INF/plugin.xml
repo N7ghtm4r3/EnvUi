@@ -25,6 +25,9 @@
     <!-- Extensions defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
+        <postStartupActivity
+                implementation="com.tecknobit.envui.ide.activities.GitignoreInitializationActivity"/>
+
         <toolWindow
                 id="EnvUi"
                 factoryClass="com.tecknobit.envui.ui.pages.envuiwindow.presenter.EnvUiWindow"
@@ -34,23 +37,23 @@
 
         <lang.parserDefinition
                 language="dEnv"
-                implementationClass="com.tecknobit.envui.ide.envfile.dEnvParserDefinition"/>
+                implementationClass="com.tecknobit.envui.ide.languages.envfile.dEnvParserDefinition"/>
 
         <fileType
                 name="dEnv"
                 language="dEnv"
-                implementationClass="com.tecknobit.envui.ide.envfile.dEnvFileType"
+                implementationClass="com.tecknobit.envui.ide.languages.envfile.dEnvFileType"
                 fieldName="INSTANCE"
                 patterns="*.env;.env"/>
 
         <lang.parserDefinition
                 language="dEnvTemplate"
-                implementationClass="com.tecknobit.envui.ide.envfiletemplate.dEnvTemplateParserDefinition"/>
+                implementationClass="com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateParserDefinition"/>
 
         <fileType
                 name="dEnvTemplate"
                 language="dEnvTemplate"
-                implementationClass="com.tecknobit.envui.ide.envfiletemplate.dEnvTemplateFileType"
+                implementationClass="com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFileType"
                 fieldName="INSTANCE"
                 patterns=".env.template"/>
     </extensions>

@@ -1,8 +1,8 @@
 package com.tecknobit.envui.util
 
-import com.tecknobit.envui.ide.dEnvFileBase
-import com.tecknobit.envui.ide.envfile.dEnvFile
-import com.tecknobit.envui.ide.envfiletemplate.dEnvTemplateFile
+import com.tecknobit.envui.ide.languages.dEnvFileBase
+import com.tecknobit.envui.ide.languages.envfile.dEnvFile
+import com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFile
 import com.tecknobit.envui.ui.pages.envsourcereader.data.EnvSourceTemplate
 import com.tecknobit.envui.ui.pages.envsourcereader.data.EnvTemplateField
 

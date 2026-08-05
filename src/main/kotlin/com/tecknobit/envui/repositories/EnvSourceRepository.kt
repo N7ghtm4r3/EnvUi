@@ -7,8 +7,8 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
-import com.tecknobit.envui.ide.envfile.dEnvFileType
-import com.tecknobit.envui.ide.envfiletemplate.dEnvTemplateFileType
+import com.tecknobit.envui.ide.languages.envfile.dEnvFileType
+import com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFileType
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 
 class EnvSourceRepository(

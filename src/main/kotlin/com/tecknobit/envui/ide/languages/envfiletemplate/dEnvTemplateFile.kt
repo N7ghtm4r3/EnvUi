@@ -1,7 +1,7 @@
-package com.tecknobit.envui.ide.envfiletemplate
+package com.tecknobit.envui.ide.languages.envfiletemplate
 
 import com.intellij.psi.FileViewProvider
-import com.tecknobit.envui.ide.dEnvFileBase
+import com.tecknobit.envui.ide.languages.dEnvFileBase
 
 class dEnvTemplateFile(
     viewProvider: FileViewProvider,

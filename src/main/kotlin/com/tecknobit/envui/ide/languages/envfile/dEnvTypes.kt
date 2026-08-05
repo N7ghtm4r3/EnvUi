@@ -1,4 +1,4 @@
-package com.tecknobit.envui.ide.envfile
+package com.tecknobit.envui.ide.languages.envfile
 
 import com.intellij.psi.tree.IFileElementType
 

@@ -1,4 +1,4 @@
-package com.tecknobit.envui.ide.envfiletemplate
+package com.tecknobit.envui.ide.languages.envfile
 
 import com.intellij.openapi.fileTypes.LanguageFileType
 import com.intellij.openapi.util.NlsContexts
@@ -6,18 +6,18 @@ import com.intellij.openapi.util.NlsSafe
 import org.jetbrains.annotations.NonNls
 import javax.swing.Icon
 
-object dEnvTemplateFileType : LanguageFileType(dEnvTemplateLanguage) {
+object dEnvFileType : LanguageFileType(dEnvLanguage) {
 
     override fun getName(): @NonNls String {
-        return "dEnvTemplate"
+        return "dEnv"
     }
 
     override fun getDescription(): @NlsContexts.Label String {
-        return "Template for environment variables across project"
+        return "Environment variables across project"
     }
 
     override fun getDefaultExtension(): @NlsSafe String {
-        return "template"
+        return "env"
     }
 
     override fun getIcon(): Icon? {

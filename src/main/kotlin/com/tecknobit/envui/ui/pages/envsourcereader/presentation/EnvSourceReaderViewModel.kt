@@ -2,8 +2,8 @@ package com.tecknobit.envui.ui.pages.envsourcereader.presentation
 
 import androidx.lifecycle.ViewModel
 import com.intellij.openapi.application.runWriteAction
-import com.tecknobit.envui.ide.envfiletemplate.dEnvTemplateFile
-import com.tecknobit.envui.ide.envfiletemplate.dEnvTemplateFile.Companion.ENV_TEMPLATE_FILENAME
+import com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFile
+import com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFile.Companion.ENV_TEMPLATE_FILENAME
 import com.tecknobit.envui.ui.enums.EnvFieldType
 import com.tecknobit.envui.ui.pages.envsourcereader.data.EnvSourceTemplate
 import com.tecknobit.envui.ui.pages.envsourcereader.data.EnvTemplateField

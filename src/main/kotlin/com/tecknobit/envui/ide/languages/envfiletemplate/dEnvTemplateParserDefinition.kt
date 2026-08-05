@@ -1,4 +1,4 @@
-package com.tecknobit.envui.ide.envfile
+package com.tecknobit.envui.ide.languages.envfiletemplate
 
 import com.intellij.lang.ASTNode
 import com.intellij.lang.ParserDefinition
@@ -10,8 +10,11 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.tree.TokenSet
+import com.tecknobit.envui.ide.envfile.EnvGeneratedTypes
+import com.tecknobit.envui.ide.envfile.EnvParser
+import com.tecknobit.envui.ide.languages.envfile.dEnvLexerAdapter
 
-class dEnvParserDefinition : ParserDefinition {
+class dEnvTemplateParserDefinition : ParserDefinition {
 
     override fun createLexer(project: Project?): Lexer {
         return dEnvLexerAdapter()
@@ -22,7 +25,7 @@ class dEnvParserDefinition : ParserDefinition {
     }
 
     override fun getFileNodeType(): IFileElementType {
-        return dEnvTypes.FILE
+        return dEnvTemplateTypes.FILE
     }
 
     override fun getCommentTokens(): TokenSet {
@@ -45,7 +48,7 @@ class dEnvParserDefinition : ParserDefinition {
     override fun createFile(
         fileViewProvider: FileViewProvider,
     ): PsiFile {
-        return dEnvFile(
+        return dEnvTemplateFile(
             viewProvider = fileViewProvider
         )
     }

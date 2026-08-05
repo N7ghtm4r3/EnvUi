@@ -4,8 +4,8 @@ import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiFile
-import com.tecknobit.envui.ide.envfile.dEnvFile
-import com.tecknobit.envui.ide.envfiletemplate.dEnvTemplateFile
+import com.tecknobit.envui.ide.languages.envfile.dEnvFile
+import com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFile
 
 data class EnvSource(
     val project: Project,

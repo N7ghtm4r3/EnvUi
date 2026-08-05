@@ -1,4 +1,4 @@
-package com.tecknobit.envui.ide
+package com.tecknobit.envui.ide.languages
 
 import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.lang.Language
