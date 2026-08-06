@@ -9,6 +9,9 @@ object EnvUiTheme {
     val primary: Color
         get() = nativeColorFromUi("Component.focusColor")
 
+    val surface: Color
+        get() = nativeColorFromUi("EditorPane.background")
+
     val border: Color
         get() = nativeColorFromUi("Component.borderColor")
 

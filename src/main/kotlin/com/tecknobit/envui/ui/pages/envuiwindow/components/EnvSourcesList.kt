@@ -10,13 +10,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.tecknobit.envui.ui.components.EmptyState
-import com.tecknobit.envui.ui.pages.envsourceupsertdialog.presenter.EnvSourceUpsertDialog
-import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 import com.tecknobit.envui.generated.resources.Res
 import com.tecknobit.envui.generated.resources.envui_no_sources_action_message
 import com.tecknobit.envui.generated.resources.envui_no_sources_message
 import com.tecknobit.envui.generated.resources.loading_sources
+import com.tecknobit.envui.ui.components.EmptyState
+import com.tecknobit.envui.ui.pages.envsourceupsert.presenter.EnvSourceUpsertDialog
+import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.jewel.ui.component.CircularProgressIndicatorBig
 import org.jetbrains.jewel.ui.component.DefaultSlimButton
@@ -96,7 +96,6 @@ private fun NoSourcesAvailable(
     EmptyState(
         modifier = modifier,
         icon = AllIconsKeys.Actions.Minimap,
-        iconSize = 75.dp,
         title = Res.string.envui_no_sources_message,
         action = {
             DefaultSlimButton(

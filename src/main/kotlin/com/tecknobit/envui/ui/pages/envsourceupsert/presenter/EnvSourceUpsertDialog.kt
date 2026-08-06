@@ -1,4 +1,4 @@
-package com.tecknobit.envui.ui.pages.envsourceupsertdialog.presenter
+package com.tecknobit.envui.ui.pages.envsourceupsert.presenter
 
 import com.intellij.openapi.ui.DialogWrapper
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
@@ -11,6 +11,10 @@ class EnvSourceUpsertDialog(
 ) : DialogWrapper(
     true
 ) {
+
+    private val viewModel = EnvSourceUpsertDialog(
+        envSource = envSource
+    )
 
     init {
         super.init()

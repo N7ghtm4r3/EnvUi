@@ -9,85 +9,69 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.intellij.openapi.ui.DialogWrapper
 import com.tecknobit.envui.I18nMessageBundle
-import com.tecknobit.envui.generated.resources.Res
-import com.tecknobit.envui.generated.resources.manage_template
-import com.tecknobit.envui.generated.resources.source
-import com.tecknobit.envui.generated.resources.template
+import com.tecknobit.envui.generated.resources.*
+import com.tecknobit.envui.ui.components.EnvUiDialog
 import com.tecknobit.envui.ui.helpers.StringResourcesProvider
+import com.tecknobit.envui.ui.pages.envsourcereader.components.EnvSourceContent
 import com.tecknobit.envui.ui.pages.envsourcereader.components.EnvTemplateFieldsEditor
 import com.tecknobit.envui.ui.pages.envsourcereader.presentation.EnvSourceReaderViewModel
 import com.tecknobit.envui.ui.pages.envsourcereader.states.EnvSourceReaderState
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.jewel.bridge.compose
 import org.jetbrains.jewel.ui.component.SegmentedControl
 import org.jetbrains.jewel.ui.component.SegmentedControlButtonData
 import org.jetbrains.jewel.ui.component.Text
-import java.awt.Dimension
-import javax.swing.JComponent
 
 class EnvSourceReaderDialog(
     private val envSource: EnvSource,
-) : DialogWrapper(
-    true
+) : EnvUiDialog<EnvSourceReaderViewModel>(
+    viewModel = EnvSourceReaderViewModel(
+        envSource = envSource
+    ),
+    title = I18nMessageBundle.message(
+        key = "envui.dialog.read.env",
+        envSource.module!!.name
+    )
 ) {
 
-    private val viewModel = EnvSourceReaderViewModel(
-        envSource = envSource
-    )
+    @Composable
+    override fun DialogContent() {
+        val dialogState by viewModel.dialogState.collectAsStateWithLifecycle()
 
-    init {
-        title = I18nMessageBundle.message(
-            key = "envui.dialog.read.env",
-            envSource.module!!.name
-        )
+        StringResourcesProvider(
+            context = EnvSourceReaderDialog::class,
+            content = {
+                val workingOnSource = remember { mutableStateOf(true) }
 
-        super.init()
-    }
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    TabControls(
+                        workingOnSource = workingOnSource
+                    )
 
-    override fun createCenterPanel(): JComponent {
-        return compose(
-            focusOnClickInside = true,
-            config = {
-                preferredSize = Dimension(600, 500)
-            }
-        ) {
-            val dialogState by viewModel.dialogState.collectAsStateWithLifecycle()
-
-            StringResourcesProvider(
-                context = EnvSourceReaderDialog::class,
-                content = {
-                    val workingOnSource = remember { mutableStateOf(true) }
-
-                    Column(
+                    AnimatedContent(
                         modifier = Modifier
-                            .fillMaxSize()
-                    ) {
-                        TabControls(
-                            workingOnSource = workingOnSource
-                        )
-
-                        AnimatedContent(
-                            modifier = Modifier
-                                .padding(
-                                    top = 16.dp
-                                ),
-                            targetState = workingOnSource.value
-                        ) { workingOnSource ->
-                            if (workingOnSource)
-                                SourceContent()
-                            else {
-                                TemplateContent(
-                                    dialogState = dialogState
-                                )
-                            }
+                            .padding(
+                                top = 16.dp
+                            ),
+                        targetState = workingOnSource.value
+                    ) { isWorkingOnSource ->
+                        if (isWorkingOnSource) {
+                            SourceContent(
+                                workingOnSource = workingOnSource
+                            )
+                        } else {
+                            TemplateContent(
+                                dialogState = dialogState
+                            )
                         }
                     }
                 }
-            )
-        }
+            }
+        )
     }
 
     @Composable
@@ -123,10 +107,22 @@ class EnvSourceReaderDialog(
     }
 
     @Composable
-    private fun SourceContent() {
-        Text(
-            text = "g"
-        )
+    private fun SourceContent(
+        workingOnSource: MutableState<Boolean>
+    ) {
+        Column {
+            Text(
+                text = stringResource(Res.string.manage_source),
+                fontWeight = FontWeight.Bold
+            )
+
+            EnvSourceContent(
+                envSource = envSource,
+                onEmptyAction = {
+                    workingOnSource.value = false
+                }
+            )
+        }
     }
 
     @Composable

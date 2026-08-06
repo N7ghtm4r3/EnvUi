@@ -22,6 +22,7 @@ import com.tecknobit.envui.ui.utils.toComposeColor
 import com.tecknobit.envui.ui.utils.toDateString
 import com.tecknobit.envui.util.revealInProjectView
 import com.tecknobit.envui.generated.resources.*
+import com.tecknobit.envui.ui.theme.CardShape
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.jewel.ui.component.Icon
 import org.jetbrains.jewel.ui.component.IconButton
@@ -33,9 +34,7 @@ import org.jetbrains.jewel.ui.icons.AllIconsKeys
 fun EnvSourceCard(
     modifier: Modifier = Modifier,
     envSource: EnvSource,
-    shape: Shape = RoundedCornerShape(
-        size = 12.dp
-    ),
+    shape: Shape = CardShape,
     onClick: (() -> Unit)? = null,
 ) {
     Box(

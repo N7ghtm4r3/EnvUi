@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.intellij.ui.JBColor
 import com.tecknobit.envui.generated.resources.*
+import com.tecknobit.envui.ui.components.LazyListScaffold
 import com.tecknobit.envui.ui.enums.EnvFieldType
 import com.tecknobit.envui.ui.enums.EnvFieldType.ANY
 import com.tecknobit.envui.ui.pages.envsourcereader.data.EnvSourceTemplate
@@ -68,51 +69,70 @@ fun EnvTemplateFieldsEditor(
         }
     }
 
-    LazyColumn(
-        modifier = modifier
-            .animateContentSize(),
-        contentPadding = PaddingValues(
-            vertical = 16.dp,
-            horizontal = 2.dp
-        ),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        stickyHeader {
-            Actions(
-                onAdd = {
-                    fields.add(EnvTemplateEditorField())
-                },
-                onSaveEnabled = isTemplateChanged(
-                    initialTemplate = envSourceTemplate,
-                    draftEditorFields = fields
-                ),
-                onSave = {
-                    val newEnvSourceTemplate = EnvSourceTemplate(
-                        fields = fields
-                            .removeDuplicates()
-                            .toEnvTemplateFields(),
-                        removedFields = removedFields
-                    )
-
-                    onSave(newEnvSourceTemplate)
+    LazyListScaffold(
+        items = fields,
+        onEmpty = {
+            NoEnvEntryAvailable(
+                modifier = Modifier
+                    .fillMaxSize(),
+                action = {
+                    DefaultButton(
+                        onClick = { fields.add(EnvTemplateEditorField()) }
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.add)
+                        )
+                    }
                 }
             )
         }
+    ) {
+        LazyColumn(
+            modifier = modifier
+                .animateContentSize(),
+            contentPadding = PaddingValues(
+                vertical = 16.dp,
+                horizontal = 2.dp
+            ),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            stickyHeader {
+                Actions(
+                    onAdd = {
+                        fields.add(EnvTemplateEditorField())
+                    },
+                    onSaveEnabled = isTemplateChanged(
+                        initialTemplate = envSourceTemplate,
+                        draftEditorFields = fields
+                    ),
+                    onSave = {
+                        val newEnvSourceTemplate = EnvSourceTemplate(
+                            fields = fields
+                                .removeDuplicates()
+                                .toEnvTemplateFields(),
+                            removedFields = removedFields
+                        )
 
-        items(
-            items = fields,
-            key = { field -> field.id }
-        ) { field ->
-            TemplateFieldEntry(
-                modifier = Modifier
-                    .animateItem(),
-                field = field,
-                onDelete = {
-                    fields.removeIf { field.id == it.id }
+                        onSave(newEnvSourceTemplate)
+                    }
+                )
+            }
 
-                    removedFields.add(field.key)
-                }
-            )
+            items(
+                items = fields,
+                key = { field -> field.id }
+            ) { field ->
+                TemplateFieldEntry(
+                    modifier = Modifier
+                        .animateItem(),
+                    field = field,
+                    onDelete = {
+                        fields.removeIf { field.id == it.id }
+
+                        removedFields.add(field.key)
+                    }
+                )
+            }
         }
     }
 }

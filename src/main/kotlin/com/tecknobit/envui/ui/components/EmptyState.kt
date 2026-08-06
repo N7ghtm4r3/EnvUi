@@ -20,7 +20,7 @@ import org.jetbrains.jewel.ui.icon.IconKey
 fun EmptyState(
     modifier: Modifier = Modifier,
     icon: IconKey,
-    iconSize: Dp = 50.dp,
+    iconSize: Dp = 75.dp,
     title: StringResource,
     action: @Composable (() -> Unit)? = null,
 ) {

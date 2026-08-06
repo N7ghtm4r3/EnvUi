@@ -19,4 +19,6 @@
     <string name="confirm">Confirm</string>
     <string name="dismiss">Dismiss</string>
     <string name="save">Save</string>
+    <string name="manage_source">Manage env source</string>
+    <string name="no_entry_available">No entry available</string>
 </resources>
