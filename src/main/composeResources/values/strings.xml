@@ -21,4 +21,5 @@
     <string name="save">Save</string>
     <string name="manage_source">Manage env source</string>
     <string name="no_entry_available">No entry available</string>
+    <string name="enter_env_value_placeholder">Enter env value</string>
 </resources>

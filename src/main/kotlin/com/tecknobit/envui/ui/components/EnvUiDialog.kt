@@ -6,6 +6,7 @@ import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.util.NlsContexts.DialogTitle
 import org.jetbrains.jewel.bridge.compose
 import java.awt.Dimension
+import javax.swing.Action
 import javax.swing.JComponent
 
 abstract class EnvUiDialog<V: ViewModel>(
@@ -32,6 +33,10 @@ abstract class EnvUiDialog<V: ViewModel>(
                 DialogContent()
             }
         )
+    }
+
+    override fun createActions(): Array<out Action?> {
+        return emptyArray()
     }
 
     @Composable
