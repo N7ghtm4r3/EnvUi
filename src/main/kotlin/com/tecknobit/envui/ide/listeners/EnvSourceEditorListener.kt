@@ -19,26 +19,37 @@ class EnvSourceEditorListener : FileEditorManagerListener {
         val envSource = file.toEnvSource(
             project = source.project
         )
-        val envSourcePreferences = EnvSourcePreferencesManager.retrieveEnvSourcePreferences(
+        val preferences = EnvSourcePreferencesManager.retrieveEnvSourcePreferences(
             source = file
         )
 
-        envSourcePreferences.properties.forEach { property ->
+        preferences.properties.forEach { property ->
+            val key = property.key
             val propertyLine = envSource.psiEnvSource.findPropertyLine(
-                key = property.key
+                key = key
             )
 
-            if(property.isCritical) {
-                addCriticalEnvMark(
+            if(property.isCritical && envSource.isPropertyMarkedAsCritical(key)) {
+                val highlighter = addCriticalEnvMark(
                     editor = editor,
                     line = propertyLine
                 )
+
+                envSource.markPropertyAsCritical(
+                    key = key,
+                    highlighter = highlighter
+                )
             }
 
-            if(property.requireResetOnClose) {
-                addResetOnCloseMark(
+            if(property.requireResetOnClose && !envSource.isPropertyMarkedAsCritical(key)) {
+                val highlighter = addResetOnCloseMark(
                     editor = editor,
                     line = propertyLine
+                )
+
+                envSource.markPropertyAsResettableOnClose(
+                    key = key,
+                    highlighter = highlighter
                 )
             }
         }

@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.intellij.ui.JBColor
 import com.tecknobit.envui.generated.resources.*
+import com.tecknobit.envui.helpers.EnvSourcePreferencesManager
 import com.tecknobit.envui.ide.envfile.Property
 import com.tecknobit.envui.ui.components.Chip
 import com.tecknobit.envui.ui.components.DebouncedInput
@@ -152,6 +153,11 @@ private fun Actions(
     envSource: EnvSource,
     property: Property
 ) {
+    val preferences = EnvSourcePreferencesManager.retrievePropertyPreferences(
+        source = envSource.source,
+        property = property
+    )
+
     Row (
         modifier = Modifier
             .padding(
@@ -164,6 +170,7 @@ private fun Actions(
             icon = AllIconsKeys.General.InspectionsWarning,
             text = Res.string.mark_as_critical_to_change,
             color = EnvUiTheme.error,
+            isClicked = preferences.isCritical,
             onClick = { isSelected ->
                 envSource.psiEnvSource.toggleMarkAsCritical(
                     key = property.keyEntry.text,
@@ -176,6 +183,7 @@ private fun Actions(
             icon = AllIconsKeys.General.Reset,
             text = Res.string.reset_value_on_close,
             color = JBColor.gray.toComposeColor(),
+            isClicked = preferences.requireResetOnClose,
             onClick = { isSelected ->
                 envSource.psiEnvSource.toggleResetOnClose(
                     key = property.keyEntry.text,

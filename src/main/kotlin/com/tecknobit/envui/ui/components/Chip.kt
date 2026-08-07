@@ -45,10 +45,11 @@ fun Chip(
     shape: Shape = DefaultChipShape,
     color: Color = EnvUiTheme.primary,
     width: Dp = 50.dp,
+    isClicked: Boolean = false,
     onClick: (Boolean) -> Unit,
 ) {
     val hint = stringResource(text)
-    var clicked by rememberSaveable { mutableStateOf(false) }
+    var clicked by rememberSaveable { mutableStateOf(isClicked) }
     val componentColor = remember(clicked) {
         color.copy(
             alpha = if(clicked)
