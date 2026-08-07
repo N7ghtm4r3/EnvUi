@@ -54,7 +54,7 @@ abstract class dEnvFileBase(
         val commentEntry = property.commentEntry
         val commentContent = comment.resolveCommentText()
 
-        workOnDocument { document ->
+        commitOnDocument { document ->
             if(commentEntry == null) {
                 val propertyLine = document.getLineNumber(
                     property.textOffset
@@ -100,22 +100,40 @@ abstract class dEnvFileBase(
         return property
     }
 
-    protected fun workOnDocument(
+    protected fun workWithDocument(
+        onWork: (Document) -> Unit
+    ) {
+        provideDocument { manager, document ->
+            document?.let {
+                onWork(document)
+            }
+        }
+    }
+
+    protected fun commitOnDocument(
         onWork: (Document) -> Unit
     ) {
         invokeLater(
             modalityState = ModalityState.current()
         ) {
-            val documentManager = PsiDocumentManager.getInstance(project)
-            val document = documentManager.getDocument(this)
-
-            document?.let {
-                WriteCommandAction.runWriteCommandAction(project) {
-                    onWork(document)
-                    documentManager.commitDocument(document)
+            provideDocument { manager, document ->
+                document?.let {
+                    WriteCommandAction.runWriteCommandAction(project) {
+                        onWork(document)
+                        manager.commitDocument(document)
+                    }
                 }
             }
         }
+    }
+
+    protected fun provideDocument(
+        onDocumentProvided: (PsiDocumentManager, Document?) -> Unit
+    ) {
+        val documentManager = PsiDocumentManager.getInstance(project)
+        val document = documentManager.getDocument(this)
+
+        onDocumentProvided(documentManager, document)
     }
 
 }

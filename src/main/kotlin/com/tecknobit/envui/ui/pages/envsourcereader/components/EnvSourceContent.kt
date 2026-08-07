@@ -165,7 +165,7 @@ private fun Actions(
             text = Res.string.mark_as_critical_to_change,
             color = EnvUiTheme.error,
             onClick = { isSelected ->
-                envSource.psiEnvSource.handleCriticalityMark(
+                envSource.psiEnvSource.toggleMarkAsCritical(
                     key = property.keyEntry.text,
                     isMarked = isSelected
                 )
@@ -177,7 +177,7 @@ private fun Actions(
             text = Res.string.reset_value_on_close,
             color = JBColor.gray.toComposeColor(),
             onClick = { isSelected ->
-                envSource.psiEnvSource.handleResetOnCloseMark(
+                envSource.psiEnvSource.toggleResetOnClose(
                     key = property.keyEntry.text,
                     isMarked = isSelected
                 )
