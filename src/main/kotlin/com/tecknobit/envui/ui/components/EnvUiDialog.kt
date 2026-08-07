@@ -36,7 +36,7 @@ abstract class EnvUiDialog<V: ViewModel>(
     }
 
     override fun createActions(): Array<out Action?> {
-        return emptyArray()
+        return arrayOf(super.okAction)
     }
 
     @Composable

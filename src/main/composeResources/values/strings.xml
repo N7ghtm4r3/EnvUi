@@ -22,4 +22,6 @@
     <string name="manage_source">Manage env source</string>
     <string name="no_entry_available">No entry available</string>
     <string name="enter_env_value_placeholder">Enter env value</string>
+    <string name="mark_as_critical_to_change">Mark as critical and warn on session close</string>
+    <string name="reset_value_on_close">Restore the initial value on session close</string>
 </resources>

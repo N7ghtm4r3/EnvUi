@@ -1,10 +1,4 @@
 package com.tecknobit.envui.util
-import com.intellij.openapi.command.WriteCommandAction
-import com.intellij.openapi.editor.Document
-import com.intellij.openapi.util.TextRange
-import com.intellij.psi.PsiDocumentManager
-import com.tecknobit.envui.ide.envfile.EnvGeneratedTypes
-import com.tecknobit.envui.ide.envfile.Property
 import com.tecknobit.envui.ide.languages.dEnvFileBase
 import com.tecknobit.envui.ide.languages.envfile.dEnvFile
 import com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFile
@@ -79,64 +73,5 @@ fun dEnvFile.updateSourceFromTemplate(
 
     writeContent(
         content = content
-    )
-}
-
-fun dEnvFile.upsertValue(
-    property: Property,
-    value: String
-) {
-    val currentValueEntry = property.valueEntry
-    val currentValue = currentValueEntry?.text ?: ""
-    if(currentValue == value)
-        return
-
-    val documentManager = PsiDocumentManager.getInstance(project)
-    val document = documentManager.getDocument(this)
-    document?.let {
-        WriteCommandAction.runWriteCommandAction(project) {
-            if(currentValueEntry == null) {
-                val equalsNode = property.node.findChildByType(
-                    EnvGeneratedTypes.EQUALS
-                )
-
-                equalsNode?.let {
-                    document.insertValue(
-                        afterEqualOffset = equalsNode.textRange!!.endOffset,
-                        value = value
-                    )
-                }
-            } else {
-                val currentValueTextRange = currentValueEntry.textRange
-
-                document.updatePropertyValue(
-                    currentValueTextRange = currentValueTextRange,
-                    newValue = value
-                )
-            }
-
-            documentManager.commitDocument(document)
-        }
-    }
-}
-
-private fun Document.updatePropertyValue(
-    currentValueTextRange: TextRange,
-    newValue: String
-) {
-    replaceString(
-        currentValueTextRange.startOffset,
-        currentValueTextRange.endOffset,
-        newValue
-    )
-}
-
-private fun Document.insertValue(
-    afterEqualOffset: Int,
-    value: String
-) {
-    insertString(
-        afterEqualOffset,
-        value
     )
 }

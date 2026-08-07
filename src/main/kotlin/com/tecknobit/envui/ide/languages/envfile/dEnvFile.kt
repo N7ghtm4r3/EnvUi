@@ -1,11 +1,9 @@
 package com.tecknobit.envui.ide.languages.envfile
 
-import com.intellij.openapi.application.ModalityState
-import com.intellij.openapi.application.invokeLater
 import com.intellij.psi.FileViewProvider
+import com.tecknobit.envui.ide.envfile.EnvGeneratedTypes
 import com.tecknobit.envui.ide.envfile.Property
 import com.tecknobit.envui.ide.languages.dEnvFileBase
-import com.tecknobit.envui.util.upsertValue
 
 class dEnvFile(
     viewProvider: FileViewProvider,
@@ -22,25 +20,64 @@ class dEnvFile(
     ) {
         val property = findPropertyByKey(
             key = key
-        )
-        if(property == null)
-            throw IllegalArgumentException("No property associated with that key")
+        )!!
 
-        invokeLater(
-            modalityState = ModalityState.current()
-        ) {
-            upsertValue(
-                property = property,
-                value = value
-            )
-        }
+        upsertValue(
+            property = property,
+            value = value
+        )
     }
 
-    private fun findPropertyByKey(
-        key: String
-    ): Property? {
-        return properties().firstOrNull { property ->
-            property.keyEntry.text == key
+    fun handleCriticalityMark(
+        key: String,
+        isMarked: Boolean
+    ) {
+        addCommentOnProperty(
+            key = key,
+            comment = "⚠\uFE0F"
+        )
+    }
+
+    fun handleResetOnCloseMark(
+        key: String,
+        isMarked: Boolean
+    ) {
+        addCommentOnProperty(
+            key = key,
+            comment = "\uD83D\uDD04"
+        )
+    }
+
+    private fun dEnvFile.upsertValue(
+        property: Property,
+        value: String
+    ) {
+        val currentValueEntry = property.valueEntry
+        val currentValue = currentValueEntry?.text ?: ""
+        if(currentValue == value)
+            return
+
+        workOnDocument { document ->
+            if(currentValueEntry == null) {
+                val equalsNode = property.node.findChildByType(
+                    EnvGeneratedTypes.EQUALS
+                )
+
+                equalsNode?.let {
+                    document.insertString(
+                        equalsNode.textRange!!.endOffset,
+                        value
+                    )
+                }
+            } else {
+                val currentValueTextRange = currentValueEntry.textRange
+
+                document.replaceString(
+                    currentValueTextRange.startOffset,
+                    currentValueTextRange.endOffset,
+                    value
+                )
+            }
         }
     }
 
