@@ -19,7 +19,7 @@ data class EnvSource(
 
     val path = source.path
 
-    val containerFolder = source.parent
+    val containerFolder: VirtualFile? = source.parent
 
     val psiEnvSource = _psiSource as dEnvFile
 

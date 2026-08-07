@@ -3,7 +3,6 @@ package com.tecknobit.envui.ui.pages.envuiwindow.components
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -13,16 +12,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.intellij.ui.JBColor.GRAY
+import com.tecknobit.envui.generated.resources.*
 import com.tecknobit.envui.ui.components.Badge
 import com.tecknobit.envui.ui.pages.envsourcereader.presenter.EnvSourceReaderDialog
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
+import com.tecknobit.envui.ui.theme.CardShape
 import com.tecknobit.envui.ui.theme.EnvUiTheme
 import com.tecknobit.envui.ui.utils.resolveIcon
 import com.tecknobit.envui.ui.utils.toComposeColor
 import com.tecknobit.envui.ui.utils.toDateString
 import com.tecknobit.envui.util.revealInProjectView
-import com.tecknobit.envui.generated.resources.*
-import com.tecknobit.envui.ui.theme.CardShape
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.jewel.ui.component.Icon
 import org.jetbrains.jewel.ui.component.IconButton
@@ -167,7 +166,7 @@ private fun ParentFolder(
 
     var iconKey: IconKey by remember { mutableStateOf(AllIconsKeys.Nodes.Folder) }
     LaunchedEffect(envSource.path) {
-        iconKey = parentFolder.resolveIcon(
+        iconKey = parentFolder!!.resolveIcon(
             project = project
         )
     }
@@ -191,7 +190,7 @@ private fun ParentFolder(
             textSize = 16.sp,
             color = GRAY.toComposeColor(),
             onClick = {
-                parentFolder.revealInProjectView(
+                parentFolder!!.revealInProjectView(
                     project = project
                 )
             },

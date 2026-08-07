@@ -88,4 +88,10 @@
         <module name="intellij.platform.jewel.ideLafBridge"/>
     </dependencies>
 
+    <projectListeners>
+        <listener
+                class="com.tecknobit.envui.ide.listeners.EnvSourceEditorListener"
+                topic="com.intellij.openapi.fileEditor.FileEditorManagerListener"/>
+    </projectListeners>
+
 </idea-plugin>

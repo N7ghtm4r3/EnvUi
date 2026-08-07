@@ -100,10 +100,25 @@ abstract class dEnvFileBase(
         return property
     }
 
+    fun findPropertyLine(
+        key: String
+    ): Int {
+        var line = 0
+        val property = findPropertyByKey(
+            key = key
+        )!!
+
+        workWithDocument { document ->
+            line = document.getLineNumber(property.textRange.startOffset)
+        }
+
+        return line
+    }
+
     protected fun workWithDocument(
         onWork: (Document) -> Unit
     ) {
-        provideDocument { manager, document ->
+        provideDocument { _, document ->
             document?.let {
                 onWork(document)
             }

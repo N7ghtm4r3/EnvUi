@@ -1,9 +1,14 @@
 package com.tecknobit.envui.util
+import com.intellij.openapi.module.ModuleUtilCore
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.PsiManager
 import com.tecknobit.envui.ide.languages.dEnvFileBase
 import com.tecknobit.envui.ide.languages.envfile.dEnvFile
 import com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFile
 import com.tecknobit.envui.ui.pages.envsourcereader.data.EnvSourceTemplate
 import com.tecknobit.envui.ui.pages.envsourcereader.data.EnvTemplateField
+import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 
 fun dEnvFileBase.writeKeys() {
     val keys = keys()
@@ -73,5 +78,23 @@ fun dEnvFile.updateSourceFromTemplate(
 
     writeContent(
         content = content
+    )
+}
+
+fun VirtualFile.toEnvSource(
+    project: Project,
+    template: VirtualFile? = null
+): EnvSource {
+    val psiManager = PsiManager.getInstance(project)
+
+    return EnvSource(
+        project = project,
+        source = this,
+        module = ModuleUtilCore.findModuleForFile(this, project),
+        _psiSource = psiManager.findFile(this)!!,
+        _templateSource = if(template != null)
+            psiManager.findFile(template)
+        else
+            null
     )
 }
