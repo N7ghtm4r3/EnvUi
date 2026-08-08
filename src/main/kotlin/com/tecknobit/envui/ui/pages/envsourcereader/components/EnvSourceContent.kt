@@ -184,10 +184,10 @@ private fun Actions(
             text = Res.string.reset_value_on_close,
             color = JBColor.gray.toComposeColor(),
             isClicked = preferences.requireResetOnClose,
-            onClick = { isSelected ->
+            onClick = {
                 envSource.psiEnvSource.toggleResetOnClose(
                     key = property.keyEntry.text,
-                    isMarked = isSelected
+                    envSource = envSource
                 )
             }
         )

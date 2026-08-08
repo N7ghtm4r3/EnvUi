@@ -1,15 +1,15 @@
 package com.tecknobit.envui.ide.languages.envfile
 
-import com.intellij.openapi.editor.Document
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.psi.FileViewProvider
 import com.tecknobit.envui.helpers.EnvSourceHighlightedPropertiesRegistry
+import com.tecknobit.envui.helpers.EnvSourcePreferencesType
 import com.tecknobit.envui.helpers.EnvSourcePreferencesType.CRITICAL
+import com.tecknobit.envui.helpers.EnvSourcePreferencesType.RESET_ON_CLOSE
 import com.tecknobit.envui.ide.envfile.EnvGeneratedTypes
 import com.tecknobit.envui.ide.envfile.Property
-import com.tecknobit.envui.ide.highlighters.addCriticalEnvMark
-import com.tecknobit.envui.ide.highlighters.addResetOnCloseMark
-import com.tecknobit.envui.ide.highlighters.removeCriticalEnvMark
+import com.tecknobit.envui.ide.highlighters.addEnvMark
+import com.tecknobit.envui.ide.highlighters.removeEnvMark
 import com.tecknobit.envui.ide.languages.dEnvFileBase
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 
@@ -42,65 +42,65 @@ class dEnvFile(
     ) {
         toggleEnvPref(
             key = key,
-            toggleAction = { property, document ->
-                val fileEditor = FileEditorManager.getInstance(project)
-                val editor = fileEditor.selectedTextEditor!!
-                val highlighter = EnvSourceHighlightedPropertiesRegistry.getPropertyHighlighter(
-                    envSource = envSource,
-                    key = key,
-                    type = CRITICAL
-                )
-
-                if(highlighter != null) {
-                    removeCriticalEnvMark(
-                        editor = editor,
-                        highlighter = highlighter
-                    )
-
-
-                } else {
-                    val rangeHighlighter = addCriticalEnvMark(
-                        editor = editor,
-                        line = document.getLineNumber(property.textRange.startOffset)
-                    )
-
-                    EnvSourceHighlightedPropertiesRegistry.markPropertyAsCritical(
-                        envSource = envSource,
-                        key = key,
-                        highlighter = rangeHighlighter
-                    )
-                }
-            }
+            envSource = envSource,
+            preferencesType = CRITICAL
         )
     }
 
     fun toggleResetOnClose(
         key: String,
-        isMarked: Boolean
+        envSource: EnvSource
     ) {
         toggleEnvPref(
             key = key,
-            toggleAction = { property, document ->
-                val fileEditor = FileEditorManager.getInstance(project)
-
-                addResetOnCloseMark(
-                    editor = fileEditor.selectedTextEditor!!,
-                    line = document.getLineNumber(property.textRange.startOffset)
-                )
-            }
+            envSource = envSource,
+            preferencesType = RESET_ON_CLOSE
         )
     }
 
-    private inline fun toggleEnvPref(
+    private fun toggleEnvPref(
         key: String,
-        crossinline toggleAction: (Property, Document) -> Unit
+        envSource: EnvSource,
+        preferencesType: EnvSourcePreferencesType
     ) {
         val property = findPropertyByKey(
             key = key
         )!!
 
         workWithDocument { document ->
-            toggleAction(property, document)
+            val fileEditor = FileEditorManager.getInstance(project)
+            val editor = fileEditor.selectedTextEditor!!
+            val highlighter = EnvSourceHighlightedPropertiesRegistry.getPropertyHighlighter(
+                envSource = envSource,
+                key = key,
+                type = preferencesType
+            )
+
+            if(highlighter != null) {
+                removeEnvMark(
+                    editor = editor,
+                    highlighter = highlighter
+                )
+
+                EnvSourceHighlightedPropertiesRegistry.unmarkPropertyAsPrefType(
+                    envSource = envSource,
+                    key = key,
+                    type = preferencesType
+                )
+            } else {
+                val rangeHighlighter = addEnvMark(
+                    editor = editor,
+                    line = document.getLineNumber(property.textRange.startOffset),
+                    preferencesType = preferencesType
+                )
+
+                EnvSourceHighlightedPropertiesRegistry.markPropertyAsPrefType(
+                    envSource = envSource,
+                    key = key,
+                    type = preferencesType,
+                    highlighter = rangeHighlighter
+                )
+            }
         }
     }
 

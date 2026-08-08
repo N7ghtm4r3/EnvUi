@@ -85,7 +85,7 @@ object EnvSourceHighlightedPropertiesRegistry {
         )
     }
 
-    private fun markPropertyAsPrefType(
+    fun markPropertyAsPrefType(
         envSource: EnvSource,
         key: String,
         type: EnvSourcePreferencesType,
@@ -99,6 +99,40 @@ object EnvSourceHighlightedPropertiesRegistry {
 
         val propertyPreferences = envSourcePreferences[key]!!
         propertyPreferences[type] = highlighter
+    }
+
+    fun unmarkPropertyAsCritical(
+        envSource: EnvSource,
+        key: String
+    ) {
+        unmarkPropertyAsPrefType(
+            envSource = envSource,
+            key = key,
+            type = CRITICAL
+        )
+    }
+
+    fun unmarkPropertyAsResettableOnClose(
+        envSource: EnvSource,
+        key: String
+    ) {
+        unmarkPropertyAsPrefType(
+            envSource = envSource,
+            key = key,
+            type = RESET_ON_CLOSE
+        )
+    }
+
+    fun unmarkPropertyAsPrefType(
+        envSource: EnvSource,
+        key: String,
+        type: EnvSourcePreferencesType
+    ) {
+        val registryEntryKey = envSource.resolveRegistryEntryKey()
+        val envSourcePreferences = highlightedProperties[registryEntryKey]!!
+        val propertyPreferences = envSourcePreferences[key]!!
+
+        propertyPreferences.remove(type)
     }
 
     fun getPropertyHighlighter(
