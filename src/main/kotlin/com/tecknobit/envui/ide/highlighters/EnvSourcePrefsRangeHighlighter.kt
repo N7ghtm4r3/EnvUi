@@ -15,10 +15,16 @@ fun addCriticalEnvMark(
         HighlighterLayer.ADDITIONAL_SYNTAX,
         null
     )
-
     highlighter.gutterIconRenderer = CriticalEnvGutterIcon()
 
     return highlighter
+}
+
+fun removeCriticalEnvMark(
+    editor: Editor,
+    highlighter: RangeHighlighter
+) {
+    editor.markupModel.removeHighlighter(highlighter)
 }
 
 fun addResetOnCloseMark(
@@ -30,7 +36,6 @@ fun addResetOnCloseMark(
         HighlighterLayer.ADDITIONAL_SYNTAX,
         null
     )
-
     highlighter.gutterIconRenderer = ResetOnCloseGutterIcon()
 
     return highlighter

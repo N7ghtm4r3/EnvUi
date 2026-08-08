@@ -3,11 +3,15 @@ package com.tecknobit.envui.ide.languages.envfile
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.psi.FileViewProvider
+import com.tecknobit.envui.helpers.EnvSourceHighlightedPropertiesRegistry
+import com.tecknobit.envui.helpers.EnvSourcePreferencesType.CRITICAL
 import com.tecknobit.envui.ide.envfile.EnvGeneratedTypes
 import com.tecknobit.envui.ide.envfile.Property
 import com.tecknobit.envui.ide.highlighters.addCriticalEnvMark
 import com.tecknobit.envui.ide.highlighters.addResetOnCloseMark
+import com.tecknobit.envui.ide.highlighters.removeCriticalEnvMark
 import com.tecknobit.envui.ide.languages.dEnvFileBase
+import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 
 class dEnvFile(
     viewProvider: FileViewProvider,
@@ -34,17 +38,38 @@ class dEnvFile(
 
     fun toggleMarkAsCritical(
         key: String,
-        isMarked: Boolean
+        envSource: EnvSource
     ) {
         toggleEnvPref(
             key = key,
             toggleAction = { property, document ->
                 val fileEditor = FileEditorManager.getInstance(project)
-
-                addCriticalEnvMark(
-                    editor = fileEditor.selectedTextEditor!!,
-                    line = document.getLineNumber(property.textRange.startOffset)
+                val editor = fileEditor.selectedTextEditor!!
+                val highlighter = EnvSourceHighlightedPropertiesRegistry.getPropertyHighlighter(
+                    envSource = envSource,
+                    key = key,
+                    type = CRITICAL
                 )
+
+                if(highlighter != null) {
+                    removeCriticalEnvMark(
+                        editor = editor,
+                        highlighter = highlighter
+                    )
+
+
+                } else {
+                    val rangeHighlighter = addCriticalEnvMark(
+                        editor = editor,
+                        line = document.getLineNumber(property.textRange.startOffset)
+                    )
+
+                    EnvSourceHighlightedPropertiesRegistry.markPropertyAsCritical(
+                        envSource = envSource,
+                        key = key,
+                        highlighter = rangeHighlighter
+                    )
+                }
             }
         )
     }

@@ -3,6 +3,7 @@ package com.tecknobit.envui.ide.listeners
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.FileEditorManagerListener
 import com.intellij.openapi.vfs.VirtualFile
+import com.tecknobit.envui.helpers.EnvSourceHighlightedPropertiesRegistry
 import com.tecknobit.envui.helpers.EnvSourcePreferencesManager
 import com.tecknobit.envui.ide.highlighters.addCriticalEnvMark
 import com.tecknobit.envui.ide.highlighters.addResetOnCloseMark
@@ -16,6 +17,7 @@ class EnvSourceEditorListener : FileEditorManagerListener {
     ) {
         super.fileOpened(source, file)
         val editor = source.selectedTextEditor!!
+        val registry = EnvSourceHighlightedPropertiesRegistry
         val envSource = file.toEnvSource(
             project = source.project
         )
@@ -29,25 +31,27 @@ class EnvSourceEditorListener : FileEditorManagerListener {
                 key = key
             )
 
-            if(property.isCritical && envSource.isPropertyMarkedAsCritical(key)) {
+            if(property.isCritical) {
                 val highlighter = addCriticalEnvMark(
                     editor = editor,
                     line = propertyLine
                 )
 
-                envSource.markPropertyAsCritical(
+                registry.markPropertyAsCritical(
+                    envSource = envSource,
                     key = key,
                     highlighter = highlighter
                 )
             }
 
-            if(property.requireResetOnClose && !envSource.isPropertyMarkedAsCritical(key)) {
+            if(property.requireResetOnClose) {
                 val highlighter = addResetOnCloseMark(
                     editor = editor,
                     line = propertyLine
                 )
 
-                envSource.markPropertyAsResettableOnClose(
+                registry.markPropertyAsResettableOnClose(
+                    envSource = envSource,
                     key = key,
                     highlighter = highlighter
                 )

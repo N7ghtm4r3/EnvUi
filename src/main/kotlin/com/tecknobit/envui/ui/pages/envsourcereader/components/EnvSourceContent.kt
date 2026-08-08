@@ -171,10 +171,10 @@ private fun Actions(
             text = Res.string.mark_as_critical_to_change,
             color = EnvUiTheme.error,
             isClicked = preferences.isCritical,
-            onClick = { isSelected ->
+            onClick = {
                 envSource.psiEnvSource.toggleMarkAsCritical(
                     key = property.keyEntry.text,
-                    isMarked = isSelected
+                    envSource = envSource
                 )
             }
         )
