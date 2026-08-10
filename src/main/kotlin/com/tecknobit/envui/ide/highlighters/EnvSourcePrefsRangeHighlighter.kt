@@ -49,15 +49,24 @@ fun addEnvMark(
         true
     )
 
-    val highlighter = markupModel.addLineHighlighter(
-        line,
-        HighlighterLayer.ADDITIONAL_SYNTAX,
-        null
-    )
-
-    highlighter.gutterIconRenderer = when(preferencesType) {
+    val gutterIconRenderer = when(preferencesType) {
         CRITICAL -> CriticalEnvGutterIcon()
         RESET_ON_CLOSE -> ResetOnCloseGutterIcon()
+    }
+
+    var highlighter = markupModel.allHighlighters.firstOrNull { highlighter ->
+        val highlighterLine = document.getLineNumber(highlighter.startOffset)
+
+        highlighterLine == line && highlighter.gutterIconRenderer?.icon == gutterIconRenderer.icon
+    }
+
+    if(highlighter == null) {
+        highlighter = markupModel.addLineHighlighter(
+            line,
+            HighlighterLayer.ADDITIONAL_SYNTAX,
+            null
+        )
+        highlighter.gutterIconRenderer = gutterIconRenderer
     }
 
     return highlighter
