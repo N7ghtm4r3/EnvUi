@@ -7,16 +7,16 @@ import com.tecknobit.envui.ide.envfile.Property
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 
 data class EnvUiState(
-    val preferences: MutableList<EnvSourcePreferences> = mutableListOf()
+    var preferences: Map<String, EnvSourcePreferences> = mapOf()
 )
 
 data class EnvSourcePreferences(
-    val sourcePath: String,
-    val properties: List<EnvSourcePropertyPreferences>
+    var sourcePath: String = "",
+    var properties: Map<String, EnvSourcePropertyPreferences> = mapOf()
 )
 
 data class EnvSourcePropertyPreferences(
-    val key: String,
+    var key: String = "",
     var isCritical: Boolean = false,
     var requireResetOnClose: Boolean = false,
 )
@@ -26,16 +26,14 @@ data class EnvSourcePropertyPreferences(
     name = "EnvUiPreferences",
     storages = [Storage(StoragePathMacros.WORKSPACE_FILE)]
 )
-class EnvSourcePreferencesManager : PersistentStateComponent<EnvUiState> {
-
-    private var currentState = EnvUiState()
+class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiState>(
+    state = EnvUiState()
+) {
 
     fun retrieveEnvSourcePreferences(
         source: VirtualFile
     ): EnvSourcePreferences? {
-        return currentState.preferences.firstOrNull { preference ->
-            preference.sourcePath == source.path
-        }
+        return state.preferences[source.path]
     }
 
     fun retrievePropertyPreferences(
@@ -52,9 +50,7 @@ class EnvSourcePreferencesManager : PersistentStateComponent<EnvUiState> {
         if(envSourcePreference == null)
             return defaultPropertyPreferences
 
-        val propertyPreferences = envSourcePreference.properties.firstOrNull { storedProperty ->
-            propertyKey == storedProperty.key
-        }
+        val propertyPreferences = envSourcePreference.properties[propertyKey]
         return propertyPreferences ?: defaultPropertyPreferences
     }
 
@@ -63,12 +59,14 @@ class EnvSourcePreferencesManager : PersistentStateComponent<EnvUiState> {
         property: Property,
         isCritical: Boolean
     ) {
-        val propertyPreferences = retrievePropertyPreferences(
+        workOnPropertyPreferences(
             source = source,
             property = property
-        )
-
-        propertyPreferences.isCritical = isCritical
+        ) { propertyPreferences ->
+            propertyPreferences.copy(
+                isCritical = isCritical
+            )
+        }
     }
 
     fun setPropertyResetOnClose(
@@ -76,20 +74,86 @@ class EnvSourcePreferencesManager : PersistentStateComponent<EnvUiState> {
         property: Property,
         resetOnClose: Boolean
     ) {
+        workOnPropertyPreferences(
+            source = source,
+            property = property
+        ) { propertyPreferences ->
+            propertyPreferences.copy(
+                requireResetOnClose = resetOnClose
+            )
+        }
+    }
+
+    private inline fun workOnPropertyPreferences(
+        source: VirtualFile,
+        property: Property,
+        onWork: (EnvSourcePropertyPreferences) -> EnvSourcePropertyPreferences
+    ) {
+        var envSourcePreferences = retrieveEnvSourcePreferences(
+            source = source
+        )
+        if(envSourcePreferences == null) {
+            envSourcePreferences = storeNewEnvSourcePreferences(
+                source = source
+            )
+        }
+
         val propertyPreferences = retrievePropertyPreferences(
             source = source,
             property = property
         )
 
-        propertyPreferences.requireResetOnClose = resetOnClose
+        val newPrefs = onWork(propertyPreferences)
+        envSourcePreferences = upsertPropertyPreferences(
+            envSourcePreferences = envSourcePreferences,
+            property = property,
+            propertyPreferences = newPrefs
+        )
+
+        storeEnvSourcePreferences(
+            source = source,
+            envSourcePreferences = envSourcePreferences
+        )
     }
 
-    override fun getState(): EnvUiState {
-        return currentState
+    private fun upsertPropertyPreferences(
+        envSourcePreferences: EnvSourcePreferences,
+        property: Property,
+        propertyPreferences: EnvSourcePropertyPreferences
+    ): EnvSourcePreferences {
+        val propertyPreferencesEntry = Pair(property.keyEntry.text, propertyPreferences)
+
+        return envSourcePreferences.copy(
+            properties = envSourcePreferences.properties + propertyPreferencesEntry
+        )
     }
 
-    override fun loadState(state: EnvUiState) {
-        currentState = state
+    private fun storeNewEnvSourcePreferences(
+        source: VirtualFile
+    ): EnvSourcePreferences {
+        val envSourcePreferences = EnvSourcePreferences(
+            sourcePath = source.path
+        )
+
+        storeEnvSourcePreferences(
+            source = source,
+            envSourcePreferences = envSourcePreferences
+        )
+
+        return envSourcePreferences
+    }
+
+    private fun storeEnvSourcePreferences(
+        source: VirtualFile,
+        envSourcePreferences: EnvSourcePreferences
+    ) {
+        val envSourceEntry = Pair(source.path, envSourcePreferences)
+
+        updateState { state ->
+            state.copy(
+                preferences = state.preferences + envSourceEntry
+            )
+        }
     }
 
 }

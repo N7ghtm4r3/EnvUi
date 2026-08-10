@@ -25,40 +25,6 @@ object EnvSourceHighlightedPropertiesRegistry {
 
     private val highlightedProperties = hashMapOf<String, EnvSourceHighlightedPropertyEntry>()
 
-    fun isPropertyMarkedAsCritical(
-        envSource: EnvSource,
-        key: String
-    ): Boolean {
-        return checkPropertyPrefType(
-            envSource = envSource,
-            key = key,
-            type = CRITICAL
-        )
-    }
-
-    fun isPropertyMarkedAsResettableOnClose(
-        envSource: EnvSource,
-        key: String
-    ): Boolean {
-        return checkPropertyPrefType(
-            envSource = envSource,
-            key = key,
-            type = RESET_ON_CLOSE
-        )
-    }
-
-    private fun checkPropertyPrefType(
-        envSource: EnvSource,
-        key: String,
-        type: EnvSourcePreferencesType
-    ): Boolean {
-        val registryEntryKey = envSource.resolveRegistryEntryKey()
-        val envSourcePreferences = highlightedProperties[registryEntryKey] ?: return false
-        val propertyPreferences = envSourcePreferences[key]  ?: return false
-
-        return propertyPreferences[type] != null
-    }
-
     fun markPropertyAsCritical(
         envSource: EnvSource,
         key: String,
@@ -98,29 +64,7 @@ object EnvSourceHighlightedPropertiesRegistry {
         envSourcePreferences.putIfAbsent(key, hashMapOf())
 
         val propertyPreferences = envSourcePreferences[key]!!
-        propertyPreferences[type] = highlighter
-    }
-
-    fun unmarkPropertyAsCritical(
-        envSource: EnvSource,
-        key: String
-    ) {
-        unmarkPropertyAsPrefType(
-            envSource = envSource,
-            key = key,
-            type = CRITICAL
-        )
-    }
-
-    fun unmarkPropertyAsResettableOnClose(
-        envSource: EnvSource,
-        key: String
-    ) {
-        unmarkPropertyAsPrefType(
-            envSource = envSource,
-            key = key,
-            type = RESET_ON_CLOSE
-        )
+        propertyPreferences.putIfAbsent(type, highlighter)
     }
 
     fun unmarkPropertyAsPrefType(

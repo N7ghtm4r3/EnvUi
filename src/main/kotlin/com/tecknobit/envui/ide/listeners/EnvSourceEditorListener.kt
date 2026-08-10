@@ -20,10 +20,10 @@ class EnvSourceEditorListener : FileEditorManagerListener {
         if(file.fileType != dEnvFileType)
             return
 
-        val editor = source.selectedTextEditor!!
+        val project = source.project
         val registry = EnvSourceHighlightedPropertiesRegistry
         val envSource = file.toEnvSource(
-            project = source.project,
+            project = project,
             resolveModule = false
         )
 
@@ -32,36 +32,40 @@ class EnvSourceEditorListener : FileEditorManagerListener {
                 source = envSource.source
             )
 
-            propertyPreferences?.properties?.forEach { property ->
+            propertyPreferences?.properties?.values?.forEach { property ->
                 val key = property.key
                 val propertyLine = envSource.psiEnvSource.findPropertyLine(
                     key = key
                 )
 
-                if(property.isCritical) {
-                    val highlighter = addCriticalEnvMark(
-                        editor = editor,
-                        line = propertyLine
-                    )
+                envSource.psiEnvSource.workWithDocument { document ->
+                    if(property.isCritical) {
+                        val highlighter = addCriticalEnvMark(
+                            document = document,
+                            project = project,
+                            line = propertyLine
+                        )
 
-                    registry.markPropertyAsCritical(
-                        envSource = envSource,
-                        key = key,
-                        highlighter = highlighter
-                    )
-                }
+                        registry.markPropertyAsCritical(
+                            envSource = envSource,
+                            key = key,
+                            highlighter = highlighter
+                        )
+                    }
 
-                if(property.requireResetOnClose) {
-                    val highlighter = addResetOnCloseMark(
-                        editor = editor,
-                        line = propertyLine
-                    )
+                    if(property.requireResetOnClose) {
+                        val highlighter = addResetOnCloseMark(
+                            document = document,
+                            project = project,
+                            line = propertyLine
+                        )
 
-                    registry.markPropertyAsResettableOnClose(
-                        envSource = envSource,
-                        key = key,
-                        highlighter = highlighter
-                    )
+                        registry.markPropertyAsResettableOnClose(
+                            envSource = envSource,
+                            key = key,
+                            highlighter = highlighter
+                        )
+                    }
                 }
             }
         }

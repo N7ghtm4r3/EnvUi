@@ -1,7 +1,6 @@
 package com.tecknobit.envui.ide.languages.envfile
 
 import com.intellij.openapi.editor.markup.RangeHighlighter
-import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.psi.FileViewProvider
 import com.tecknobit.envui.helpers.EnvSourceHighlightedPropertiesRegistry
 import com.tecknobit.envui.helpers.EnvSourcePreferencesType
@@ -86,8 +85,6 @@ class dEnvFile(
         )!!
 
         workWithDocument { document ->
-            val fileEditor = FileEditorManager.getInstance(project)
-            val editor = fileEditor.selectedTextEditor!!
             val highlighter = EnvSourceHighlightedPropertiesRegistry.getPropertyHighlighter(
                 envSource = envSource,
                 key = key,
@@ -97,7 +94,6 @@ class dEnvFile(
             envSource.useEnvSourcePreferencesManager {
                 if(highlighter != null) {
                     removeEnvMark(
-                        editor = editor,
                         highlighter = highlighter
                     )
 
@@ -108,7 +104,8 @@ class dEnvFile(
                     )
                 } else {
                     val rangeHighlighter = addEnvMark(
-                        editor = editor,
+                        document = document,
+                        project = project,
                         line = document.getLineNumber(property.textRange.startOffset),
                         preferencesType = preferencesType
                     )

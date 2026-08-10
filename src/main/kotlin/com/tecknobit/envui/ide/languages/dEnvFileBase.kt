@@ -115,7 +115,7 @@ abstract class dEnvFileBase(
         return line
     }
 
-    protected fun workWithDocument(
+    fun workWithDocument(
         onWork: (Document) -> Unit
     ) {
         provideDocument { _, document ->
