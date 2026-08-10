@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.sp
 import com.intellij.ui.JBColor
 import com.tecknobit.envui.generated.resources.*
 import com.tecknobit.envui.ide.envfile.Property
-import com.tecknobit.envui.ide.services.EnvSourcePreferencesManager
+import com.tecknobit.envui.ide.services.useEnvSourcePreferencesManager
 import com.tecknobit.envui.ui.components.Chip
 import com.tecknobit.envui.ui.components.DebouncedInput
 import com.tecknobit.envui.ui.components.LazyListScaffold
@@ -153,14 +153,12 @@ private fun Actions(
     envSource: EnvSource,
     property: Property
 ) {
-    val envSourcePreferencesManager = EnvSourcePreferencesManager()
-    val propertyPreferences = envSourcePreferencesManager.retrievePropertyPreferences(
-        source = envSource.source,
-        property = property
-    )
-
-    if (propertyPreferences == null)
-        return
+    val propertyPreferences = envSource.useEnvSourcePreferencesManager {
+        retrievePropertyPreferences(
+            source = envSource.source,
+            property = property
+        )
+    }
 
     Row (
         modifier = Modifier

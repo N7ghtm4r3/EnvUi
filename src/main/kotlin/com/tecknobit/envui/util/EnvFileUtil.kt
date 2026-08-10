@@ -83,14 +83,18 @@ fun dEnvFile.updateSourceFromTemplate(
 
 fun VirtualFile.toEnvSource(
     project: Project,
-    template: VirtualFile? = null
+    template: VirtualFile? = null,
+    resolveModule: Boolean = true
 ): EnvSource {
     val psiManager = PsiManager.getInstance(project)
 
     return EnvSource(
         project = project,
         source = this,
-        module = ModuleUtilCore.findModuleForFile(this, project),
+        module = if(resolveModule)
+            ModuleUtilCore.findModuleForFile(this, project)
+        else
+            null,
         _psiSource = psiManager.findFile(this)!!,
         _templateSource = if(template != null)
             psiManager.findFile(template)

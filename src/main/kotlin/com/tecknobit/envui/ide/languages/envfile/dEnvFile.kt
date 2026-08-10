@@ -11,6 +11,7 @@ import com.tecknobit.envui.ide.envfile.Property
 import com.tecknobit.envui.ide.highlighters.addEnvMark
 import com.tecknobit.envui.ide.highlighters.removeEnvMark
 import com.tecknobit.envui.ide.languages.dEnvFileBase
+import com.tecknobit.envui.ide.services.useEnvSourcePreferencesManager
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 
 class dEnvFile(
@@ -76,29 +77,37 @@ class dEnvFile(
                 type = preferencesType
             )
 
-            if(highlighter != null) {
-                removeEnvMark(
-                    editor = editor,
-                    highlighter = highlighter
-                )
+            envSource.useEnvSourcePreferencesManager {
+                if(highlighter != null) {
+                    removeEnvMark(
+                        editor = editor,
+                        highlighter = highlighter
+                    )
 
-                EnvSourceHighlightedPropertiesRegistry.unmarkPropertyAsPrefType(
-                    envSource = envSource,
-                    key = key,
-                    type = preferencesType
-                )
-            } else {
-                val rangeHighlighter = addEnvMark(
-                    editor = editor,
-                    line = document.getLineNumber(property.textRange.startOffset),
-                    preferencesType = preferencesType
-                )
+                    EnvSourceHighlightedPropertiesRegistry.unmarkPropertyAsPrefType(
+                        envSource = envSource,
+                        key = key,
+                        type = preferencesType
+                    )
+                } else {
+                    val rangeHighlighter = addEnvMark(
+                        editor = editor,
+                        line = document.getLineNumber(property.textRange.startOffset),
+                        preferencesType = preferencesType
+                    )
 
-                EnvSourceHighlightedPropertiesRegistry.markPropertyAsPrefType(
-                    envSource = envSource,
-                    key = key,
-                    type = preferencesType,
-                    highlighter = rangeHighlighter
+                    EnvSourceHighlightedPropertiesRegistry.markPropertyAsPrefType(
+                        envSource = envSource,
+                        key = key,
+                        type = preferencesType,
+                        highlighter = rangeHighlighter
+                    )
+                }
+
+                setPropertyCriticality(
+                    source = envSource.source,
+                    property = property,
+                    isCritical = highlighter != null
                 )
             }
         }

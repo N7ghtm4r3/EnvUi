@@ -4,29 +4,22 @@ import com.intellij.openapi.components.*
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.tecknobit.envui.ide.envfile.Property
+import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 
 data class EnvUiState(
     val preferences: MutableList<EnvSourcePreferences> = mutableListOf()
 )
 
 data class EnvSourcePreferences(
-    val source: VirtualFile,
+    val sourcePath: String,
     val properties: List<EnvSourcePropertyPreferences>
 )
 
 data class EnvSourcePropertyPreferences(
     val key: String,
-    val isCritical: Boolean = false,
-    val requireResetOnClose: Boolean = false,
+    var isCritical: Boolean = false,
+    var requireResetOnClose: Boolean = false,
 )
-
-inline fun Project.useEnvSourcePreferencesManager(
-    crossinline usage: (EnvSourcePreferencesManager) -> Unit
-) {
-    val preferencesManager = service<EnvSourcePreferencesManager>()
-
-    usage(preferencesManager)
-}
 
 @Service(Service.Level.PROJECT)
 @State(
@@ -41,7 +34,7 @@ class EnvSourcePreferencesManager : PersistentStateComponent<EnvUiState> {
         source: VirtualFile
     ): EnvSourcePreferences? {
         return currentState.preferences.firstOrNull { preference ->
-            preference.source.path == source.path
+            preference.sourcePath == source.path
         }
     }
 
@@ -65,12 +58,41 @@ class EnvSourcePreferencesManager : PersistentStateComponent<EnvUiState> {
         return propertyPreferences ?: defaultPropertyPreferences
     }
 
+    fun setPropertyCriticality(
+        source: VirtualFile,
+        property: Property,
+        isCritical: Boolean
+    ) {
+        val propertyPreferences = retrievePropertyPreferences(
+            source = source,
+            property = property
+        )
+
+        propertyPreferences.isCritical = isCritical
+    }
+
     override fun getState(): EnvUiState {
         return currentState
     }
 
-    override fun loadState(p0: EnvUiState) {
+    override fun loadState(state: EnvUiState) {
         currentState = state
     }
 
+}
+
+inline fun <T> EnvSource.useEnvSourcePreferencesManager(
+    crossinline usage: EnvSourcePreferencesManager.() -> T
+): T {
+    return this.project.useEnvSourcePreferencesManager(
+        usage = usage
+    )
+}
+
+inline fun <T> Project.useEnvSourcePreferencesManager(
+    crossinline usage: EnvSourcePreferencesManager.() -> T
+): T {
+    val preferencesManager = service<EnvSourcePreferencesManager>()
+
+    return usage(preferencesManager)
 }

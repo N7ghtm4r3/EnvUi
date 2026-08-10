@@ -23,11 +23,12 @@ class EnvSourceEditorListener : FileEditorManagerListener {
         val editor = source.selectedTextEditor!!
         val registry = EnvSourceHighlightedPropertiesRegistry
         val envSource = file.toEnvSource(
-            project = source.project
+            project = source.project,
+            resolveModule = false
         )
 
-        envSource.project.useEnvSourcePreferencesManager { preferencesManager ->
-            val propertyPreferences = preferencesManager.retrieveEnvSourcePreferences(
+        envSource.useEnvSourcePreferencesManager {
+            val propertyPreferences = retrieveEnvSourcePreferences(
                 source = envSource.source
             )
 
