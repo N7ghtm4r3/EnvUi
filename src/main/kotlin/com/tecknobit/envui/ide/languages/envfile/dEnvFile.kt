@@ -1,5 +1,6 @@
 package com.tecknobit.envui.ide.languages.envfile
 
+import com.intellij.openapi.editor.markup.RangeHighlighter
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.psi.FileViewProvider
 import com.tecknobit.envui.helpers.EnvSourceHighlightedPropertiesRegistry
@@ -11,6 +12,7 @@ import com.tecknobit.envui.ide.envfile.Property
 import com.tecknobit.envui.ide.highlighters.addEnvMark
 import com.tecknobit.envui.ide.highlighters.removeEnvMark
 import com.tecknobit.envui.ide.languages.dEnvFileBase
+import com.tecknobit.envui.ide.services.EnvSourcePreferencesManager
 import com.tecknobit.envui.ide.services.useEnvSourcePreferencesManager
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 
@@ -44,7 +46,14 @@ class dEnvFile(
         toggleEnvPref(
             key = key,
             envSource = envSource,
-            preferencesType = CRITICAL
+            preferencesType = CRITICAL,
+            onPersistPref = { property, highlighter ->
+                setPropertyCriticality(
+                    source = envSource.source,
+                    property = property,
+                    isCritical = highlighter == null
+                )
+            }
         )
     }
 
@@ -55,14 +64,22 @@ class dEnvFile(
         toggleEnvPref(
             key = key,
             envSource = envSource,
-            preferencesType = RESET_ON_CLOSE
+            preferencesType = RESET_ON_CLOSE,
+            onPersistPref = { property, highlighter ->
+                setPropertyResetOnClose(
+                    source = envSource.source,
+                    property = property,
+                    resetOnClose = highlighter == null
+                )
+            }
         )
     }
 
-    private fun toggleEnvPref(
+    private inline fun toggleEnvPref(
         key: String,
         envSource: EnvSource,
-        preferencesType: EnvSourcePreferencesType
+        preferencesType: EnvSourcePreferencesType,
+        crossinline onPersistPref: EnvSourcePreferencesManager.(Property, RangeHighlighter?) -> Unit
     ) {
         val property = findPropertyByKey(
             key = key
@@ -104,11 +121,7 @@ class dEnvFile(
                     )
                 }
 
-                setPropertyCriticality(
-                    source = envSource.source,
-                    property = property,
-                    isCritical = highlighter != null
-                )
+                onPersistPref(property, highlighter)
             }
         }
     }

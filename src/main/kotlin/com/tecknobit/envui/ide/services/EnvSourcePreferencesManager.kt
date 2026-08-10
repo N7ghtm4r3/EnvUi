@@ -71,6 +71,19 @@ class EnvSourcePreferencesManager : PersistentStateComponent<EnvUiState> {
         propertyPreferences.isCritical = isCritical
     }
 
+    fun setPropertyResetOnClose(
+        source: VirtualFile,
+        property: Property,
+        resetOnClose: Boolean
+    ) {
+        val propertyPreferences = retrievePropertyPreferences(
+            source = source,
+            property = property
+        )
+
+        propertyPreferences.requireResetOnClose = resetOnClose
+    }
+
     override fun getState(): EnvUiState {
         return currentState
     }
