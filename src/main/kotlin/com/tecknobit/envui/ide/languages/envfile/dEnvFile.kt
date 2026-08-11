@@ -3,9 +3,9 @@ package com.tecknobit.envui.ide.languages.envfile
 import com.intellij.openapi.editor.markup.RangeHighlighter
 import com.intellij.psi.FileViewProvider
 import com.tecknobit.envui.helpers.EnvSourceHighlightedPropertiesRegistry
-import com.tecknobit.envui.helpers.EnvSourcePreferencesType
-import com.tecknobit.envui.helpers.EnvSourcePreferencesType.CRITICAL
-import com.tecknobit.envui.helpers.EnvSourcePreferencesType.RESET_ON_CLOSE
+import com.tecknobit.envui.helpers.EnvSourcePreferenceType
+import com.tecknobit.envui.helpers.EnvSourcePreferenceType.CRITICAL
+import com.tecknobit.envui.helpers.EnvSourcePreferenceType.RESET_ON_CLOSE
 import com.tecknobit.envui.ide.envfile.EnvGeneratedTypes
 import com.tecknobit.envui.ide.envfile.Property
 import com.tecknobit.envui.ide.highlighters.addEnvMark
@@ -45,7 +45,7 @@ class dEnvFile(
         toggleEnvPref(
             key = key,
             envSource = envSource,
-            preferencesType = CRITICAL,
+            preferenceType = CRITICAL,
             onPersistPref = { property, highlighter ->
                 setPropertyCriticality(
                     source = envSource.source,
@@ -63,7 +63,7 @@ class dEnvFile(
         toggleEnvPref(
             key = key,
             envSource = envSource,
-            preferencesType = RESET_ON_CLOSE,
+            preferenceType = RESET_ON_CLOSE,
             onPersistPref = { property, highlighter ->
                 setPropertyResetOnClose(
                     source = envSource.source,
@@ -77,7 +77,7 @@ class dEnvFile(
     private inline fun toggleEnvPref(
         key: String,
         envSource: EnvSource,
-        preferencesType: EnvSourcePreferencesType,
+        preferenceType: EnvSourcePreferenceType,
         crossinline onPersistPref: EnvSourcePreferencesManager.(Property, RangeHighlighter?) -> Unit
     ) {
         val property = findPropertyByKey(
@@ -88,7 +88,7 @@ class dEnvFile(
             val highlighter = EnvSourceHighlightedPropertiesRegistry.getPropertyHighlighter(
                 envSource = envSource,
                 key = key,
-                type = preferencesType
+                type = preferenceType
             )
 
             envSource.useEnvSourcePreferencesManager {
@@ -100,20 +100,26 @@ class dEnvFile(
                     EnvSourceHighlightedPropertiesRegistry.unmarkPropertyAsPrefType(
                         envSource = envSource,
                         key = key,
-                        type = preferencesType
+                        type = preferenceType
                     )
                 } else {
+                    resolveConflictualPreferences(
+                        key = key,
+                        envSource = envSource,
+                        newPreference = preferenceType
+                    )
+
                     val rangeHighlighter = addEnvMark(
                         document = document,
                         project = project,
                         line = document.getLineNumber(property.textRange.startOffset),
-                        preferencesType = preferencesType
+                        preferencesType = preferenceType
                     )
 
                     EnvSourceHighlightedPropertiesRegistry.markPropertyAsPrefType(
                         envSource = envSource,
                         key = key,
-                        type = preferencesType,
+                        type = preferenceType,
                         highlighter = rangeHighlighter
                     )
                 }
@@ -121,6 +127,77 @@ class dEnvFile(
                 onPersistPref(property, highlighter)
             }
         }
+    }
+
+    private fun resolveConflictualPreferences(
+        key: String,
+        envSource: EnvSource,
+        newPreference: EnvSourcePreferenceType
+    ) {
+        val conflictualPreferences = getConflictualPreferences(
+            newPreference = newPreference,
+            envSource = envSource,
+            key = key
+        )
+
+        conflictualPreferences.forEach { conflictualPreference ->
+            toggleEnvPref(
+                key = key,
+                envSource = envSource,
+                preferenceType = conflictualPreference,
+                onPersistPref = { property, _ ->
+                    setPropertyPreference(
+                        source = envSource.source,
+                        property = property,
+                        onSet = { propertyPreferences ->
+                            propertyPreferences.copy(
+                                requireResetOnClose = false
+                            )
+                        }
+                    )
+                }
+            )
+        }
+    }
+
+    private fun getConflictualPreferences(
+        newPreference: EnvSourcePreferenceType,
+        envSource: EnvSource,
+        key: String
+    ): List<EnvSourcePreferenceType> {
+        val activePreferences = getCurrentActivePreferences(
+            envSource = envSource,
+            key = key
+        )
+        val newPreferenceConflictualPreferences = newPreference.conflictualPreferences
+        val conflictualPreferences = mutableListOf<EnvSourcePreferenceType>()
+
+        newPreferenceConflictualPreferences.forEach { conflictualPreference ->
+            if(activePreferences.contains(conflictualPreference))
+                conflictualPreferences.add(conflictualPreference)
+        }
+
+        return conflictualPreferences
+    }
+
+    private fun getCurrentActivePreferences(
+        envSource: EnvSource,
+        key: String
+    ): HashSet<EnvSourcePreferenceType> {
+        val storedActivePreferences = project.useEnvSourcePreferencesManager {
+            retrievePropertyPreferences(
+                source = envSource.source,
+                key = key
+            )
+        }
+
+        val activePreferences = hashSetOf<EnvSourcePreferenceType>()
+        if(storedActivePreferences.isCritical)
+            activePreferences.add(CRITICAL)
+        if(storedActivePreferences.requireResetOnClose)
+            activePreferences.add(RESET_ON_CLOSE)
+
+        return activePreferences
     }
 
     private fun dEnvFile.upsertValue(

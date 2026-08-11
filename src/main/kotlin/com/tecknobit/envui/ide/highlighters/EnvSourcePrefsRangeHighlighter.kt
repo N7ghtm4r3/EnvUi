@@ -5,9 +5,9 @@ import com.intellij.openapi.editor.impl.DocumentMarkupModel
 import com.intellij.openapi.editor.markup.HighlighterLayer
 import com.intellij.openapi.editor.markup.RangeHighlighter
 import com.intellij.openapi.project.Project
-import com.tecknobit.envui.helpers.EnvSourcePreferencesType
-import com.tecknobit.envui.helpers.EnvSourcePreferencesType.CRITICAL
-import com.tecknobit.envui.helpers.EnvSourcePreferencesType.RESET_ON_CLOSE
+import com.tecknobit.envui.helpers.EnvSourcePreferenceType
+import com.tecknobit.envui.helpers.EnvSourcePreferenceType.CRITICAL
+import com.tecknobit.envui.helpers.EnvSourcePreferenceType.RESET_ON_CLOSE
 import com.tecknobit.envui.ide.highlighters.icons.CriticalEnvGutterIcon
 import com.tecknobit.envui.ide.highlighters.icons.ResetOnCloseGutterIcon
 
@@ -41,7 +41,7 @@ fun addEnvMark(
     document: Document,
     project: Project,
     line: Int,
-    preferencesType: EnvSourcePreferencesType
+    preferencesType: EnvSourcePreferenceType
 ): RangeHighlighter {
     val markupModel = DocumentMarkupModel.forDocument(
         document,

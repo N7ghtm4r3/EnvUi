@@ -1,11 +1,11 @@
 package com.tecknobit.envui.helpers
 
 import com.intellij.openapi.editor.markup.RangeHighlighter
-import com.tecknobit.envui.helpers.EnvSourcePreferencesType.CRITICAL
-import com.tecknobit.envui.helpers.EnvSourcePreferencesType.RESET_ON_CLOSE
+import com.tecknobit.envui.helpers.EnvSourcePreferenceType.CRITICAL
+import com.tecknobit.envui.helpers.EnvSourcePreferenceType.RESET_ON_CLOSE
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 
-enum class EnvSourcePreferencesType(
+enum class EnvSourcePreferenceType(
     val displayName: String
 ) {
 
@@ -15,11 +15,17 @@ enum class EnvSourcePreferencesType(
 
     RESET_ON_CLOSE(
         displayName = "reset_on_close"
-    )
+    );
+
+    val conflictualPreferences: Set<EnvSourcePreferenceType>
+        get() = when(this) {
+            CRITICAL -> hashSetOf(RESET_ON_CLOSE)
+            RESET_ON_CLOSE -> hashSetOf(CRITICAL)
+        }
 
 }
 
-private typealias EnvSourceHighlightedPropertyEntry = HashMap<String, HashMap<EnvSourcePreferencesType, RangeHighlighter>>
+private typealias EnvSourceHighlightedPropertyEntry = HashMap<String, HashMap<EnvSourcePreferenceType, RangeHighlighter>>
 
 object EnvSourceHighlightedPropertiesRegistry {
 
@@ -54,7 +60,7 @@ object EnvSourceHighlightedPropertiesRegistry {
     fun markPropertyAsPrefType(
         envSource: EnvSource,
         key: String,
-        type: EnvSourcePreferencesType,
+        type: EnvSourcePreferenceType,
         highlighter: RangeHighlighter
     ) {
         val registryEntryKey = envSource.resolveRegistryEntryKey()
@@ -70,7 +76,7 @@ object EnvSourceHighlightedPropertiesRegistry {
     fun unmarkPropertyAsPrefType(
         envSource: EnvSource,
         key: String,
-        type: EnvSourcePreferencesType
+        type: EnvSourcePreferenceType
     ) {
         val registryEntryKey = envSource.resolveRegistryEntryKey()
         val envSourcePreferences = highlightedProperties[registryEntryKey]!!
@@ -82,7 +88,7 @@ object EnvSourceHighlightedPropertiesRegistry {
     fun getPropertyHighlighter(
         envSource: EnvSource,
         key: String,
-        type: EnvSourcePreferencesType,
+        type: EnvSourcePreferenceType,
     ): RangeHighlighter? {
         val registryEntryKey = envSource.resolveRegistryEntryKey()
 

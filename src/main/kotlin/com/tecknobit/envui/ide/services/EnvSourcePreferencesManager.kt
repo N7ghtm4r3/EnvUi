@@ -40,17 +40,26 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
         source: VirtualFile,
         property: Property
     ): EnvSourcePropertyPreferences {
+        return retrievePropertyPreferences(
+            source = source,
+            key = property.keyEntry.text
+        )
+    }
+
+    fun retrievePropertyPreferences(
+        source: VirtualFile,
+        key: String
+    ): EnvSourcePropertyPreferences {
         val envSourcePreference = retrieveEnvSourcePreferences(
             source = source
         )
-        val propertyKey = property.keyEntry.text
         val defaultPropertyPreferences = EnvSourcePropertyPreferences(
-            key = propertyKey
+            key = key
         )
         if(envSourcePreference == null)
             return defaultPropertyPreferences
 
-        val propertyPreferences = envSourcePreference.properties[propertyKey]
+        val propertyPreferences = envSourcePreference.properties[key]
         return propertyPreferences ?: defaultPropertyPreferences
     }
 
@@ -59,7 +68,7 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
         property: Property,
         isCritical: Boolean
     ) {
-        workOnPropertyPreferences(
+         setPropertyPreference(
             source = source,
             property = property
         ) { propertyPreferences ->
@@ -74,13 +83,26 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
         property: Property,
         resetOnClose: Boolean
     ) {
-        workOnPropertyPreferences(
+        setPropertyPreference(
             source = source,
             property = property
         ) { propertyPreferences ->
             propertyPreferences.copy(
                 requireResetOnClose = resetOnClose
             )
+        }
+    }
+
+    fun setPropertyPreference(
+        source: VirtualFile,
+        property: Property,
+        onSet: (EnvSourcePropertyPreferences) -> EnvSourcePropertyPreferences
+    ) {
+        workOnPropertyPreferences(
+            source = source,
+            property = property
+        ) { propertyPreferences ->
+            onSet(propertyPreferences)
         }
     }
 
