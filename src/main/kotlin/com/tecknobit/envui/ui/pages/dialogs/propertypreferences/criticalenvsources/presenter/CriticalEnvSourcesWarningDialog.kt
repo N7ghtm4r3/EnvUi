@@ -3,6 +3,7 @@ package com.tecknobit.envui.ui.pages.dialogs.propertypreferences.criticalenvsour
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.intellij.openapi.project.Project
 import com.tecknobit.envui.I18nMessageBundle
 import com.tecknobit.envui.ide.services.EnvSourcePreferences
 import com.tecknobit.envui.ui.components.EnvUiDialog
@@ -10,6 +11,7 @@ import com.tecknobit.envui.ui.pages.dialogs.propertypreferences.criticalenvsourc
 import com.tecknobit.envui.ui.pages.dialogs.propertypreferences.criticalenvsources.presentation.CriticalEnvSourcesWarningViewModel
 
 class CriticalEnvSourcesWarningDialog(
+    private val project: Project,
     private val criticalEnvSources: List<EnvSourcePreferences>
 ) : EnvUiDialog<CriticalEnvSourcesWarningViewModel>(
     viewModel = CriticalEnvSourcesWarningViewModel(
@@ -23,6 +25,7 @@ class CriticalEnvSourcesWarningDialog(
         CriticalEnvSourcesList(
             modifier = Modifier
                 .fillMaxSize(),
+            project = project,
             criticalEnvSources = criticalEnvSources
         )
     }

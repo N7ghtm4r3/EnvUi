@@ -13,9 +13,9 @@ import com.tecknobit.envui.generated.resources.*
 import com.tecknobit.envui.ui.components.Badge
 import com.tecknobit.envui.ui.components.Card
 import com.tecknobit.envui.ui.components.CardShape
+import com.tecknobit.envui.ui.components.ModuleBadge
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.presenter.EnvSourceReaderDialog
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
-import com.tecknobit.envui.ui.theme.EnvUiTheme
 import com.tecknobit.envui.ui.utils.resolveIcon
 import com.tecknobit.envui.ui.utils.toComposeColor
 import com.tecknobit.envui.ui.utils.toDateString
@@ -67,16 +67,8 @@ private fun CardHeader(
                 .weight(2f)
         ) {
             envSource.module?.let {
-                Badge(
-                    icon = {
-                        Icon(
-                            key = AllIconsKeys.Nodes.Module,
-                            contentDescription = stringResource(Res.string.env_source_module)
-                        )
-                    },
-                    text = it.name,
-                    textSize = 12.sp,
-                    color = EnvUiTheme.primary,
+                ModuleBadge(
+                    module = it,
                     onClick = {
                         it.revealInProjectView(
                             project = envSource.project

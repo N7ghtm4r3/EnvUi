@@ -17,6 +17,7 @@ class IdeLifecycleListener : ProjectManagerListener {
 
         if(criticalEnvSources.isNotEmpty()) {
             val criticalEnvSourcesWarningDialog = CriticalEnvSourcesWarningDialog(
+                project = project,
                 criticalEnvSources = criticalEnvSources
             )
 
