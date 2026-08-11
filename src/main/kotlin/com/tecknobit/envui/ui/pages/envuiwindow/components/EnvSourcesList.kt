@@ -15,7 +15,7 @@ import com.tecknobit.envui.generated.resources.envui_no_sources_action_message
 import com.tecknobit.envui.generated.resources.envui_no_sources_message
 import com.tecknobit.envui.generated.resources.loading_sources
 import com.tecknobit.envui.ui.components.EmptyState
-import com.tecknobit.envui.ui.pages.envsourceupsert.presenter.EnvSourceUpsertDialog
+import com.tecknobit.envui.ui.pages.dialogs.envsourceupsert.presenter.EnvSourceUpsertDialog
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.jewel.ui.component.CircularProgressIndicatorBig

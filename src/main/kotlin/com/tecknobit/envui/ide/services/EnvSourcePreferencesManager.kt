@@ -178,6 +178,36 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
         }
     }
 
+    fun retrieveAllEnvSourcePreferences(): Map<String, EnvSourcePreferences> {
+        return state.preferences
+    }
+
+    fun retrieveAllCriticalEnvSourcePreferences(): List<EnvSourcePreferences> {
+        return retrieveAllEnvSourcePreferences { propertyPreferences ->
+            propertyPreferences.isCritical
+        }
+    }
+
+    fun retrieveAllResettableOnCloseEnvSourcePreferences(): List<EnvSourcePreferences> {
+        return retrieveAllEnvSourcePreferences { propertyPreferences ->
+            propertyPreferences.requireResetOnClose
+        }
+    }
+
+    private inline fun retrieveAllEnvSourcePreferences(
+        predicate: (EnvSourcePropertyPreferences) -> Boolean
+    ): List<EnvSourcePreferences> {
+        val envSourcePreferences = retrieveAllEnvSourcePreferences()
+
+        return envSourcePreferences.values.filter { envSourcePreference ->
+            val criticalProperties = envSourcePreference.properties.values.firstOrNull { property ->
+                predicate(property)
+            }
+
+            criticalProperties != null
+        }
+    }
+
 }
 
 inline fun <T> EnvSource.useEnvSourcePreferencesManager(

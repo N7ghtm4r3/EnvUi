@@ -1,0 +1,4 @@
+interface:
+  display_name: "WikiToMe"
+  short_description: "Schede brevi e agnostiche su API e funzionalità"
+  default_prompt: "Usa $wikitome per spiegarmi brevemente una specifica API o funzionalità."

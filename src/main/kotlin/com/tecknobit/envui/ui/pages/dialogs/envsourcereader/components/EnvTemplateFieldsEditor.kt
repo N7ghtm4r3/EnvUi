@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalJewelApi::class)
 
-package com.tecknobit.envui.ui.pages.envsourcereader.components
+package com.tecknobit.envui.ui.pages.dialogs.envsourcereader.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -21,8 +21,8 @@ import com.tecknobit.envui.generated.resources.*
 import com.tecknobit.envui.ui.components.LazyListScaffold
 import com.tecknobit.envui.ui.enums.EnvFieldType
 import com.tecknobit.envui.ui.enums.EnvFieldType.ANY
-import com.tecknobit.envui.ui.pages.envsourcereader.data.EnvSourceTemplate
-import com.tecknobit.envui.ui.pages.envsourcereader.data.EnvTemplateField
+import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.data.EnvSourceTemplate
+import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.data.EnvTemplateField
 import com.tecknobit.envui.ui.theme.EnvUiTheme
 import com.tecknobit.envui.ui.utils.toComposeColor
 import org.jetbrains.compose.resources.stringResource

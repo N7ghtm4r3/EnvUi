@@ -1,4 +1,4 @@
-package com.tecknobit.envui.ui.pages.envsourcereader.components
+package com.tecknobit.envui.ui.pages.dialogs.envsourcereader.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

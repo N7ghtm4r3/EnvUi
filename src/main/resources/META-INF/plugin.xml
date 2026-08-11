@@ -92,6 +92,10 @@
         <listener
                 class="com.tecknobit.envui.ide.listeners.EnvSourceEditorListener"
                 topic="com.intellij.openapi.fileEditor.FileEditorManagerListener"/>
+
+        <listener
+                class="com.tecknobit.envui.ide.listeners.IdeLifecycleListener"
+                topic="com.intellij.openapi.project.ProjectManagerListener"/>
     </projectListeners>
 
 </idea-plugin>

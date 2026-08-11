@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.sp
 import com.intellij.ui.JBColor.GRAY
 import com.tecknobit.envui.generated.resources.*
 import com.tecknobit.envui.ui.components.Badge
-import com.tecknobit.envui.ui.pages.envsourcereader.presenter.EnvSourceReaderDialog
+import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.presenter.EnvSourceReaderDialog
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 import com.tecknobit.envui.ui.theme.CardShape
 import com.tecknobit.envui.ui.theme.EnvUiTheme

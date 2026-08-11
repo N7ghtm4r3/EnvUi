@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -49,14 +48,12 @@ fun Chip(
     onClick: (Boolean) -> Unit,
 ) {
     val hint = stringResource(text)
-    val componentColor = remember(isClicked) {
-        color.copy(
-            alpha = if(isClicked)
-                0.3f
-            else
-                0f
-        )
-    }
+    val componentColor = color.copy(
+        alpha = if(isClicked)
+            0.3f
+        else
+            0f
+    )
 
     Tooltip(
         tooltip = {
@@ -80,7 +77,7 @@ fun Chip(
                         color = componentColor
                     )
                     .clickable {
-                        onClick(isClicked)
+                        onClick(!isClicked)
                     }
                     .width(width)
                     .semantics(

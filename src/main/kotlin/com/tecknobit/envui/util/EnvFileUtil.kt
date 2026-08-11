@@ -6,8 +6,8 @@ import com.intellij.psi.PsiManager
 import com.tecknobit.envui.ide.languages.dEnvFileBase
 import com.tecknobit.envui.ide.languages.envfile.dEnvFile
 import com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFile
-import com.tecknobit.envui.ui.pages.envsourcereader.data.EnvSourceTemplate
-import com.tecknobit.envui.ui.pages.envsourcereader.data.EnvTemplateField
+import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.data.EnvSourceTemplate
+import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.data.EnvTemplateField
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 
 fun dEnvFileBase.writeKeys() {

@@ -1,0 +1,25 @@
+package com.tecknobit.envui.ide.listeners
+
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.project.ProjectManagerListener
+import com.tecknobit.envui.ide.services.useEnvSourcePreferencesManager
+import com.tecknobit.envui.ui.pages.dialogs.propertypreferences.criticalproperty.presenter.CriticalPropertyWarningDialog
+
+class IdeLifecycleListener : ProjectManagerListener {
+
+    override fun projectClosingBeforeSave(
+        project: Project
+    ) {
+        super.projectClosingBeforeSave(project)
+        val criticalProperties = project.useEnvSourcePreferencesManager {
+            retrieveAllCriticalEnvSourcePreferences()
+        }
+
+        if(criticalProperties.isNotEmpty()) {
+            val criticalPropertyWarningDialog = CriticalPropertyWarningDialog()
+            criticalPropertyWarningDialog.show()
+        }
+
+    }
+
+}

@@ -1,4 +1,4 @@
-package com.tecknobit.envui.ui.pages.envsourceupsert.presentation
+package com.tecknobit.envui.ui.pages.dialogs.envsourceupsert.presentation
 
 import androidx.lifecycle.ViewModel
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource

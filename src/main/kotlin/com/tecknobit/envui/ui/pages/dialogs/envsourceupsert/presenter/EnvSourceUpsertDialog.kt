@@ -1,4 +1,4 @@
-package com.tecknobit.envui.ui.pages.envsourceupsert.presenter
+package com.tecknobit.envui.ui.pages.dialogs.envsourceupsert.presenter
 
 import com.intellij.openapi.ui.DialogWrapper
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource

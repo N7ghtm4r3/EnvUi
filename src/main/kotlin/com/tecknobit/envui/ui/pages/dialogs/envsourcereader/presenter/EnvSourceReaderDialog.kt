@@ -1,4 +1,4 @@
-package com.tecknobit.envui.ui.pages.envsourcereader.presenter
+package com.tecknobit.envui.ui.pages.dialogs.envsourcereader.presenter
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
@@ -13,10 +13,10 @@ import com.tecknobit.envui.I18nMessageBundle
 import com.tecknobit.envui.generated.resources.*
 import com.tecknobit.envui.ui.components.EnvUiDialog
 import com.tecknobit.envui.ui.helpers.StringResourcesProvider
-import com.tecknobit.envui.ui.pages.envsourcereader.components.EnvSourceContent
-import com.tecknobit.envui.ui.pages.envsourcereader.components.EnvTemplateFieldsEditor
-import com.tecknobit.envui.ui.pages.envsourcereader.presentation.EnvSourceReaderViewModel
-import com.tecknobit.envui.ui.pages.envsourcereader.states.EnvSourceReaderState
+import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.components.EnvSourceContent
+import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.components.EnvTemplateFieldsEditor
+import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.presentation.EnvSourceReaderViewModel
+import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.states.EnvSourceReaderState
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.jewel.ui.component.SegmentedControl
