@@ -5,7 +5,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -15,6 +16,7 @@ import androidx.compose.ui.unit.sp
 import com.intellij.ui.JBColor
 import com.tecknobit.envui.generated.resources.*
 import com.tecknobit.envui.ide.envfile.Property
+import com.tecknobit.envui.ide.services.EnvSourcePropertyPreferences
 import com.tecknobit.envui.ide.services.useEnvSourcePreferencesManager
 import com.tecknobit.envui.ui.components.Chip
 import com.tecknobit.envui.ui.components.DebouncedInput
@@ -153,11 +155,25 @@ private fun Actions(
     envSource: EnvSource,
     property: Property
 ) {
-    val propertyPreferences = envSource.useEnvSourcePreferencesManager {
-        retrievePropertyPreferences(
-            source = envSource.source,
-            property = property
+    var refresh by rememberSaveable { mutableStateOf(false) }
+    var propertyPreferences by rememberSaveable {
+        mutableStateOf(
+            retrievePropertyPreference(
+                envSource = envSource,
+                property = property
+            )
         )
+    }
+
+    LaunchedEffect(refresh) {
+        if(refresh) {
+            propertyPreferences = retrievePropertyPreference(
+                envSource = envSource,
+                property = property
+            )
+
+            refresh = false
+        }
     }
 
     Row (
@@ -178,6 +194,8 @@ private fun Actions(
                     key = property.keyEntry.text,
                     envSource = envSource
                 )
+
+                refresh = true
             }
         )
 
@@ -191,7 +209,21 @@ private fun Actions(
                     key = property.keyEntry.text,
                     envSource = envSource
                 )
+
+                refresh = true
             }
+        )
+    }
+}
+
+private fun retrievePropertyPreference(
+    envSource: EnvSource,
+    property: Property
+): EnvSourcePropertyPreferences {
+    return envSource.useEnvSourcePreferencesManager {
+        retrievePropertyPreferences(
+            source = envSource.source,
+            property = property
         )
     }
 }

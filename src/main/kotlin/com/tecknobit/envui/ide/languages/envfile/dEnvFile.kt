@@ -12,6 +12,7 @@ import com.tecknobit.envui.ide.highlighters.addEnvMark
 import com.tecknobit.envui.ide.highlighters.removeEnvMark
 import com.tecknobit.envui.ide.languages.dEnvFileBase
 import com.tecknobit.envui.ide.services.EnvSourcePreferencesManager
+import com.tecknobit.envui.ide.services.EnvSourcePropertyPreferences
 import com.tecknobit.envui.ide.services.useEnvSourcePreferencesManager
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 
@@ -74,11 +75,11 @@ class dEnvFile(
         )
     }
 
-    private inline fun toggleEnvPref(
+    private fun toggleEnvPref(
         key: String,
         envSource: EnvSource,
         preferenceType: EnvSourcePreferenceType,
-        crossinline onPersistPref: EnvSourcePreferencesManager.(Property, RangeHighlighter?) -> Unit
+        onPersistPref: (EnvSourcePreferencesManager.(Property, RangeHighlighter?) -> Unit)? = null
     ) {
         val property = findPropertyByKey(
             key = key
@@ -124,7 +125,7 @@ class dEnvFile(
                     )
                 }
 
-                onPersistPref(property, highlighter)
+                onPersistPref?.invoke(this, property, highlighter)
             }
         }
     }
@@ -134,28 +135,43 @@ class dEnvFile(
         envSource: EnvSource,
         newPreference: EnvSourcePreferenceType
     ) {
+        val resolvedPropertyPreferences = EnvSourcePropertyPreferences(
+            key = key
+        )
+        val newPreferenceConflictualPreferences = newPreference.conflictualPreferences
+
         val conflictualPreferences = getConflictualPreferences(
             newPreference = newPreference,
             envSource = envSource,
             key = key
         )
-
         conflictualPreferences.forEach { conflictualPreference ->
             toggleEnvPref(
                 key = key,
                 envSource = envSource,
-                preferenceType = conflictualPreference,
-                onPersistPref = { property, _ ->
-                    setPropertyPreference(
-                        source = envSource.source,
-                        property = property,
-                        onSet = { propertyPreferences ->
-                            propertyPreferences.copy(
-                                requireResetOnClose = false
-                            )
-                        }
-                    )
+                preferenceType = conflictualPreference
+            )
+
+            val flagValue = !newPreferenceConflictualPreferences.contains(conflictualPreference)
+            when(newPreference) {
+                CRITICAL -> {
+                    resolvedPropertyPreferences.requireResetOnClose = flagValue
                 }
+                RESET_ON_CLOSE -> {
+                    resolvedPropertyPreferences.isCritical = flagValue
+                }
+            }
+        }
+
+        envSource.useEnvSourcePreferencesManager {
+            val property = findPropertyByKey(
+                key = key
+            )!!
+
+            setPropertyPreference(
+                source = envSource.source,
+                property = property,
+                onSet = { resolvedPropertyPreferences }
             )
         }
     }

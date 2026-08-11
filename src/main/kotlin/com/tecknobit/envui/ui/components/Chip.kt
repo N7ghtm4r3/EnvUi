@@ -49,7 +49,7 @@ fun Chip(
     onClick: (Boolean) -> Unit,
 ) {
     val hint = stringResource(text)
-    var clicked by rememberSaveable { mutableStateOf(isClicked) }
+    var clicked by rememberSaveable(isClicked) { mutableStateOf(isClicked) }
     val componentColor = remember(clicked) {
         color.copy(
             alpha = if(clicked)
