@@ -1,6 +1,7 @@
 package com.tecknobit.envui.ui.theme
 
 import androidx.compose.ui.graphics.Color
+import com.intellij.ui.JBColor
 import com.tecknobit.envui.ui.utils.toComposeColor
 import javax.swing.UIManager
 
@@ -8,6 +9,9 @@ object EnvUiTheme {
 
     val primary: Color
         get() = nativeColorFromUi("Component.focusColor")
+
+    val background: Color
+        get() = JBColor.background().toComposeColor()
 
     val surface: Color
         get() = nativeColorFromUi("EditorPane.background")
