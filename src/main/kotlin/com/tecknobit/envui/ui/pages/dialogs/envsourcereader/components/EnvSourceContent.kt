@@ -18,11 +18,11 @@ import com.tecknobit.envui.generated.resources.*
 import com.tecknobit.envui.ide.envfile.Property
 import com.tecknobit.envui.ide.services.EnvSourcePropertyPreferences
 import com.tecknobit.envui.ide.services.useEnvSourcePreferencesManager
+import com.tecknobit.envui.ui.components.CardShape
 import com.tecknobit.envui.ui.components.Chip
 import com.tecknobit.envui.ui.components.DebouncedInput
 import com.tecknobit.envui.ui.components.LazyListScaffold
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
-import com.tecknobit.envui.ui.theme.CardShape
 import com.tecknobit.envui.ui.theme.EnvUiTheme
 import com.tecknobit.envui.ui.utils.toComposeColor
 import org.jetbrains.compose.resources.stringResource

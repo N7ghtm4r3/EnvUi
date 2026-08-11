@@ -3,7 +3,7 @@ package com.tecknobit.envui.ide.listeners
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManagerListener
 import com.tecknobit.envui.ide.services.useEnvSourcePreferencesManager
-import com.tecknobit.envui.ui.pages.dialogs.propertypreferences.criticalproperty.presenter.CriticalPropertyWarningDialog
+import com.tecknobit.envui.ui.pages.dialogs.propertypreferences.criticalenvsources.presenter.CriticalEnvSourcesWarningDialog
 
 class IdeLifecycleListener : ProjectManagerListener {
 
@@ -11,13 +11,16 @@ class IdeLifecycleListener : ProjectManagerListener {
         project: Project
     ) {
         super.projectClosingBeforeSave(project)
-        val criticalProperties = project.useEnvSourcePreferencesManager {
+        val criticalEnvSources = project.useEnvSourcePreferencesManager {
             retrieveAllCriticalEnvSourcePreferences()
         }
 
-        if(criticalProperties.isNotEmpty()) {
-            val criticalPropertyWarningDialog = CriticalPropertyWarningDialog()
-            criticalPropertyWarningDialog.show()
+        if(criticalEnvSources.isNotEmpty()) {
+            val criticalEnvSourcesWarningDialog = CriticalEnvSourcesWarningDialog(
+                criticalEnvSources = criticalEnvSources
+            )
+
+            criticalEnvSourcesWarningDialog.show()
         }
 
     }
