@@ -11,8 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -49,10 +49,9 @@ fun Chip(
     onClick: (Boolean) -> Unit,
 ) {
     val hint = stringResource(text)
-    var clicked by rememberSaveable(isClicked) { mutableStateOf(isClicked) }
-    val componentColor = remember(clicked) {
+    val componentColor = remember(isClicked) {
         color.copy(
-            alpha = if(clicked)
+            alpha = if(isClicked)
                 0.3f
             else
                 0f
@@ -81,8 +80,7 @@ fun Chip(
                         color = componentColor
                     )
                     .clickable {
-                        clicked = !clicked
-                        onClick(clicked)
+                        onClick(isClicked)
                     }
                     .width(width)
                     .semantics(
