@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
@@ -20,7 +19,6 @@ import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleUtil
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.vfs.VfsUtil
 import com.tecknobit.envui.generated.resources.*
 import com.tecknobit.envui.ide.services.EnvSourcePreferences
 import com.tecknobit.envui.ide.services.EnvSourcePropertyPreferences
@@ -28,6 +26,7 @@ import com.tecknobit.envui.ui.components.*
 import com.tecknobit.envui.ui.pages.dialogs.propertypreferences.criticalenvsources.presentation.CriticalEnvSourcesWarningViewModel
 import com.tecknobit.envui.ui.theme.EnvUiTheme
 import com.tecknobit.envui.ui.utils.toDateString
+import com.tecknobit.envui.util.toVirtualFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
@@ -36,7 +35,6 @@ import org.jetbrains.jewel.ui.component.DefaultButton
 import org.jetbrains.jewel.ui.component.Icon
 import org.jetbrains.jewel.ui.component.Text
 import org.jetbrains.jewel.ui.icons.AllIconsKeys
-import java.nio.file.Path
 
 @Composable
 fun CriticalEnvSourcesList(
@@ -47,16 +45,14 @@ fun CriticalEnvSourcesList(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val criticalEnvSources = uiState.criticalEnvSources
 
-    LaunchedEffect(uiState) {
-        println(criticalEnvSources)
-    }
-
     LazyListScaffold(
         items = criticalEnvSources,
         onEmpty = {
             EmptyState(
-                icon = AllIconsKeys.Empty,
-                title = Res.string.critical_env_sources_changed
+                iconColor = Color.Unspecified,
+                iconSize = 150.dp,
+                icon = AllIconsKeys.Status.Success,
+                title = Res.string.all_diff_solved
             )
         },
         content = {
@@ -110,7 +106,7 @@ private fun LazyListScope.propertiesHeader(
     criticalEnvSource: EnvSourcePreferences,
 ) {
     stickyHeader {
-        val sourcePath = Path.of(criticalEnvSource.sourcePath)
+        val sourcePath = criticalEnvSource.sourcePath
         val module by produceState<Module?>(
             initialValue = null,
             key1 = project,
@@ -118,7 +114,7 @@ private fun LazyListScope.propertiesHeader(
             producer = {
                 value = withContext(Dispatchers.IO) {
                     runReadAction {
-                        val source = VfsUtil.findFile(sourcePath, true)
+                        val source = sourcePath.toVirtualFile()
                         source?.let {
                             ModuleUtil.findModuleForFile(source, project)
                         }
@@ -166,6 +162,8 @@ private fun CriticalEnvSourceCard(
                 horizontalArrangement = Arrangement.spacedBy(5.dp)
             ) {
                 ChangesDiff(
+                    modifier = Modifier
+                        .weight(2.5f),
                     criticalEnvSourceProperty = criticalEnvSourceProperty
                 )
 
@@ -175,12 +173,8 @@ private fun CriticalEnvSourceCard(
                     horizontalAlignment = Alignment.End
                 ) {
                     Actions(
-                        onRevert = {
-
-                        },
-                        onAccept = {
-
-                        }
+                        onRevert = onRevert,
+                        onAccept = onAccept
                     )
                 }
             }

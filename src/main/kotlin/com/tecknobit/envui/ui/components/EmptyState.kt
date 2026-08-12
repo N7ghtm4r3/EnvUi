@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.tecknobit.envui.ui.theme.EnvUiTheme
@@ -21,6 +22,7 @@ fun EmptyState(
     modifier: Modifier = Modifier,
     icon: IconKey,
     iconSize: Dp = 75.dp,
+    iconColor: Color = EnvUiTheme.primary,
     title: StringResource,
     action: @Composable (() -> Unit)? = null,
 ) {
@@ -39,7 +41,7 @@ fun EmptyState(
                 modifier = Modifier
                     .size(iconSize),
                 key = icon,
-                tint = EnvUiTheme.primary,
+                tint = iconColor,
                 contentDescription = text
             )
 
