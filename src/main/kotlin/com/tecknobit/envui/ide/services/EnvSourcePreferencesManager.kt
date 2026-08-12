@@ -19,6 +19,10 @@ data class EnvSourcePropertyPreferences(
     var key: String = "",
     var isCritical: Boolean = false,
     var requireResetOnClose: Boolean = false,
+    var initialValue: String = "",
+    var currentValue: String = initialValue,
+    var lastUpdateAt: Long = -1L,
+    var isChanged: Boolean = false,
 )
 
 @Service(Service.Level.PROJECT)
@@ -42,25 +46,85 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
     ): EnvSourcePropertyPreferences {
         return retrievePropertyPreferences(
             source = source,
-            key = property.keyEntry.text
+            key = property.keyEntry.text,
+            value = property.valueEntry?.text
         )
     }
 
     fun retrievePropertyPreferences(
         source: VirtualFile,
-        key: String
+        key: String,
+        value: String? = ""
     ): EnvSourcePropertyPreferences {
         val envSourcePreference = retrieveEnvSourcePreferences(
             source = source
         )
         val defaultPropertyPreferences = EnvSourcePropertyPreferences(
-            key = key
+            key = key,
+            initialValue = value ?: ""
         )
         if(envSourcePreference == null)
             return defaultPropertyPreferences
 
         val propertyPreferences = envSourcePreference.properties[key]
         return propertyPreferences ?: defaultPropertyPreferences
+    }
+
+    fun setPropertyValue(
+        source: VirtualFile,
+        property: Property,
+        value: String
+    ) {
+        setPropertyPreference(
+            source = source,
+            property = property
+        ) { propertyPreferences ->
+            var currentInitialValue = propertyPreferences.initialValue
+            if(currentInitialValue.isBlank())
+                currentInitialValue = value
+
+            propertyPreferences.copy(
+                initialValue = currentInitialValue,
+                currentValue = value,
+                lastUpdateAt = System.currentTimeMillis(),
+                isChanged = true
+            )
+        }
+    }
+
+    fun acceptNewPropertyValue(
+        source: VirtualFile,
+        property: Property
+    ) {
+        setPropertyPreference(
+            source = source,
+            property = property
+        ) { propertyPreferences ->
+            val newValue = propertyPreferences.currentValue
+
+            propertyPreferences.copy(
+                initialValue = newValue,
+                currentValue = newValue,
+                lastUpdateAt = -1L,
+                isChanged = false
+            )
+        }
+    }
+
+    fun revertPropertyValue(
+        source: VirtualFile,
+        property: Property
+    ) {
+        setPropertyPreference(
+            source = source,
+            property = property
+        ) { propertyPreferences ->
+            propertyPreferences.copy(
+                currentValue = propertyPreferences.initialValue,
+                lastUpdateAt = -1L,
+                isChanged = false
+            )
+        }
     }
 
     fun setPropertyCriticality(
@@ -182,26 +246,40 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
         return state.preferences
     }
 
-    fun retrieveAllCriticalEnvSourcePreferences(): List<EnvSourcePreferences> {
-        return retrieveAllEnvSourcePreferences { propertyPreferences ->
-            propertyPreferences.isCritical
-        }
+    fun retrieveAllCriticalEnvSourcePreferences(
+        excludeUnchanged: Boolean = true
+    ): List<EnvSourcePreferences> {
+        return retrieveAllEnvSourcePreferences(
+            excludeUnchanged = excludeUnchanged,
+            predicate = { propertyPreferences ->
+                propertyPreferences.isCritical
+            }
+        )
     }
 
-    fun retrieveAllResettableOnCloseEnvSourcePreferences(): List<EnvSourcePreferences> {
-        return retrieveAllEnvSourcePreferences { propertyPreferences ->
-            propertyPreferences.requireResetOnClose
-        }
+    fun retrieveAllResettableOnCloseEnvSourcePreferences(
+        excludeUnchanged: Boolean = true
+    ): List<EnvSourcePreferences> {
+        return retrieveAllEnvSourcePreferences(
+            excludeUnchanged = excludeUnchanged,
+            predicate = { propertyPreferences ->
+                propertyPreferences.requireResetOnClose
+            }
+        )
     }
 
     private inline fun retrieveAllEnvSourcePreferences(
-        predicate: (EnvSourcePropertyPreferences) -> Boolean
+        predicate: (EnvSourcePropertyPreferences) -> Boolean,
+        excludeUnchanged: Boolean = true
     ): List<EnvSourcePreferences> {
         val envSourcePreferences = retrieveAllEnvSourcePreferences()
 
         return envSourcePreferences.values.filter { envSourcePreference ->
             val criticalProperties = envSourcePreference.properties.values.firstOrNull { property ->
-                predicate(property)
+                if(excludeUnchanged)
+                    predicate(property) && property.isChanged
+                else
+                    predicate(property)
             }
 
             criticalProperties != null

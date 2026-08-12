@@ -37,6 +37,14 @@ class dEnvFile(
             property = property,
             value = value
         )
+
+        project.useEnvSourcePreferencesManager {
+            setPropertyValue(
+                source = this@dEnvFile.virtualFile,
+                property = property,
+                value = value
+            )
+        }
     }
 
     fun toggleMarkAsCritical(
@@ -171,7 +179,14 @@ class dEnvFile(
             setPropertyPreference(
                 source = envSource.source,
                 property = property,
-                onSet = { resolvedPropertyPreferences }
+                onSet = { propertyPreferences ->
+                    resolvedPropertyPreferences.copy(
+                        initialValue = propertyPreferences.initialValue,
+                        currentValue = propertyPreferences.currentValue,
+                        lastUpdateAt = propertyPreferences.lastUpdateAt,
+                        isChanged = propertyPreferences.isChanged
+                    )
+                }
             )
         }
     }

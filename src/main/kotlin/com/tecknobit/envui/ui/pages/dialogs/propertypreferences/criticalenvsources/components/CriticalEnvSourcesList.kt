@@ -24,6 +24,7 @@ import com.tecknobit.envui.ide.services.EnvSourcePreferences
 import com.tecknobit.envui.ide.services.EnvSourcePropertyPreferences
 import com.tecknobit.envui.ui.components.*
 import com.tecknobit.envui.ui.theme.EnvUiTheme
+import com.tecknobit.envui.ui.utils.toDateString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
@@ -71,6 +72,7 @@ fun CriticalEnvSourcesList(
                         CriticalEnvSourceCard(
                             modifier = Modifier
                                 .animateItem(),
+                            project = project,
                             criticalEnvSourceProperty = criticalEnvSourceProperty
                         )
                     }
@@ -119,6 +121,7 @@ private fun LazyListScope.propertiesHeader(
 @Composable
 private fun CriticalEnvSourceCard(
     modifier: Modifier = Modifier,
+    project: Project,
     criticalEnvSourceProperty: EnvSourcePropertyPreferences
 ) {
     Card(
@@ -138,14 +141,19 @@ private fun CriticalEnvSourceCard(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(5.dp)
             ) {
-                ChangesDiff()
+                ChangesDiff(
+                    criticalEnvSourceProperty = criticalEnvSourceProperty
+                )
 
                 Column (
                     modifier = Modifier
                         .weight(1f),
                     horizontalAlignment = Alignment.End
                 ) {
-                    Actions()
+                    Actions(
+                        project = project,
+                        criticalEnvSourceProperty = criticalEnvSourceProperty
+                    )
                 }
             }
         }
@@ -169,7 +177,7 @@ private fun CriticalEnvSourceCardHeader(
         Text(
             text = stringResource(
                 resource = Res.string.critical_env_property_changed_description,
-                "22"
+                criticalEnvSourceProperty.lastUpdateAt.toDateString()
             ),
             fontSize = 12.sp,
             color = EnvUiTheme.mutedColor
@@ -180,13 +188,14 @@ private fun CriticalEnvSourceCardHeader(
 @Composable
 private fun ChangesDiff(
     modifier: Modifier = Modifier,
+    criticalEnvSourceProperty: EnvSourcePropertyPreferences
 ) {
     Row(
         modifier = modifier
     ) {
         CriticalPropertyValueBadge(
             color = EnvUiTheme.primary,
-            value = "gggg"
+            value = criticalEnvSourceProperty.initialValue
         )
 
         Icon(
@@ -198,7 +207,7 @@ private fun ChangesDiff(
 
         CriticalPropertyValueBadge(
             color = EnvUiTheme.error,
-            value = "gggg"
+            value = criticalEnvSourceProperty.currentValue
         )
     }
 }
@@ -222,6 +231,8 @@ private fun CriticalPropertyValueBadge(
 @Composable
 private fun Actions(
     modifier: Modifier = Modifier,
+    project: Project,
+    criticalEnvSourceProperty: EnvSourcePropertyPreferences
 ) {
     Row (
         modifier = modifier,

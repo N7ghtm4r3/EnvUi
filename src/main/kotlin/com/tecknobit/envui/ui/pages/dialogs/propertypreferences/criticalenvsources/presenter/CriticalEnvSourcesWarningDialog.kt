@@ -15,6 +15,7 @@ class CriticalEnvSourcesWarningDialog(
     private val criticalEnvSources: List<EnvSourcePreferences>
 ) : EnvUiDialog<CriticalEnvSourcesWarningViewModel>(
     viewModel = CriticalEnvSourcesWarningViewModel(
+        project = project,
         criticalProperties = criticalEnvSources
     ),
     title = I18nMessageBundle.message("critical.env_sources.changed", criticalEnvSources.size)
