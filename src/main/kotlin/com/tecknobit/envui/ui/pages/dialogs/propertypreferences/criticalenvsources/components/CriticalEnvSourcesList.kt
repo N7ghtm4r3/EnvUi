@@ -9,24 +9,28 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleUtil
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VfsUtil
 import com.tecknobit.envui.generated.resources.Res
+import com.tecknobit.envui.generated.resources.critical_env_property_changed_description
 import com.tecknobit.envui.generated.resources.critical_env_sources_changed
 import com.tecknobit.envui.ide.services.EnvSourcePreferences
 import com.tecknobit.envui.ide.services.EnvSourcePropertyPreferences
-import com.tecknobit.envui.ui.components.Card
-import com.tecknobit.envui.ui.components.EmptyState
-import com.tecknobit.envui.ui.components.LazyListScaffold
-import com.tecknobit.envui.ui.components.ModuleBadge
+import com.tecknobit.envui.ui.components.*
 import com.tecknobit.envui.ui.theme.EnvUiTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.jewel.foundation.theme.LocalTextStyle
+import org.jetbrains.jewel.ui.component.Icon
 import org.jetbrains.jewel.ui.component.Text
 import org.jetbrains.jewel.ui.icons.AllIconsKeys
 import java.nio.file.Path
@@ -65,7 +69,7 @@ fun CriticalEnvSourcesList(
                         items = criticalEnvSource.properties.values.toList(),
                         key = { it.key }
                     ) { criticalEnvSourceProperty ->
-                        CriticalEnvSource(
+                        CriticalEnvSourceCard(
                             modifier = Modifier
                                 .animateItem(),
                             criticalEnvSourceProperty = criticalEnvSourceProperty
@@ -114,17 +118,72 @@ private fun LazyListScope.propertiesHeader(
 }
 
 @Composable
-private fun CriticalEnvSource(
+private fun CriticalEnvSourceCard(
     modifier: Modifier = Modifier,
     criticalEnvSourceProperty: EnvSourcePropertyPreferences
 ) {
     Card(
         modifier = modifier
-            .height(150.dp)
             .fillMaxWidth()
     ) {
-        Text(
-            text = criticalEnvSourceProperty.key
-        )
+        Column (
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Column (
+                verticalArrangement = Arrangement.spacedBy(5.dp)
+            ) {
+                KeyText(
+                    key = criticalEnvSourceProperty.key,
+                    fontSize = 22.sp
+                )
+
+                Text(
+                    text = stringResource(
+                        resource = Res.string.critical_env_property_changed_description,
+                        "22"
+                    ),
+                    fontSize = 12.sp,
+                    color = EnvUiTheme.mutedColor
+                )
+            }
+
+            Row (
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(5.dp)
+            ) {
+                CriticalPropertyValueBadge(
+                    color = EnvUiTheme.primary,
+                    value = "gggg"
+                )
+
+                Icon(
+                    modifier = Modifier
+                        .size(26.dp),
+                    key = AllIconsKeys.Actions.ArrowExpand,
+                    contentDescription = ""
+                )
+
+                CriticalPropertyValueBadge(
+                    color = EnvUiTheme.error,
+                    value = "gggg"
+                )
+            }
+        }
     }
+}
+
+@Composable
+private fun CriticalPropertyValueBadge(
+    color: Color,
+    value: String
+) {
+    Badge(
+        text = value,
+        textStyle = LocalTextStyle.current.copy(
+            fontSize = 16.sp
+        ),
+        color = color
+    )
 }

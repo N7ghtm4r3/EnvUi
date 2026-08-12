@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.util.NlsContexts.DialogTitle
+import com.tecknobit.envui.ui.helpers.StringResourcesProvider
 import org.jetbrains.jewel.bridge.compose
 import java.awt.Dimension
 import javax.swing.Action
@@ -30,7 +31,11 @@ abstract class EnvUiDialog<V: ViewModel>(
                 preferredSize = Dimension(600, 500)
             },
             content = {
-                DialogContent()
+                StringResourcesProvider(
+                    context = this::class
+                ) {
+                    DialogContent()
+                }
             }
         )
     }

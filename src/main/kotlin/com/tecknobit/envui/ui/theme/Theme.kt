@@ -2,6 +2,7 @@ package com.tecknobit.envui.ui.theme
 
 import androidx.compose.ui.graphics.Color
 import com.intellij.ui.JBColor
+import com.intellij.util.ui.UIUtil
 import com.tecknobit.envui.ui.utils.toComposeColor
 import javax.swing.UIManager
 
@@ -21,6 +22,11 @@ object EnvUiTheme {
 
     val error: Color
         get() = nativeColorFromUi("Component.errorFocusColor")
+
+    val mutedColor: Color
+        get() = UIUtil
+            .getLabelInfoForeground()
+            .toComposeColor()
 
     private fun nativeColorFromUi(
         colorKey: String

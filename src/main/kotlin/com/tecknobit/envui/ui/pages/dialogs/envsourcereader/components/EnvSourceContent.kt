@@ -10,18 +10,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.intellij.ui.JBColor
 import com.tecknobit.envui.generated.resources.*
 import com.tecknobit.envui.ide.envfile.Property
 import com.tecknobit.envui.ide.services.EnvSourcePropertyPreferences
 import com.tecknobit.envui.ide.services.useEnvSourcePreferencesManager
-import com.tecknobit.envui.ui.components.CardShape
-import com.tecknobit.envui.ui.components.Chip
-import com.tecknobit.envui.ui.components.DebouncedInput
-import com.tecknobit.envui.ui.components.LazyListScaffold
+import com.tecknobit.envui.ui.components.*
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 import com.tecknobit.envui.ui.theme.EnvUiTheme
 import com.tecknobit.envui.ui.utils.toComposeColor
@@ -123,10 +118,8 @@ private fun EnvSourceProperty(
                     modifier = Modifier
                         .weight(3f)
                 ) {
-                    Text(
-                        text = property.keyEntry.text,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
+                    KeyText(
+                        property = property
                     )
                 }
 

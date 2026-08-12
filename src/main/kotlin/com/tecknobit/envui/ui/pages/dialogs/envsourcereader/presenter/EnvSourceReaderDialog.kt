@@ -12,7 +12,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tecknobit.envui.I18nMessageBundle
 import com.tecknobit.envui.generated.resources.*
 import com.tecknobit.envui.ui.components.EnvUiDialog
-import com.tecknobit.envui.ui.helpers.StringResourcesProvider
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.components.EnvSourceContent
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.components.EnvTemplateFieldsEditor
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.presentation.EnvSourceReaderViewModel
@@ -38,40 +37,34 @@ class EnvSourceReaderDialog(
     @Composable
     override fun DialogContent() {
         val dialogState by viewModel.dialogState.collectAsStateWithLifecycle()
+        val workingOnSource = remember { mutableStateOf(true) }
 
-        StringResourcesProvider(
-            context = EnvSourceReaderDialog::class,
-            content = {
-                val workingOnSource = remember { mutableStateOf(true) }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            TabControls(
+                workingOnSource = workingOnSource
+            )
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    TabControls(
+            AnimatedContent(
+                modifier = Modifier
+                    .padding(
+                        top = 16.dp
+                    ),
+                targetState = workingOnSource.value
+            ) { isWorkingOnSource ->
+                if (isWorkingOnSource) {
+                    SourceContent(
                         workingOnSource = workingOnSource
                     )
-
-                    AnimatedContent(
-                        modifier = Modifier
-                            .padding(
-                                top = 16.dp
-                            ),
-                        targetState = workingOnSource.value
-                    ) { isWorkingOnSource ->
-                        if (isWorkingOnSource) {
-                            SourceContent(
-                                workingOnSource = workingOnSource
-                            )
-                        } else {
-                            TemplateContent(
-                                dialogState = dialogState
-                            )
-                        }
-                    }
+                } else {
+                    TemplateContent(
+                        dialogState = dialogState
+                    )
                 }
             }
-        )
+        }
     }
 
     @Composable
