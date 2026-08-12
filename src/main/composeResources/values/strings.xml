@@ -26,4 +26,6 @@
     <string name="reset_value_on_close">Restore the initial value on session close</string>
     <string name="critical_env_sources_changed">There are $1%d critical env sources have changed</string>
     <string name="critical_env_property_changed_description">This property changed at %1$s</string>
+    <string name="accept">Accept</string>
+    <string name="revert">Revert</string>
 </resources>

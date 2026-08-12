@@ -19,9 +19,7 @@ import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleUtil
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VfsUtil
-import com.tecknobit.envui.generated.resources.Res
-import com.tecknobit.envui.generated.resources.critical_env_property_changed_description
-import com.tecknobit.envui.generated.resources.critical_env_sources_changed
+import com.tecknobit.envui.generated.resources.*
 import com.tecknobit.envui.ide.services.EnvSourcePreferences
 import com.tecknobit.envui.ide.services.EnvSourcePropertyPreferences
 import com.tecknobit.envui.ui.components.*
@@ -30,6 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.jewel.foundation.theme.LocalTextStyle
+import org.jetbrains.jewel.ui.component.DefaultButton
 import org.jetbrains.jewel.ui.component.Icon
 import org.jetbrains.jewel.ui.component.Text
 import org.jetbrains.jewel.ui.icons.AllIconsKeys
@@ -129,23 +128,9 @@ private fun CriticalEnvSourceCard(
         Column (
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Column (
-                verticalArrangement = Arrangement.spacedBy(5.dp)
-            ) {
-                KeyText(
-                    key = criticalEnvSourceProperty.key,
-                    fontSize = 22.sp
-                )
-
-                Text(
-                    text = stringResource(
-                        resource = Res.string.critical_env_property_changed_description,
-                        "22"
-                    ),
-                    fontSize = 12.sp,
-                    color = EnvUiTheme.mutedColor
-                )
-            }
+            CriticalEnvSourceCardHeader(
+                criticalEnvSourceProperty = criticalEnvSourceProperty
+            )
 
             Row (
                 modifier = Modifier
@@ -153,37 +138,113 @@ private fun CriticalEnvSourceCard(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(5.dp)
             ) {
-                CriticalPropertyValueBadge(
-                    color = EnvUiTheme.primary,
-                    value = "gggg"
-                )
+                ChangesDiff()
 
-                Icon(
+                Column (
                     modifier = Modifier
-                        .size(26.dp),
-                    key = AllIconsKeys.Actions.ArrowExpand,
-                    contentDescription = ""
-                )
-
-                CriticalPropertyValueBadge(
-                    color = EnvUiTheme.error,
-                    value = "gggg"
-                )
+                        .weight(1f),
+                    horizontalAlignment = Alignment.End
+                ) {
+                    Actions()
+                }
             }
         }
     }
 }
 
 @Composable
+private fun CriticalEnvSourceCardHeader(
+    modifier: Modifier = Modifier,
+    criticalEnvSourceProperty: EnvSourcePropertyPreferences
+) {
+    Column (
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(5.dp)
+    ) {
+        KeyText(
+            key = criticalEnvSourceProperty.key,
+            fontSize = 22.sp
+        )
+
+        Text(
+            text = stringResource(
+                resource = Res.string.critical_env_property_changed_description,
+                "22"
+            ),
+            fontSize = 12.sp,
+            color = EnvUiTheme.mutedColor
+        )
+    }
+}
+
+@Composable
+private fun ChangesDiff(
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier
+    ) {
+        CriticalPropertyValueBadge(
+            color = EnvUiTheme.primary,
+            value = "gggg"
+        )
+
+        Icon(
+            modifier = Modifier
+                .size(26.dp),
+            key = AllIconsKeys.Actions.ArrowExpand,
+            contentDescription = ""
+        )
+
+        CriticalPropertyValueBadge(
+            color = EnvUiTheme.error,
+            value = "gggg"
+        )
+    }
+}
+
+@Composable
 private fun CriticalPropertyValueBadge(
+    modifier: Modifier = Modifier,
     color: Color,
     value: String
 ) {
     Badge(
+        modifier = modifier,
         text = value,
         textStyle = LocalTextStyle.current.copy(
             fontSize = 16.sp
         ),
         color = color
     )
+}
+
+@Composable
+private fun Actions(
+    modifier: Modifier = Modifier,
+) {
+    Row (
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        DestructiveButton(
+            onClick = {
+
+            }
+        ) {
+            Text(
+                text = stringResource(Res.string.revert)
+            )
+        }
+
+        DefaultButton(
+            onClick = {
+
+            }
+        ) {
+            Text(
+                text = stringResource(Res.string.accept)
+            )
+        }
+    }
 }
