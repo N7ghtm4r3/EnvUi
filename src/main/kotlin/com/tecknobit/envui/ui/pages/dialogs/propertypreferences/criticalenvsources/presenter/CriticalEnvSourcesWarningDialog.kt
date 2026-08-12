@@ -16,7 +16,7 @@ class CriticalEnvSourcesWarningDialog(
 ) : EnvUiDialog<CriticalEnvSourcesWarningViewModel>(
     viewModel = CriticalEnvSourcesWarningViewModel(
         project = project,
-        criticalProperties = criticalEnvSources
+        criticalEnvSources = criticalEnvSources
     ),
     title = I18nMessageBundle.message("critical.env_sources.changed", criticalEnvSources.size)
 ) {
@@ -27,7 +27,7 @@ class CriticalEnvSourcesWarningDialog(
             modifier = Modifier
                 .fillMaxSize(),
             project = project,
-            criticalEnvSources = criticalEnvSources
+            viewModel = viewModel
         )
     }
 

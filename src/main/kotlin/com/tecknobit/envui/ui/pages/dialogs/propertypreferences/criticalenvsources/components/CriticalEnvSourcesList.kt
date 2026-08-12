@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleUtil
@@ -23,6 +25,7 @@ import com.tecknobit.envui.generated.resources.*
 import com.tecknobit.envui.ide.services.EnvSourcePreferences
 import com.tecknobit.envui.ide.services.EnvSourcePropertyPreferences
 import com.tecknobit.envui.ui.components.*
+import com.tecknobit.envui.ui.pages.dialogs.propertypreferences.criticalenvsources.presentation.CriticalEnvSourcesWarningViewModel
 import com.tecknobit.envui.ui.theme.EnvUiTheme
 import com.tecknobit.envui.ui.utils.toDateString
 import kotlinx.coroutines.Dispatchers
@@ -39,8 +42,15 @@ import java.nio.file.Path
 fun CriticalEnvSourcesList(
     modifier: Modifier = Modifier,
     project: Project,
-    criticalEnvSources: List<EnvSourcePreferences>
+    viewModel: CriticalEnvSourcesWarningViewModel
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val criticalEnvSources = uiState.criticalEnvSources
+
+    LaunchedEffect(uiState) {
+        println(criticalEnvSources)
+    }
+
     LazyListScaffold(
         items = criticalEnvSources,
         onEmpty = {
@@ -72,8 +82,21 @@ fun CriticalEnvSourcesList(
                         CriticalEnvSourceCard(
                             modifier = Modifier
                                 .animateItem(),
-                            project = project,
-                            criticalEnvSourceProperty = criticalEnvSourceProperty
+                            criticalEnvSourceProperty = criticalEnvSourceProperty,
+                            onRevert = {
+                                viewModel.revertPropertyValue(
+                                    sourcePath = criticalEnvSource.sourcePath,
+                                    envSourcePreferences = criticalEnvSource,
+                                    propertyPreferences = criticalEnvSourceProperty
+                                )
+                            },
+                            onAccept = {
+                                viewModel.acceptNewPropertyValue(
+                                    sourcePath = criticalEnvSource.sourcePath,
+                                    envSourcePreferences = criticalEnvSource,
+                                    propertyPreferences = criticalEnvSourceProperty
+                                )
+                            }
                         )
                     }
                 }
@@ -121,8 +144,9 @@ private fun LazyListScope.propertiesHeader(
 @Composable
 private fun CriticalEnvSourceCard(
     modifier: Modifier = Modifier,
-    project: Project,
-    criticalEnvSourceProperty: EnvSourcePropertyPreferences
+    criticalEnvSourceProperty: EnvSourcePropertyPreferences,
+    onRevert: () -> Unit,
+    onAccept: () -> Unit
 ) {
     Card(
         modifier = modifier
@@ -151,8 +175,12 @@ private fun CriticalEnvSourceCard(
                     horizontalAlignment = Alignment.End
                 ) {
                     Actions(
-                        project = project,
-                        criticalEnvSourceProperty = criticalEnvSourceProperty
+                        onRevert = {
+
+                        },
+                        onAccept = {
+
+                        }
                     )
                 }
             }
@@ -231,17 +259,15 @@ private fun CriticalPropertyValueBadge(
 @Composable
 private fun Actions(
     modifier: Modifier = Modifier,
-    project: Project,
-    criticalEnvSourceProperty: EnvSourcePropertyPreferences
+    onRevert: () -> Unit,
+    onAccept: () -> Unit
 ) {
     Row (
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         DestructiveButton(
-            onClick = {
-
-            }
+            onClick = onRevert
         ) {
             Text(
                 text = stringResource(Res.string.revert)
@@ -249,9 +275,7 @@ private fun Actions(
         }
 
         DefaultButton(
-            onClick = {
-
-            }
+            onClick = onAccept
         ) {
             Text(
                 text = stringResource(Res.string.accept)
