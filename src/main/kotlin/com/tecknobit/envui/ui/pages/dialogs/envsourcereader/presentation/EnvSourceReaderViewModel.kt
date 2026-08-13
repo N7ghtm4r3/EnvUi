@@ -55,6 +55,9 @@ class EnvSourceReaderViewModel(
     private fun createTemplateFile(): dEnvTemplateFile {
         val envSource = envSource.psiEnvSource
         val directory = requireNotNull(envSource.containingDirectory)
+        val existingTemplate = directory.findFile(ENV_TEMPLATE_FILENAME)
+        if (existingTemplate != null)
+            return existingTemplate as dEnvTemplateFile
 
         return runWriteAction {
             val template = directory.createFile(ENV_TEMPLATE_FILENAME) as dEnvTemplateFile

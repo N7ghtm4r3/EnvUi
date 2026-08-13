@@ -58,22 +58,22 @@
                 patterns=".env.template"/>
     </extensions>
 
-<!--    <actions>-->
-<!--        <action-->
-<!--                id="com.tecknobit.envui.ide.actions.OpenEnvSourceSettingsDialogActionogAction"-->
-<!--                class="com.tecknobit.envui.ide.actions.OpenEnvSourceSettingsDialogActionogAction"-->
-<!--                text="Open source"-->
-<!--                description="Open .env source">-->
+    <actions>
+        <action
+                id="com.tecknobit.envui.ide.actions.OpenEnvSourceDialogAction"
+                class="com.tecknobit.envui.ide.actions.OpenEnvSourceDialogAction"
+                text="Open env source"
+                description="Open .env source">
 
-<!--            <add-to-group-->
-<!--                    group-id="ToolsMenu"-->
-<!--                    anchor="last"/>-->
+            <add-to-group
+                    group-id="ToolsMenu"
+                    anchor="last"/>
 
-<!--            <keyboard-shortcut-->
-<!--                    keymap="$default"-->
-<!--                    first-keystroke="control alt E"/>-->
-<!--        </action>-->
-<!--    </actions>-->
+            <keyboard-shortcut
+                    keymap="$default"
+                    first-keystroke="meta PERIOD E"/>
+        </action>
+    </actions>
 
     <dependencies>
         <plugin id="com.intellij.modules.platform"/>
