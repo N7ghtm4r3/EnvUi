@@ -22,7 +22,7 @@ data class EnvSourcePropertyPreferences(
     var initialValue: String = "",
     var currentValue: String = initialValue,
     var lastUpdateAt: Long = -1L,
-    var isChanged: Boolean = false,
+    var isChanged: Boolean = initialValue != currentValue,
 )
 
 @Service(Service.Level.PROJECT)
@@ -82,12 +82,16 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
             var currentInitialValue = propertyPreferences.initialValue
             if(currentInitialValue.isBlank())
                 currentInitialValue = value
+            val isChanged = currentInitialValue != value
 
             propertyPreferences.copy(
                 initialValue = currentInitialValue,
                 currentValue = value,
-                lastUpdateAt = System.currentTimeMillis(),
-                isChanged = true
+                lastUpdateAt =  if (isChanged)
+                    System.currentTimeMillis()
+                else
+                    -1L,
+                isChanged = isChanged
             )
         }
     }

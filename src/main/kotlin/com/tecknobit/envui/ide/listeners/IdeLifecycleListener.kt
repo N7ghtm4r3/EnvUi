@@ -10,7 +10,6 @@ class IdeLifecycleListener : ProjectManagerListener {
     override fun projectClosingBeforeSave(
         project: Project
     ) {
-        super.projectClosingBeforeSave(project)
         val criticalEnvSources = project.useEnvSourcePreferencesManager {
             retrieveAllCriticalEnvSourcePreferences()
         }
@@ -22,6 +21,8 @@ class IdeLifecycleListener : ProjectManagerListener {
             )
 
             criticalEnvSourcesWarningDialog.show()
+
+            super.projectClosingBeforeSave(project)
         }
 
     }

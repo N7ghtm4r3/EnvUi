@@ -50,7 +50,7 @@ fun CriticalEnvSourcesList(
         onEmpty = {
             EmptyState(
                 iconColor = Color.Unspecified,
-                iconSize = 150.dp,
+                iconSize = 100.dp,
                 icon = AllIconsKeys.Status.Success,
                 title = Res.string.all_diff_solved
             )
