@@ -126,11 +126,10 @@ abstract class dEnvFileBase(
     }
 
     protected fun commitOnDocument(
+        synchronously: Boolean = false,
         onWork: (Document) -> Unit
     ) {
-        invokeLater(
-            modalityState = ModalityState.current()
-        ) {
+        val documentRoutine = {
             provideDocument { manager, document ->
                 document?.let {
                     WriteCommandAction.runWriteCommandAction(project) {
@@ -139,6 +138,17 @@ abstract class dEnvFileBase(
                     }
                 }
             }
+        }
+
+        if(synchronously)
+            documentRoutine()
+        else {
+            invokeLater(
+                modalityState = ModalityState.current(),
+                runnable = {
+                    documentRoutine()
+                }
+            )
         }
     }
 

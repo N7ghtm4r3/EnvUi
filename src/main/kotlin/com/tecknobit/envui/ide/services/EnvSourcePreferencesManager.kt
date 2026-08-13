@@ -115,22 +115,6 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
         }
     }
 
-    fun revertPropertyValue(
-        source: VirtualFile,
-        property: Property
-    ) {
-        setPropertyPreference(
-            source = source,
-            property = property
-        ) { propertyPreferences ->
-            propertyPreferences.copy(
-                currentValue = propertyPreferences.initialValue,
-                lastUpdateAt = -1L,
-                isChanged = false
-            )
-        }
-    }
-
     fun setPropertyCriticality(
         source: VirtualFile,
         property: Property,
@@ -247,7 +231,13 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
     }
 
     fun retrieveAllEnvSourcePreferences(): Map<String, EnvSourcePreferences> {
-        return state.preferences
+        return state.preferences.mapValues { (_, preferences) ->
+            preferences.copy(
+                properties = preferences.properties.mapValues { (_, property) ->
+                    property.copy()
+                }
+            )
+        }
     }
 
     fun retrieveAllCriticalEnvSourcePreferences(
@@ -279,14 +269,16 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
         val envSourcePreferences = retrieveAllEnvSourcePreferences()
 
         return envSourcePreferences.values.filter { envSourcePreference ->
-            val criticalProperties = envSourcePreference.properties.values.firstOrNull { property ->
+            val criticalProperties = envSourcePreference.properties.filter { (_, property) ->
                 if(excludeUnchanged)
                     predicate(property) && property.isChanged
                 else
                     predicate(property)
             }
 
-            criticalProperties != null
+            envSourcePreference.properties = criticalProperties
+
+            criticalProperties.isNotEmpty()
         }
     }
 

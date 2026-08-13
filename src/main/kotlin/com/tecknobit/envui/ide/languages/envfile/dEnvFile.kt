@@ -27,7 +27,8 @@ class dEnvFile(
 
     fun updateValueForKey(
         key: String,
-        value: String
+        value: String,
+        synchronously: Boolean = false
     ) {
         val property = findPropertyByKey(
             key = key
@@ -35,7 +36,8 @@ class dEnvFile(
 
         upsertValue(
             property = property,
-            value = value
+            value = value,
+            synchronously = synchronously
         )
 
         project.useEnvSourcePreferencesManager {
@@ -233,14 +235,17 @@ class dEnvFile(
 
     private fun dEnvFile.upsertValue(
         property: Property,
-        value: String
+        value: String,
+        synchronously: Boolean
     ) {
         val currentValueEntry = property.valueEntry
         val currentValue = currentValueEntry?.text ?: ""
         if(currentValue == value)
             return
 
-        commitOnDocument { document ->
+        commitOnDocument(
+            synchronously = synchronously
+        ) { document ->
             if(currentValueEntry == null) {
                 val equalsNode = property.node.findChildByType(
                     EnvGeneratedTypes.EQUALS

@@ -56,12 +56,7 @@ class CriticalEnvSourcesWarningViewModel(
             sourcePath = sourcePath,
             envSourcePreferences = envSourcePreferences,
             propertyPreferences = propertyPreferences
-        ) { source, _, property ->
-            revertPropertyValue(
-                source = source,
-                property = property
-            )
-
+        ) { _, _, _ ->
             propertyPreferences.initialValue
         }
     }

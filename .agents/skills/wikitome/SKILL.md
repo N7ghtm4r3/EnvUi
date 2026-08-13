@@ -1,75 +1,83 @@
 ---
 name: wikitome
-description: Crea in chat una scheda breve, chiara e autonoma su una specifica API, capacità tecnica o funzionalità da implementare, per esempio "come implementare remember". Usa questa skill quando l'utente vuole capire rapidamente che cosa fa un'API o un concetto, come progettarlo in modo indipendente da framework e linguaggi, i casi d'uso, quando usarlo o evitarlo e un piccolo esempio concettuale. Su richiesta esplicita, valuta anche uno snippet o scenario condiviso dall'utente rispetto all'API trattata.
+description: Create a short, clear, self-contained wiki entry in chat about a specific API, technical capability, or functionality to implement, for example "how to implement remember." Before producing the entry, always analyze the available project context in read-only mode. Use this skill when the user wants to quickly understand what an API or concept does, how to design it independently of languages and frameworks, its use cases, when to use or avoid it, better alternatives, and a small conceptual example. Also accept a user-provided scenario to identify the APIs or capabilities to document; when a scenario contains multiple candidates, list them first and expand the user-selected ones step by step. When explicitly requested, evaluate the scenario or a snippet against the API being discussed.
 ---
 
 # WikiToMe
 
-## Obiettivo
+## Objective
 
-Produrre una voce wiki tecnica, compatta e consultabile a colpo d'occhio. Restare agnostici rispetto a linguaggi, framework, vendor e librerie, salvo richiesta esplicita dell'utente.
+Produce a compact technical wiki entry that can be understood at a glance. Remain agnostic about languages, frameworks, vendors, and libraries unless the user explicitly requests otherwise.
 
-## Procedura
+## Procedure
 
-1. Identificare l'API, la capacità o il comportamento richiesto e il problema che risolve.
-2. Se il nome è ambiguo, dichiarare in una riga l'interpretazione adottata. Non inventare firme, endpoint o comportamenti proprietari.
-3. Descrivere il contratto concettuale: input, output, stato, persistenza, errori e vincoli rilevanti. Omettere le voci non applicabili.
-4. Spiegare l'implementazione tramite componenti e flusso dei dati, usando interfacce astratte e pseudocodice neutrale.
-5. Evidenziare i casi d'uso, quando scegliere la soluzione e quando evitarla.
-6. Concludere con un esempio minimo che mostri il percorso principale e, se importante, un errore o caso limite.
-7. Aggiungere una valutazione contestuale solo quando l'utente chiede esplicitamente di valutare uno snippet o scenario che ha condiviso.
+1. Always analyze the available project context in read-only mode before identifying or describing any API. Examine only the files, documentation, and elements relevant to the request; do not modify the project.
+2. Identify the requested API, capability, or behavior and the problem it solves.
+3. When the user provides a scenario without naming a specific API, use it to identify candidate APIs or capabilities to document. Derive candidates only from the scenario and the analyzed context, without inventing missing requirements, APIs, or behaviors.
+4. If the scenario contains multiple candidates, return a compact list of the APIs or capabilities and the role each one plays. Do not expand all entries automatically. Let the user choose which candidates to explore, then document the selected ones one at a time, step by step.
+5. If the name is ambiguous, state the adopted interpretation in one line. Do not invent signatures, endpoints, or proprietary behaviors.
+6. Describe the conceptual contract: input, output, state, persistence, errors, and relevant constraints. Omit items that do not apply.
+7. Explain the implementation through components and data flow, using abstract interfaces and language-neutral pseudocode.
+8. Highlight use cases, when to choose the solution, when to avoid it, and any better-suited alternatives. Base alternatives on the analyzed context and clearly state why they may be preferable.
+9. Conclude with a minimal example showing the main path and, when important, an error or edge case.
+10. Add a contextual evaluation only when the user explicitly asks to evaluate a snippet or scenario they shared.
 
-## Formato della risposta
+## Response format
 
-Usare questo ordine, adattando o unendo le sezioni quando serve. Preferire definizioni, elenchi brevi e tabelle compatte alla prosa continua.
+Use this order, adapting or merging sections when needed. Prefer definitions, short lists, and compact tables over continuous prose.
 
-### `<nome API o funzionalità>`
+### Candidate APIs or capabilities (scenario only)
 
-> Definizione in 1–2 frasi e problema risolto.
+When a scenario yields multiple candidates, list each candidate with its purpose and relevance to the scenario. Stop after the list and let the user choose which candidate to explore first.
 
-#### Contratto
+### `<API or functionality name>`
 
-Mostrare firma concettuale, input, risultato, stato ed errori principali. Usare una tabella solo se chiarisce più campi.
+> Definition in 1–2 sentences and the problem it solves.
 
-#### Funzionamento
+#### Contract
 
-Elencare da 3 a 6 passaggi concettuali, includendo solo i componenti necessari.
+Show the conceptual signature, input, result, state, and main errors. Use a table only when it clarifies multiple fields.
 
-#### Utilizzo
+#### How it works
 
-Raccogliere in punti distinti: casi d'uso, quando usarla e quando evitarla.
+List 3–6 conceptual steps, including only the necessary components.
 
-#### Esempio
+#### Usage
 
-Mostrare un esempio minimo e completo del percorso principale.
+Cover in separate points: use cases, when to use it, when to avoid it, and better-suited alternatives with their relevant tradeoffs.
 
-#### Valutazione dello snippet o scenario (opzionale)
+#### Example
 
-Includere questa parte solo su richiesta esplicita e basarla sul materiale fornito dall'utente. Valutare l'uso rispetto al contratto, al ciclo di vita e ai casi d'uso dell'API descritta, non come code review generale.
+Show a minimal, complete example of the main path.
 
-- Dire subito se l'approccio è adatto, parzialmente adatto o non adatto, spiegandone il motivo.
-- Individuare al massimo tre aspetti rilevanti: correttezza, ciclo di vita, chiavi o dipendenze, stato, errori, prestazioni oppure alternativa più appropriata.
-- Proporre una correzione minima quando serve; preservare linguaggio, framework e stile dello snippet originale.
-- Usare un tono naturale e diretto. Non imporre la struttura wiki a questa sezione se una breve spiegazione discorsiva risulta più chiara.
-- Dichiarare eventuali ipotesi quando lo scenario non contiene abbastanza contesto. Non inventare requisiti mancanti.
+#### Snippet or scenario evaluation (optional)
 
-## Regole di qualità
+Include this section only when explicitly requested and base it on the material provided by the user. Evaluate the usage against the contract, lifecycle, and use cases of the described API, not as a general code review.
 
-- Puntare a 150–300 parole, salvo richiesta diversa.
-- Adottare uno stile wiki: neutrale, dichiarativo, denso di informazioni e senza introduzioni o conclusioni conversazionali.
-- Evitare paragrafi lunghi, ripetizioni, transizioni narrative e formule come "in altre parole".
-- Spiegare prima il comportamento osservabile e poi i dettagli interni.
-- Usare nomi astratti come `Store`, `Clock`, `Serializer` o `Policy` invece di prodotti specifici.
-- Racchiudere nomi di API, funzioni, parametri, tipi, chiavi e valori letterali tra backtick inline.
-- Racchiudere ogni esempio multilinea in un blocco Markdown fenced e specificare sempre il linguaggio corretto, per esempio `json`, `http`, `sql`, `python` o `javascript`.
-- Usare il tag `text` esclusivamente per pseudocodice realmente indipendente dal linguaggio. Non dichiarare un linguaggio diverso da quello mostrato soltanto per ottenere colorazione sintattica.
-- Separare il contratto pubblico dalle possibili strategie di implementazione.
-- Segnalare le decisioni importanti: durata dei dati, invalidazione, concorrenza, sicurezza, privacy, idempotenza e gestione degli errori, ma solo se pertinenti.
-- Non trasformare la risposta in un tutorial completo, una comparazione di framework o documentazione esaustiva.
-- Non presentare pseudocodice come codice pronto per la produzione.
-- Se l'utente indica un'API concreta o fornisce documentazione, rispettarne la terminologia e distinguere i fatti documentati dalle raccomandazioni progettuali.
-- Non aggiungere automaticamente una valutazione né chiedere uno snippet quando l'utente vuole soltanto la scheda dell'API.
+- State immediately whether the approach is suitable, partially suitable, or unsuitable, and explain why.
+- Identify at most three relevant aspects: correctness, lifecycle, keys or dependencies, state, errors, performance, or a more appropriate alternative.
+- Propose a minimal correction when needed; preserve the language, framework, and style of the original snippet.
+- Use a natural, direct tone. Do not impose the wiki structure on this section when a short prose explanation is clearer.
+- State any assumptions when the scenario lacks sufficient context. Do not invent missing requirements.
 
-## Esempio di stile
+## Quality rules
 
-Per una richiesta come "Come posso implementare remember?", interpretare `remember` come una capacità che conserva un valore tra richieste solo se il contesto non indica un'API specifica. Riassumere il contratto `remember(key, producer, policy) -> value`, descrivere lettura, scadenza, calcolo, salvataggio e invalidazione, quindi mostrare pseudocodice conciso in un blocco `text` e indicare quando una cache o una sessione non sono appropriate.
+- Target 150–300 words unless otherwise requested.
+- Use a wiki style: neutral, declarative, information-dense, and without conversational introductions or conclusions.
+- Avoid long paragraphs, repetition, narrative transitions, and phrases such as "in other words."
+- Explain observable behavior before internal details.
+- Use abstract names such as `Store`, `Clock`, `Serializer`, or `Policy` instead of specific products.
+- Enclose API, function, parameter, type, key, and literal value names in inline backticks.
+- Place every multiline example in a fenced Markdown block and always specify the correct language, such as `json`, `http`, `sql`, `python`, or `javascript`.
+- Use the `text` tag only for genuinely language-independent pseudocode. Do not declare a language different from the content merely to obtain syntax highlighting.
+- Separate the public contract from possible implementation strategies.
+- Call out important decisions about data lifetime, invalidation, concurrency, security, privacy, idempotency, and error handling, but only when relevant.
+- Do not turn the response into a complete tutorial, framework comparison, or exhaustive documentation.
+- Do not present pseudocode as production-ready code.
+- If the user names a concrete API or provides documentation, preserve its terminology and distinguish documented facts from design recommendations.
+- Always suggest better-suited alternatives when the API should not be used or when the analyzed context supports a more appropriate option. Do not invent unsupported alternatives.
+- Do not automatically add an evaluation or ask for a snippet when the user only wants the API entry.
+
+## Style example
+
+For a request such as "How can I implement remember?", interpret `remember` as a capability that retains a value across requests only when the context does not indicate a specific API. Summarize the contract as `remember(key, producer, policy) -> value`, describe lookup, expiration, computation, storage, and invalidation, then show concise pseudocode in a `text` block and state when a cache or session is inappropriate.
