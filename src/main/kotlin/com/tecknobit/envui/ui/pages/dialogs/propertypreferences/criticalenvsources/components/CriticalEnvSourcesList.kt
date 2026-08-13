@@ -73,7 +73,7 @@ fun CriticalEnvSourcesList(
 
                     items(
                         items = criticalEnvSource.properties.values.toList(),
-                        key = { it.key }
+                        key = { criticalEnvSource.sourcePath + it.key }
                     ) { criticalEnvSourceProperty ->
                         CriticalEnvSourceCard(
                             modifier = Modifier
@@ -260,7 +260,7 @@ private fun Actions(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        DestructiveButton(
+        DefaultButton(
             onClick = onRevert
         ) {
             Text(
@@ -268,7 +268,7 @@ private fun Actions(
             )
         }
 
-        DefaultButton(
+        DestructiveButton(
             onClick = onAccept
         ) {
             Text(
