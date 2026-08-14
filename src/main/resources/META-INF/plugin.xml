@@ -82,6 +82,22 @@
                     first-keystroke="control PERIOD"
                     second-keystroke="E"/>
         </action>
+
+        <action
+                id="com.tecknobit.envui.ide.actions.CopyEnvEntryAction"
+                class="com.tecknobit.envui.ide.actions.CopyEnvEntryAction"
+                text="Copy env entry value"
+                description="Click on key to copy value of the env entry">
+
+            <add-to-group
+                    group-id="EditorPopupMenu"
+                    anchor="last"/>
+
+            <keyboard-shortcut
+                    keymap="$default"
+                    first-keystroke="shift PERIOD"
+                    second-keystroke="E"/>
+        </action>
     </actions>
 
     <dependencies>
