@@ -63,15 +63,16 @@
                 id="com.tecknobit.envui.ide.actions.OpenEnvSourceDialogAction"
                 class="com.tecknobit.envui.ide.actions.OpenEnvSourceDialogAction"
                 text="Open env source"
-                description="Open .env source">
+                description="Open the env source in dedicated dialog">
 
             <add-to-group
-                    group-id="ToolsMenu"
+                    group-id="ProjectViewPopupMenu"
                     anchor="last"/>
 
             <keyboard-shortcut
                     keymap="$default"
-                    first-keystroke="meta PERIOD E"/>
+                    first-keystroke="control PERIOD"
+                    second-keystroke="E"/>
         </action>
     </actions>
 
