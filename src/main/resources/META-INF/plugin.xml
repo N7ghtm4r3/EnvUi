@@ -39,6 +39,10 @@
                 language="dEnv"
                 implementationClass="com.tecknobit.envui.ide.languages.envfile.dEnvParserDefinition"/>
 
+        <lang.syntaxHighlighterFactory
+                language="dEnv"
+                implementationClass="com.tecknobit.envui.ide.languages.syntax.dEnvSyntaxHighlighterFactory"/>
+
         <fileType
                 name="dEnv"
                 language="dEnv"
@@ -49,6 +53,10 @@
         <lang.parserDefinition
                 language="dEnvTemplate"
                 implementationClass="com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateParserDefinition"/>
+
+        <lang.syntaxHighlighterFactory
+                language="dEnvTemplate"
+                implementationClass="com.tecknobit.envui.ide.languages.syntax.dEnvSyntaxHighlighterFactory"/>
 
         <fileType
                 name="dEnvTemplate"
