@@ -1,5 +1,6 @@
 package com.tecknobit.envui.ide.actions
 
+import com.intellij.icons.AllIcons
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -21,7 +22,9 @@ class OpenEnvSourceDialogAction : AnAction() {
     override fun update(event: AnActionEvent) {
         val editorFile = event.resolveVirtualFile()
 
-        event.presentation.isEnabled = editorFile != null
+        val presentation = event.presentation
+        presentation.isEnabled = editorFile != null
+        presentation.icon = AllIcons.Actions.Preview
     }
 
     override fun getActionUpdateThread(): ActionUpdateThread {

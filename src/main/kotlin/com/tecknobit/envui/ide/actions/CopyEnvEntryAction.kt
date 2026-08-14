@@ -9,6 +9,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.psi.util.parentOfTypes
+import com.tecknobit.envui.I18nMessageBundle
 import com.tecknobit.envui.ide.envfile.Property
 import java.awt.datatransfer.StringSelection
 
@@ -37,7 +38,9 @@ class CopyEnvEntryAction : AnAction() {
         manager.setContents(StringSelection(value))
         hintManager.showInformationHint(
             editor,
-            "Copied!"
+            I18nMessageBundle.message(
+                key = "copied"
+            )
         )
     }
 
