@@ -21,11 +21,10 @@ class dEnvSyntaxHighlighter : SyntaxHighlighterBase() {
     ): Array<out TextAttributesKey?> {
         return pack(
             when(token) {
-                EnvGeneratedTypes.KEY -> DefaultLanguageHighlighterColors.INSTANCE_FIELD
+                EnvGeneratedTypes.KEY, EnvGeneratedTypes.EXPORT -> DefaultLanguageHighlighterColors.KEYWORD
                 EnvGeneratedTypes.VALUE -> DefaultLanguageHighlighterColors.STRING
                 EnvGeneratedTypes.QUOTED_VALUE -> DefaultLanguageHighlighterColors.STRING
                 EnvGeneratedTypes.COMMENT -> DefaultLanguageHighlighterColors.LINE_COMMENT
-                EnvGeneratedTypes.EXPORT -> DefaultLanguageHighlighterColors.KEYWORD
                 EnvGeneratedTypes.EQUALS -> DefaultLanguageHighlighterColors.OPERATION_SIGN
                 TokenType.BAD_CHARACTER -> HighlighterColors.BAD_CHARACTER
 
