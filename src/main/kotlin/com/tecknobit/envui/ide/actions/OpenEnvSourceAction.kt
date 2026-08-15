@@ -6,7 +6,7 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.presenter.EnvSourceReaderDialog
 
-class OpenEnvSourceDialogAction : AnAction() {
+class OpenEnvSourceAction : AnAction() {
 
     override fun actionPerformed(
         event: AnActionEvent
@@ -19,7 +19,9 @@ class OpenEnvSourceDialogAction : AnAction() {
         dialog.show()
     }
 
-    override fun update(event: AnActionEvent) {
+    override fun update(
+        event: AnActionEvent
+    ) {
         val editorFile = event.resolveVirtualFile()
 
         val presentation = event.presentation

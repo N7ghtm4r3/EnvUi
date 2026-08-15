@@ -68,8 +68,8 @@
 
     <actions>
         <action
-                id="com.tecknobit.envui.ide.actions.OpenEnvSourceDialogAction"
-                class="com.tecknobit.envui.ide.actions.OpenEnvSourceDialogAction"
+                id="com.tecknobit.envui.ide.actions.OpenEnvSourceAction"
+                class="com.tecknobit.envui.ide.actions.OpenEnvSourceAction"
                 text="Open env source"
                 description="Open the env source in dedicated dialog">
 
@@ -97,6 +97,17 @@
                     keymap="$default"
                     first-keystroke="shift PERIOD"
                     second-keystroke="E"/>
+        </action>
+
+        <action
+                id="com.tecknobit.envui.ide.actions.CreateEnvSourceAction"
+                class="com.tecknobit.envui.ide.actions.CreateEnvSourceAction"
+                text="Env source"
+                description="Create a new env source">
+
+            <add-to-group
+                    group-id="NewGroup"
+                    anchor="last"/>
         </action>
     </actions>
 
