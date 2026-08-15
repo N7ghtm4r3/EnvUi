@@ -1,6 +1,5 @@
 package com.tecknobit.envui.ide.listeners
 
-import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManagerListener
 import com.tecknobit.envui.ide.services.useEnvSourcePreferencesManager
@@ -33,12 +32,10 @@ class IdeLifecycleListener : ProjectManagerListener {
         project.useEnvSourcePreferencesManager {
             resettableOnCloseSources.forEach { preferences ->
                 val source = preferences.sourcePath.toVirtualFile() ?: return@forEach
-                val envSource = runReadAction {
-                    source.toEnvSource(
-                        project = project,
-                        resolveModule = false
-                    )
-                }
+                val envSource = source.toEnvSource(
+                    project = project,
+                    resolveModule = false
+                )
                 val psiSource = envSource.psiEnvSource
 
                 preferences.properties.forEach { (key, preferences) ->
