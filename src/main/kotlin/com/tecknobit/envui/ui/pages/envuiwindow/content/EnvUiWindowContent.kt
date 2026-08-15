@@ -9,13 +9,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.intellij.openapi.project.Project
+import com.tecknobit.envui.generated.resources.Res
+import com.tecknobit.envui.generated.resources.search_by_folder_or_module
 import com.tecknobit.envui.ui.components.DebouncedInput
 import com.tecknobit.envui.ui.helpers.StringResourcesProvider
 import com.tecknobit.envui.ui.pages.envuiwindow.components.EnvSourcesList
 import com.tecknobit.envui.ui.pages.envuiwindow.presentation.EnvUiWindowViewModel
 import com.tecknobit.envui.ui.pages.envuiwindow.presenter.EnvUiWindow
-import com.tecknobit.envui.generated.resources.Res
-import com.tecknobit.envui.generated.resources.search_by_folder_or_module
 
 @Composable
 fun EnvUiWindowContent(

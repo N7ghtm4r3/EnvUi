@@ -1,8 +1,10 @@
 package com.tecknobit.envui.repositories
 
 import com.intellij.openapi.application.readAction
+import com.intellij.openapi.application.writeAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.PsiDirectory
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.tecknobit.envui.ide.languages.envfile.dEnvFileType
@@ -80,6 +82,22 @@ class EnvSourceRepository(
                 template = template
             )
         }
+    }
+
+    suspend fun createNewEnvSource(
+        project: Project,
+        containerDirectory: PsiDirectory
+    ): EnvSource {
+        val dEnvExtension = ".${dEnvFileType.defaultExtension}"
+
+        val source = writeAction {
+            containerDirectory.createFile("$dEnvExtension.${dEnvTemplateFileType.defaultExtension}")
+            containerDirectory.createFile(dEnvExtension)
+        }
+
+        return source.virtualFile.toEnvSource(
+            project = project
+        )
     }
 
 }
