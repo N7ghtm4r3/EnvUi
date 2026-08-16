@@ -16,6 +16,20 @@ class GitignoreInitializationActivity : ProjectActivity {
 
     }
 
+    private enum class GitignoreFileEntry(
+        val fileName: String
+    ) {
+
+        ENV(
+            fileName = ".env"
+        ),
+
+        WORKSPACE(
+            fileName = "workspace.xml"
+        )
+
+    }
+
     override suspend fun execute(
         project: Project
     ) {
@@ -23,7 +37,7 @@ class GitignoreInitializationActivity : ProjectActivity {
             project = project
         )
 
-        guaranteeToIgnoreDEnvVersioning(
+        guaranteeToIgnoreEntryVersioning(
             gitignoreFile = gitignoreRoot
         )
     }
@@ -42,18 +56,24 @@ class GitignoreInitializationActivity : ProjectActivity {
         }
     }
 
-    private suspend fun guaranteeToIgnoreDEnvVersioning(
+    private suspend fun guaranteeToIgnoreEntryVersioning(
         gitignoreFile: VirtualFile
     ) {
         val currentContent = gitignoreFile.readText()
-        val dEnvExtension = ".env"
-        if(currentContent.contains(dEnvExtension + "\n"))
-            return
 
         val content = buildString {
             append(currentContent)
-            append("\n")
-            append(dEnvExtension)
+            if(currentContent.isNotBlank())
+                append("\n")
+
+            GitignoreFileEntry.entries.forEach { gitignoreFileEntry ->
+                val filename = gitignoreFileEntry.fileName
+                if(currentContent.contains(filename + "\n"))
+                    return@forEach
+
+                append(filename)
+                append("\n")
+            }
         }
 
         writeAction {
