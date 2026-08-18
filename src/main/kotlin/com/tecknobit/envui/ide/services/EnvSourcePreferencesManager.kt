@@ -350,6 +350,7 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
     ) {
         updateState { state ->
             var sourcePreferences = state.preferences[source.path]
+            val propertyPreferences = sourcePreferences?.properties?.toMutableMap() ?: return
 
             newPreferences.forEach { (key, value) ->
                 var propertyPrefs = previousPreferences[key] ?: EnvSourcePropertyPreferences()
@@ -363,16 +364,15 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
                     isChanged = (value != propertyPrefs.currentValue) && previousInitialValue.isNotBlank(),
                 )
 
-                sourcePreferences = sourcePreferences!!.copy(
-                    properties = sourcePreferences.properties.plus(
-                        key to propertyPrefs
-                    )
-                )
+                propertyPreferences[key] = propertyPrefs
             }
+            sourcePreferences = sourcePreferences.copy(
+                properties = propertyPreferences
+            )
 
             state.upsertEnvSourcePreferences(
                 source = source,
-                sourcePreferences = sourcePreferences!!
+                sourcePreferences = sourcePreferences
             )
         }
     }
