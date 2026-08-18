@@ -7,6 +7,7 @@ import com.intellij.psi.PsiManager
 import com.tecknobit.envui.ide.languages.dEnvFileBase
 import com.tecknobit.envui.ide.languages.envfile.dEnvFile
 import com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFile
+import com.tecknobit.envui.ide.services.useEnvSourcePreferencesManager
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.data.EnvSourceTemplate
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.data.EnvTemplateField
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
@@ -80,6 +81,13 @@ fun dEnvFile.updateSourceFromTemplate(
     writeContent(
         content = content
     )
+
+    project.useEnvSourcePreferencesManager {
+        deletePreferences(
+            source = this@updateSourceFromTemplate.virtualFile,
+            propertyKeys = removedKeys
+        )
+    }
 }
 
 fun VirtualFile.toEnvSource(

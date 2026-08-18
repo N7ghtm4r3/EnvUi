@@ -106,10 +106,7 @@ fun EnvTemplateFieldsEditor(
                         draftEditorFields = fields
                     ),
                     onSave = {
-                        val newEnvSourceTemplate = EnvSourceTemplate(
-                            fields = fields
-                                .removeDuplicates()
-                                .toEnvTemplateFields(),
+                        val newEnvSourceTemplate = fields.saveAsTemplate(
                             removedFields = removedFields
                         )
 
@@ -128,8 +125,15 @@ fun EnvTemplateFieldsEditor(
                     field = field,
                     onDelete = {
                         fields.removeIf { field.id == it.id }
-
                         removedFields.add(field.key)
+
+                        if (fields.isEmpty()) {
+                            val newEnvSourceTemplate = fields.saveAsTemplate(
+                                removedFields = removedFields
+                            )
+
+                            onSave(newEnvSourceTemplate)
+                        }
                     }
                 )
             }
@@ -146,6 +150,17 @@ private fun isTemplateChanged(
     val allKeysValid = draftEditorFields.firstOrNull { it.key.isBlank() } == null
 
     return (initialTemplateFields != draftFields) && allKeysValid
+}
+
+private fun List<EnvTemplateEditorField>.saveAsTemplate(
+    removedFields: HashSet<String>,
+): EnvSourceTemplate {
+    return EnvSourceTemplate(
+        fields = this
+            .removeDuplicates()
+            .toEnvTemplateFields(),
+        removedFields = removedFields
+    )
 }
 
 private fun List<EnvTemplateEditorField>.toEnvTemplateFields(): List<EnvTemplateField> {

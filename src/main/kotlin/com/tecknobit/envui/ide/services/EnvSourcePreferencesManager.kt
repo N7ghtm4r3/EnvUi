@@ -282,6 +282,26 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
         }
     }
 
+    fun deletePreferences(
+        source: VirtualFile,
+        propertyKeys: Set<String>,
+    ) {
+        updateState { state ->
+            val sourcePath = source.path
+            var sourcePreferences = state.preferences[sourcePath] ?: return@updateState state
+
+            sourcePreferences = sourcePreferences.copy(
+                properties = sourcePreferences.properties.minus(propertyKeys)
+            )
+
+            state.copy(
+                preferences = state.preferences.plus(
+                    pair = source.path to sourcePreferences
+                )
+            )
+        }
+    }
+
 }
 
 inline fun <T> EnvSource.useEnvSourcePreferencesManager(
