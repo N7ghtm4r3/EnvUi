@@ -17,11 +17,7 @@ class EnvSourceDocumentListener : FileDocumentManagerListener, dEnvDocumentListe
             return
 
         val project = resolveProject(source) ?: return
-        val envSource = resolveEnvSource(
-            source = source,
-            project = project
-        ) ?: return
-
+        val envSource = resolveEnvSource(source, project) ?: return
         project.useEnvSourcePreferencesManager {
             syncPreferencesFromSource(
                 envSource = envSource

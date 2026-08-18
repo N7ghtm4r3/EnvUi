@@ -12,7 +12,7 @@ fun PsiFile.writeContent(
 
     document?.let {
         WriteCommandAction.runWriteCommandAction(project) {
-            document.text = content
+            document.replaceString(0, document.textLength, content)
             documentManager.commitDocument(document)
         }
     }

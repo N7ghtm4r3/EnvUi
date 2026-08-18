@@ -4,6 +4,7 @@ import com.intellij.openapi.components.*
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.tecknobit.envui.ide.envfile.Property
+import com.tecknobit.envui.ide.languages.dEnvFileBase
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 
 data class EnvUiState(
@@ -283,10 +284,33 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
     fun syncPreferencesFromSource(
         envSource: EnvSource,
     ) {
-        val sourcePath = envSource.path
         val source = envSource.source
-        val psiSource = envSource.psiEnvSource
-        val newPropertiesMap = buildMap {
+        val newPropertiesMap = mapNewProperties(
+            psiSource = envSource.psiEnvSource
+        )
+
+        val previousPreferences = ensureEnvSourcePreferences(
+            source = source
+        )
+        val previousProperties = previousPreferences.properties
+
+        syncPreferences(
+            source = source,
+            previousPreferences = previousProperties,
+            newPreferences = newPropertiesMap
+        )
+
+        removeStaleKeys(
+            source = source,
+            previousKeys = previousProperties.keys,
+            currentKeys = newPropertiesMap.keys
+        )
+    }
+
+    private fun mapNewProperties(
+        psiSource: dEnvFileBase,
+    ): Map<String, String> {
+        return buildMap {
             psiSource.properties().forEach { property ->
                 val key = property.keyEntry.text
                 val value = property.valueEntry?.text ?: ""
@@ -294,13 +318,18 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
                 put(key, value)
             }
         }
+    }
 
-        var currentPreferences = retrieveEnvSourcePreferences(
+    private fun ensureEnvSourcePreferences(
+        source: VirtualFile,
+    ): EnvSourcePreferences {
+        var preferences = retrieveEnvSourcePreferences(
             source = source
         )
-        if (currentPreferences == null) {
+
+        if (preferences == null) {
             val emptyEnvSourcePreferences = EnvSourcePreferences(
-                sourcePath = sourcePath
+                sourcePath = source.path
             )
 
             storeEnvSourcePreferences(
@@ -308,24 +337,35 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
                 envSourcePreferences = emptyEnvSourcePreferences
             )
 
-            currentPreferences = emptyEnvSourcePreferences
+            preferences = emptyEnvSourcePreferences
         }
-        val currentProperties = currentPreferences.properties
 
+        return preferences
+    }
+
+    private fun syncPreferences(
+        source: VirtualFile,
+        previousPreferences: Map<String, EnvSourcePropertyPreferences>,
+        newPreferences: Map<String, String>,
+    ) {
         updateState { state ->
-            var sourcePreferences = state.preferences[sourcePath]
+            var sourcePreferences = state.preferences[source.path]
 
-            newPropertiesMap.forEach { (key, value) ->
-                val existingProperty = currentProperties[key]
-                val initialValue = existingProperty?.initialValue ?: value
+            newPreferences.forEach { (key, value) ->
+                var propertyPrefs = previousPreferences[key] ?: EnvSourcePropertyPreferences()
+                val previousInitialValue = propertyPrefs.initialValue
+
+                propertyPrefs = propertyPrefs.copy(
+                    key = key,
+                    initialValue = previousInitialValue.ifBlank { value },
+                    currentValue = value,
+                    lastUpdateAt = System.currentTimeMillis(),
+                    isChanged = (value != propertyPrefs.currentValue) && previousInitialValue.isNotBlank(),
+                )
 
                 sourcePreferences = sourcePreferences!!.copy(
                     properties = sourcePreferences.properties.plus(
-                        key to EnvSourcePropertyPreferences(
-                            key = key,
-                            initialValue = initialValue,
-                            currentValue = value
-                        )
+                        key to propertyPrefs
                     )
                 )
             }
@@ -335,12 +375,6 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
                 sourcePreferences = sourcePreferences!!
             )
         }
-
-        removeStaleKeys(
-            source = source,
-            previousKeys = currentPreferences.properties.keys,
-            currentKeys = newPropertiesMap.keys
-        )
     }
 
     private fun removeStaleKeys(
