@@ -10,7 +10,7 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.tecknobit.envui.ide.languages.envfile.dEnvFileType
 import com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFileType
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
-import com.tecknobit.envui.util.toEnvSource
+import com.tecknobit.envui.utils.toEnvSource
 
 class EnvSourceRepository(
     private val project: Project,

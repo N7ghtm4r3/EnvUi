@@ -6,9 +6,9 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.tecknobit.envui.helpers.EnvSourceHighlightedPropertiesRegistry
 import com.tecknobit.envui.ide.highlighters.addCriticalEnvMark
 import com.tecknobit.envui.ide.highlighters.addResetOnCloseMark
-import com.tecknobit.envui.ide.languages.envfile.dEnvFileType
 import com.tecknobit.envui.ide.services.useEnvSourcePreferencesManager
-import com.tecknobit.envui.util.toEnvSource
+import com.tecknobit.envui.utils.isNotEnvFile
+import com.tecknobit.envui.utils.toEnvSource
 
 class EnvSourceEditorListener : FileEditorManagerListener {
 
@@ -17,7 +17,7 @@ class EnvSourceEditorListener : FileEditorManagerListener {
         file: VirtualFile
     ) {
         super.fileOpened(source, file)
-        if(file.fileType != dEnvFileType)
+        if (file.isNotEnvFile())
             return
 
         val project = source.project

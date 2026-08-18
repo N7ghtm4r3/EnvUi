@@ -26,7 +26,7 @@ import com.tecknobit.envui.ui.components.*
 import com.tecknobit.envui.ui.pages.dialogs.propertypreferences.criticalenvsources.presentation.CriticalEnvSourcesWarningViewModel
 import com.tecknobit.envui.ui.theme.EnvUiTheme
 import com.tecknobit.envui.ui.utils.toDateString
-import com.tecknobit.envui.util.toVirtualFile
+import com.tecknobit.envui.utils.toVirtualFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource

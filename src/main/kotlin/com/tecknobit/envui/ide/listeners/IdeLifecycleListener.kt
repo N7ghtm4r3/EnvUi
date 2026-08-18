@@ -4,8 +4,8 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManagerListener
 import com.tecknobit.envui.ide.services.useEnvSourcePreferencesManager
 import com.tecknobit.envui.ui.pages.dialogs.propertypreferences.criticalenvsources.presenter.CriticalEnvSourcesWarningDialog
-import com.tecknobit.envui.util.toEnvSource
-import com.tecknobit.envui.util.toVirtualFile
+import com.tecknobit.envui.utils.toEnvSource
+import com.tecknobit.envui.utils.toVirtualFile
 
 class IdeLifecycleListener : ProjectManagerListener {
 

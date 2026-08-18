@@ -1,4 +1,4 @@
-package com.tecknobit.envui.util
+package com.tecknobit.envui.utils
 
 import com.intellij.ide.projectView.ProjectView
 import com.intellij.openapi.editor.Document

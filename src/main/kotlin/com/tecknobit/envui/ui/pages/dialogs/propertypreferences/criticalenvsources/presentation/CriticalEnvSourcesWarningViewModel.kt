@@ -10,8 +10,8 @@ import com.tecknobit.envui.ide.services.EnvSourcePreferencesManager
 import com.tecknobit.envui.ide.services.EnvSourcePropertyPreferences
 import com.tecknobit.envui.ide.services.useEnvSourcePreferencesManager
 import com.tecknobit.envui.ui.pages.dialogs.propertypreferences.criticalenvsources.states.CriticalEnvSourcesWarningState
-import com.tecknobit.envui.util.toEnvSource
-import com.tecknobit.envui.util.toVirtualFile
+import com.tecknobit.envui.utils.toEnvSource
+import com.tecknobit.envui.utils.toVirtualFile
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

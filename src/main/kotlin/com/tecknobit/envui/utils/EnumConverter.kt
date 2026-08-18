@@ -1,4 +1,4 @@
-package com.tecknobit.envui.util
+package com.tecknobit.envui.utils
 
 import androidx.compose.ui.text.input.KeyboardType
 import com.tecknobit.envui.ui.enums.EnvFieldType

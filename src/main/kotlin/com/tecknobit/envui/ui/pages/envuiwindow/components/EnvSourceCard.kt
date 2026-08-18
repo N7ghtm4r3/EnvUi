@@ -19,7 +19,7 @@ import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 import com.tecknobit.envui.ui.utils.resolveIcon
 import com.tecknobit.envui.ui.utils.toComposeColor
 import com.tecknobit.envui.ui.utils.toDateString
-import com.tecknobit.envui.util.revealInProjectView
+import com.tecknobit.envui.utils.revealInProjectView
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.jewel.ui.component.Icon
 import org.jetbrains.jewel.ui.component.IconButton

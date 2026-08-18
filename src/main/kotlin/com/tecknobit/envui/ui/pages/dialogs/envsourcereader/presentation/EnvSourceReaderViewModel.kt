@@ -9,9 +9,9 @@ import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.data.EnvSourceTempla
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.data.EnvTemplateField
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.states.EnvSourceReaderState
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
-import com.tecknobit.envui.util.updateKeysFromTemplate
-import com.tecknobit.envui.util.updateSourceFromTemplate
-import com.tecknobit.envui.util.writeKeys
+import com.tecknobit.envui.utils.updateKeysFromTemplate
+import com.tecknobit.envui.utils.updateSourceFromTemplate
+import com.tecknobit.envui.utils.writeKeys
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

@@ -1,4 +1,4 @@
-package com.tecknobit.envui.util
+package com.tecknobit.envui.utils
 
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.psi.PsiDocumentManager
@@ -12,7 +12,7 @@ fun PsiFile.writeContent(
 
     document?.let {
         WriteCommandAction.runWriteCommandAction(project) {
-            document.setText(content)
+            document.text = content
             documentManager.commitDocument(document)
         }
     }

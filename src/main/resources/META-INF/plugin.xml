@@ -64,13 +64,16 @@
                 implementationClass="com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFileType"
                 fieldName="INSTANCE"
                 patterns=".env.template"/>
+
+        <fileDocumentManagerListener
+                implementation="com.tecknobit.envui.ide.listeners.EnvSourceDocumentListener"/>
     </extensions>
 
     <actions>
         <action
                 id="com.tecknobit.envui.ide.actions.OpenEnvSourceAction"
                 class="com.tecknobit.envui.ide.actions.OpenEnvSourceAction"
-                text="Open env source"
+                text="Open Env Source"
                 description="Open the env source in dedicated dialog">
 
             <add-to-group
@@ -86,7 +89,7 @@
         <action
                 id="com.tecknobit.envui.ide.actions.CopyEnvEntryAction"
                 class="com.tecknobit.envui.ide.actions.CopyEnvEntryAction"
-                text="Copy env entry value"
+                text="Copy Env Entry Value"
                 description="Click on key to copy value of the env entry">
 
             <add-to-group
@@ -102,7 +105,7 @@
         <action
                 id="com.tecknobit.envui.ide.actions.CreateEnvSourceAction"
                 class="com.tecknobit.envui.ide.actions.CreateEnvSourceAction"
-                text="Env source"
+                text="Env Source"
                 description="Create a new env source">
 
             <add-to-group
