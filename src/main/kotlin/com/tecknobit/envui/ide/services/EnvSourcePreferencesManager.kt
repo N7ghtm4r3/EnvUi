@@ -195,10 +195,10 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
         property: Property,
         propertyPreferences: EnvSourcePropertyPreferences
     ): EnvSourcePreferences {
-        val propertyPreferencesEntry = Pair(property.keyEntry.text, propertyPreferences)
-
         return envSourcePreferences.copy(
-            properties = envSourcePreferences.properties + propertyPreferencesEntry
+            properties = envSourcePreferences.properties.plus(
+                pair = property.keyEntry.text to propertyPreferences
+            )
         )
     }
 
@@ -221,11 +221,10 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
         source: VirtualFile,
         envSourcePreferences: EnvSourcePreferences
     ) {
-        val envSourceEntry = Pair(source.path, envSourcePreferences)
-
         updateState { state ->
-            state.copy(
-                preferences = state.preferences + envSourceEntry
+            state.upsertEnvSourcePreferences(
+                source = source,
+                sourcePreferences = envSourcePreferences
             )
         }
     }
@@ -275,11 +274,88 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
                 else
                     predicate(property)
             }
-
             envSourcePreference.properties = criticalProperties
 
             criticalProperties.isNotEmpty()
         }
+    }
+
+    fun syncPreferencesFromSource(
+        envSource: EnvSource,
+    ) {
+        val sourcePath = envSource.path
+        val source = envSource.source
+        val psiSource = envSource.psiEnvSource
+        val newPropertiesMap = buildMap {
+            psiSource.properties().forEach { property ->
+                val key = property.keyEntry.text
+                val value = property.valueEntry?.text ?: ""
+
+                put(key, value)
+            }
+        }
+
+        var currentPreferences = retrieveEnvSourcePreferences(
+            source = source
+        )
+        if (currentPreferences == null) {
+            val emptyEnvSourcePreferences = EnvSourcePreferences(
+                sourcePath = sourcePath
+            )
+
+            storeEnvSourcePreferences(
+                source = source,
+                envSourcePreferences = emptyEnvSourcePreferences
+            )
+
+            currentPreferences = emptyEnvSourcePreferences
+        }
+        val currentProperties = currentPreferences.properties
+
+        updateState { state ->
+            var sourcePreferences = state.preferences[sourcePath]
+
+            newPropertiesMap.forEach { (key, value) ->
+                val existingProperty = currentProperties[key]
+                val initialValue = existingProperty?.initialValue ?: value
+
+                sourcePreferences = sourcePreferences!!.copy(
+                    properties = sourcePreferences.properties.plus(
+                        key to EnvSourcePropertyPreferences(
+                            key = key,
+                            initialValue = initialValue,
+                            currentValue = value
+                        )
+                    )
+                )
+            }
+
+            state.upsertEnvSourcePreferences(
+                source = source,
+                sourcePreferences = sourcePreferences!!
+            )
+        }
+
+        removeStaleKeys(
+            source = source,
+            previousKeys = currentPreferences.properties.keys,
+            currentKeys = newPropertiesMap.keys
+        )
+    }
+
+    private fun removeStaleKeys(
+        source: VirtualFile,
+        previousKeys: Set<String>,
+        currentKeys: Set<String>,
+    ) {
+        val staleKeys = previousKeys.minus(currentKeys)
+        if (staleKeys.isEmpty())
+            return
+
+        deletePreferences(
+            source = source,
+            propertyKeys = staleKeys
+        )
     }
 
     fun deletePreferences(
@@ -294,13 +370,21 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
                 properties = sourcePreferences.properties.minus(propertyKeys)
             )
 
-            state.copy(
-                preferences = state.preferences.plus(
-                    pair = source.path to sourcePreferences
-                )
+            state.upsertEnvSourcePreferences(
+                source = source,
+                sourcePreferences = sourcePreferences
             )
         }
     }
+
+    private fun EnvUiState.upsertEnvSourcePreferences(
+        source: VirtualFile,
+        sourcePreferences: EnvSourcePreferences,
+    ) = copy(
+        preferences = state.preferences.plus(
+            pair = source.path to sourcePreferences
+        )
+    )
 
 }
 
