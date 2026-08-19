@@ -3,10 +3,12 @@ import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.tecknobit.envui.ide.languages.dEnvFileBase
 import com.tecknobit.envui.ide.languages.envfile.dEnvFile
 import com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFile
+import com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFile.Companion.ENV_TEMPLATE_FILENAME
 import com.tecknobit.envui.ide.services.useEnvSourcePreferencesManager
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.data.EnvSourceTemplate
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.data.EnvTemplateField
@@ -108,8 +110,20 @@ fun VirtualFile.toEnvSource(
             _psiSource = psiManager.findFile(this)!!,
             _templateSource = if(template != null)
                 psiManager.findFile(template)
-            else
-                null
+            else {
+                resolveEnvSourceTemplate(
+                    project = project
+                )
+            }
         )
     }
+}
+
+private fun VirtualFile.resolveEnvSourceTemplate(
+    project: Project,
+): PsiFile? {
+    val psiManager = PsiManager.getInstance(project)
+    val templateVirtualFile = parent.findChild(ENV_TEMPLATE_FILENAME) ?: return null
+
+    return psiManager.findFile(templateVirtualFile)
 }

@@ -125,9 +125,9 @@ abstract class dEnvFileBase(
         }
     }
 
-    protected fun commitOnDocument(
+    fun commitOnDocument(
         synchronously: Boolean = false,
-        onWork: (Document) -> Unit
+        onWork: (Document) -> Unit,
     ) {
         val documentRoutine = {
             provideDocument { manager, document ->
