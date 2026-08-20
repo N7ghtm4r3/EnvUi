@@ -13,6 +13,7 @@ data class EnvSource(
     val module: Module?,
     private val _psiSource: PsiFile,
     private val _templateSource: PsiFile? = null,
+    val isResolvedFromTemplate: Boolean,
 ) {
 
     val name = source.name

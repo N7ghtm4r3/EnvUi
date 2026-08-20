@@ -1,5 +1,6 @@
 package com.tecknobit.envui.utils
 import com.intellij.openapi.application.runReadAction
+import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
@@ -7,6 +8,7 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.tecknobit.envui.ide.languages.dEnvFileBase
 import com.tecknobit.envui.ide.languages.envfile.dEnvFile
+import com.tecknobit.envui.ide.languages.envfile.dEnvFile.Companion.ENV_FILENAME
 import com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFile
 import com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFile.Companion.ENV_TEMPLATE_FILENAME
 import com.tecknobit.envui.ide.services.useEnvSourcePreferencesManager
@@ -99,31 +101,96 @@ fun VirtualFile.toEnvSource(
 ): EnvSource {
     return runReadAction {
         val psiManager = PsiManager.getInstance(project)
+        val module = if (resolveModule)
+            ModuleUtilCore.findModuleForFile(this, project)
+        else
+            null
 
-        EnvSource(
-            project = project,
-            source = this,
-            module = if(resolveModule)
-                ModuleUtilCore.findModuleForFile(this, project)
-            else
-                null,
-            _psiSource = psiManager.findFile(this)!!,
-            _templateSource = if(template != null)
-                psiManager.findFile(template)
-            else {
-                resolveEnvSourceTemplate(
-                    project = project
-                )
-            }
+        if (isEnvFile()) {
+            resolveFromSource(
+                project = project,
+                psiManager = psiManager,
+                template = template,
+                module = module
+            )
+        } else {
+            resolveFromTemplate(
+                project = project,
+                psiManager = psiManager,
+                module = module
+            )
+        }
+    }
+}
+
+private fun VirtualFile.resolveFromSource(
+    project: Project,
+    psiManager: PsiManager,
+    template: VirtualFile? = null,
+    module: Module?,
+): EnvSource {
+    val templateSource = if (template != null)
+        psiManager.findFile(template)
+    else {
+        resolveEnvSourceTemplate(
+            project = project
         )
     }
+
+    return EnvSource(
+        project = project,
+        source = this,
+        module = module,
+        _psiSource = psiManager.findFile(this)!!,
+        _templateSource = templateSource,
+        isResolvedFromTemplate = false
+    )
+}
+
+
+private fun VirtualFile.resolveFromTemplate(
+    project: Project,
+    psiManager: PsiManager,
+    module: Module?,
+): EnvSource {
+    val sourcePsiFile = resolveEnvSource(
+        project = project
+    )
+
+    return EnvSource(
+        project = project,
+        source = sourcePsiFile?.virtualFile!!,
+        module = module,
+        _psiSource = sourcePsiFile,
+        _templateSource = psiManager.findFile(this)!!,
+        isResolvedFromTemplate = true
+    )
+}
+
+private fun VirtualFile.resolveEnvSource(
+    project: Project,
+): PsiFile? {
+    return resolveEnvSourceFile(
+        project = project,
+        fileName = ENV_FILENAME
+    )
 }
 
 private fun VirtualFile.resolveEnvSourceTemplate(
     project: Project,
 ): PsiFile? {
+    return resolveEnvSourceFile(
+        project = project,
+        fileName = ENV_TEMPLATE_FILENAME
+    )
+}
+
+private fun VirtualFile.resolveEnvSourceFile(
+    project: Project,
+    fileName: String,
+): PsiFile? {
     val psiManager = PsiManager.getInstance(project)
-    val templateVirtualFile = parent.findChild(ENV_TEMPLATE_FILENAME) ?: return null
+    val templateVirtualFile = parent.findChild(fileName) ?: return null
 
     return psiManager.findFile(templateVirtualFile)
 }

@@ -37,7 +37,7 @@ class EnvSourceReaderDialog(
     @Composable
     override fun DialogContent() {
         val dialogState by viewModel.dialogState.collectAsStateWithLifecycle()
-        val workingOnSource = remember { mutableStateOf(true) }
+        val workingOnSource = remember { mutableStateOf(!envSource.isResolvedFromTemplate) }
 
         Column(
             modifier = Modifier

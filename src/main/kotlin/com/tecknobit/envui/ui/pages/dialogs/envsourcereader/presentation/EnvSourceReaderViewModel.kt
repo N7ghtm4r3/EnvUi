@@ -25,6 +25,11 @@ class EnvSourceReaderViewModel(
     )
     val dialogState = _dialogState.asStateFlow()
 
+    init {
+        if (envSource.isResolvedFromTemplate)
+            mapSourceTemplate()
+    }
+
     fun mapSourceTemplate() {
         var template = envSource.psiEnvTemplateSource
         if (template == null) {

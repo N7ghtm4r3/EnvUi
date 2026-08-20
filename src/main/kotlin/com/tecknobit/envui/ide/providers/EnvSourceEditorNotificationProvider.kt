@@ -34,8 +34,7 @@ class EnvSourceEditorNotificationProvider : EditorNotificationProvider {
         file: VirtualFile,
     ): EditorNotificationPanel {
         val envSource = file.toEnvSource(
-            project = project,
-            resolveModule = false
+            project = project
         )
 
         return EditorNotificationPanel().apply {
