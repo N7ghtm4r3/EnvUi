@@ -1,7 +1,9 @@
 package com.tecknobit.envui.ide.listeners
 
+import com.intellij.openapi.editor.ex.EditorEx
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.FileEditorManagerListener
+import com.intellij.openapi.fileEditor.TextEditor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.tecknobit.envui.helpers.EnvSourceHighlightedPropertiesRegistry
@@ -10,6 +12,7 @@ import com.tecknobit.envui.ide.highlighters.addResetOnCloseMark
 import com.tecknobit.envui.ide.services.useEnvSourcePreferencesManager
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 import com.tecknobit.envui.utils.isNotEnvFile
+import com.tecknobit.envui.utils.isNotEnvSourceFile
 import com.tecknobit.envui.utils.toEnvSource
 
 class EnvSourceEditorListener : FileEditorManagerListener {
@@ -18,6 +21,14 @@ class EnvSourceEditorListener : FileEditorManagerListener {
         source: FileEditorManager,
         file: VirtualFile
     ) {
+        if (file.isNotEnvSourceFile())
+            return
+
+        disableEditing(
+            source = source,
+            file = file
+        )
+
         if (file.isNotEnvFile())
             return
 
@@ -31,6 +42,22 @@ class EnvSourceEditorListener : FileEditorManagerListener {
             project = project,
             envSource = envSource
         )
+    }
+
+    private fun disableEditing(
+        source: FileEditorManager,
+        file: VirtualFile,
+    ) {
+        val allEditors = source.getAllEditors(file)
+        val textEditors = allEditors.filterIsInstance<TextEditor>()
+
+        textEditors.forEach { textEditor ->
+            val editor = textEditor.editor
+            if (editor !is EditorEx)
+                return@forEach
+
+            editor.isViewer = true
+        }
     }
 
     private fun highlightProperties(

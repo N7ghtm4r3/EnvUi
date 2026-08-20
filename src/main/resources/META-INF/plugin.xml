@@ -68,9 +68,6 @@
         <editorNotificationProvider
                 implementation="com.tecknobit.envui.ide.providers.EnvSourceEditorNotificationProvider"/>
 
-        <writingAccessProvider
-                implementation="com.tecknobit.envui.ide.providers.EnvSourceWritingAccessProvider"/>
-
         <fileDocumentManagerListener
                 implementation="com.tecknobit.envui.ide.listeners.document.EnvSourceDocumentListener"/>
     </extensions>
