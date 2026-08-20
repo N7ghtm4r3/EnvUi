@@ -23,18 +23,6 @@ class EnvSourceDocumentListener : FileDocumentManagerListener, dEnvDocumentListe
         }
     }
 
-    override fun afterDocumentSaved(
-        document: Document,
-    ) {
-        requireEnvSource(
-            document = document
-        ) { envSource, _ ->
-            syncTemplateFromSource(
-                envSource = envSource
-            )
-        }
-    }
-
     private inline fun requireEnvSource(
         document: Document,
         crossinline block: (EnvSource, Project) -> Unit,

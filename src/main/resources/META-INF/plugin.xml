@@ -65,11 +65,11 @@
                 fieldName="INSTANCE"
                 patterns=".env.template"/>
 
-        <fileDocumentManagerListener
-                implementation="com.tecknobit.envui.ide.listeners.document.EnvSourceDocumentListener"/>
+        <writingAccessProvider
+                implementation="com.tecknobit.envui.ide.providers.EnvSourceWritingAccessProvider"/>
 
         <fileDocumentManagerListener
-                implementation="com.tecknobit.envui.ide.listeners.document.EnvTemplateDocumentListener"/>
+                implementation="com.tecknobit.envui.ide.listeners.document.EnvSourceDocumentListener"/>
     </extensions>
 
     <actions>

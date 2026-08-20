@@ -23,6 +23,12 @@ class dEnvFile(
     dEnvLanguage
 ) {
 
+    companion object {
+
+        const val ENV_FILENAME = ".env"
+
+    }
+
     override fun getFileType() = dEnvFileType
 
     fun updateValueForKey(
