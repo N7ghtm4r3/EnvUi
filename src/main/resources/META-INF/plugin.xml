@@ -65,6 +65,9 @@
                 fieldName="INSTANCE"
                 patterns=".env.template"/>
 
+        <editorNotificationProvider
+                implementation="com.tecknobit.envui.ide.providers.EnvSourceEditorNotificationProvider"/>
+
         <writingAccessProvider
                 implementation="com.tecknobit.envui.ide.providers.EnvSourceWritingAccessProvider"/>
 
