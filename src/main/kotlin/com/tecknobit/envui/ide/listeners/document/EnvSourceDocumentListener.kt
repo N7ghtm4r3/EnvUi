@@ -6,6 +6,7 @@ import com.intellij.openapi.project.Project
 import com.tecknobit.envui.ide.services.useEnvSourcePreferencesManager
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 import com.tecknobit.envui.utils.isNotEnvFile
+import com.tecknobit.envui.utils.resolveProject
 
 class EnvSourceDocumentListener : FileDocumentManagerListener, dEnvDocumentListener {
 
@@ -33,7 +34,7 @@ class EnvSourceDocumentListener : FileDocumentManagerListener, dEnvDocumentListe
         if (source.isNotEnvFile())
             return
 
-        val project = resolveProject(source) ?: return
+        val project = source.resolveProject() ?: return
         val envSource = resolveEnvSource(source, project) ?: return
 
         block(envSource, project)

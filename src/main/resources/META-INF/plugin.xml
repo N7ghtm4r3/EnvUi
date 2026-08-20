@@ -138,6 +138,10 @@
         <listener
                 class="com.tecknobit.envui.ide.listeners.IdeLifecycleListener"
                 topic="com.intellij.openapi.project.ProjectManagerListener"/>
+
+        <listener
+                class="com.tecknobit.envui.ide.listeners.VirtualFileSystemListener"
+                topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>
     </projectListeners>
 
 </idea-plugin>

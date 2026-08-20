@@ -1,6 +1,8 @@
 package com.tecknobit.envui.utils
 
 import com.intellij.openapi.application.runReadAction
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.project.ProjectLocator
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.tecknobit.envui.ide.languages.envfile.dEnvFileType
@@ -36,4 +38,12 @@ fun VirtualFile?.isNotEnvTemplateFile(): Boolean {
 
 fun VirtualFile?.isEnvTemplateFile(): Boolean {
     return this != null && fileType == dEnvTemplateFileType
+}
+
+fun VirtualFile?.resolveProject(): Project? {
+    if (this == null)
+        return null
+
+    val projectLocator = ProjectLocator.getInstance()
+    return projectLocator.guessProjectForFile(this)
 }
