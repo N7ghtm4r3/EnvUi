@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.intellij.openapi.application.runWriteAction
 import com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFile
 import com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFile.Companion.ENV_TEMPLATE_FILENAME
-import com.tecknobit.envui.ui.enums.EnvFieldType
+import com.tecknobit.envui.enums.EnvFieldType
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.data.EnvSourceTemplate
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.data.EnvTemplateField
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.states.EnvSourceReaderState

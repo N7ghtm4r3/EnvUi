@@ -17,10 +17,9 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.intellij.ui.JBColor
+import com.tecknobit.envui.enums.EnvFieldType
 import com.tecknobit.envui.generated.resources.*
 import com.tecknobit.envui.ui.components.LazyListScaffold
-import com.tecknobit.envui.ui.enums.EnvFieldType
-import com.tecknobit.envui.ui.enums.EnvFieldType.ANY
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.data.EnvSourceTemplate
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.data.EnvTemplateField
 import com.tecknobit.envui.ui.theme.EnvUiTheme
@@ -35,7 +34,7 @@ import org.jetbrains.jewel.ui.component.items as menuItems
 private data class EnvTemplateEditorField(
     val id: Long = Random.nextLong(),
     private val _key: String = "",
-    private val _fieldType: EnvFieldType = ANY,
+    private val _fieldType: EnvFieldType = EnvFieldType.ANY,
     val isFilled: Boolean = false,
     val changed: MutableState<Boolean> = mutableStateOf(false)
 ) {

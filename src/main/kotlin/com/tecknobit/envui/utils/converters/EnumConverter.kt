@@ -1,8 +1,8 @@
 package com.tecknobit.envui.utils.converters
 
 import androidx.compose.ui.text.input.KeyboardType
-import com.tecknobit.envui.ui.enums.EnvFieldType
-import com.tecknobit.envui.ui.enums.EnvFieldType.*
+import com.tecknobit.envui.enums.EnvFieldType
+import com.tecknobit.envui.enums.EnvFieldType.*
 
 fun EnvFieldType.toKeyboardType(): KeyboardType {
     return when(this) {
