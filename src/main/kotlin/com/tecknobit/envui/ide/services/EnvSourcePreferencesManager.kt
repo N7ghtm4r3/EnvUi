@@ -23,7 +23,6 @@ data class EnvSourcePropertyPreferences(
     var initialValue: String = "",
     var currentValue: String = initialValue,
     var lastUpdateAt: Long = -1L,
-    var isChanged: Boolean = initialValue != currentValue,
 )
 
 @Service(Service.Level.PROJECT)
@@ -91,8 +90,7 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
                 lastUpdateAt =  if (isChanged)
                     System.currentTimeMillis()
                 else
-                    -1L,
-                isChanged = isChanged
+                    -1L
             )
         }
     }
@@ -110,8 +108,7 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
             propertyPreferences.copy(
                 initialValue = newValue,
                 currentValue = newValue,
-                lastUpdateAt = -1L,
-                isChanged = false
+                lastUpdateAt = -1L
             )
         }
     }
@@ -270,9 +267,11 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
 
         return envSourcePreferences.values.filter { envSourcePreference ->
             val criticalProperties = envSourcePreference.properties.filter { (_, property) ->
-                if(excludeUnchanged)
-                    predicate(property) && property.isChanged
-                else
+                if (excludeUnchanged) {
+                    val isChanged = property.initialValue != property.currentValue
+
+                    predicate(property) && isChanged
+                } else
                     predicate(property)
             }
             envSourcePreference.properties = criticalProperties
@@ -360,8 +359,7 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
                     key = key,
                     initialValue = previousInitialValue.ifBlank { value },
                     currentValue = value,
-                    lastUpdateAt = System.currentTimeMillis(),
-                    isChanged = (value != propertyPrefs.currentValue) && previousInitialValue.isNotBlank(),
+                    lastUpdateAt = System.currentTimeMillis()
                 )
 
                 propertyPreferences[key] = propertyPrefs

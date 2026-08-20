@@ -191,8 +191,7 @@ class dEnvFile(
                     resolvedPropertyPreferences.copy(
                         initialValue = propertyPreferences.initialValue,
                         currentValue = propertyPreferences.currentValue,
-                        lastUpdateAt = propertyPreferences.lastUpdateAt,
-                        isChanged = propertyPreferences.isChanged
+                        lastUpdateAt = propertyPreferences.lastUpdateAt
                     )
                 }
             )
