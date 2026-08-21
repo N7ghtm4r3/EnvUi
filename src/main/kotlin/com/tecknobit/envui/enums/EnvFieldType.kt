@@ -2,18 +2,36 @@ package com.tecknobit.envui.enums
 
 enum class EnvFieldType(
     val displayName: String,
+    val validator: Regex,
 ) {
 
-    STRING("String"),
+    STRING(
+        displayName = "String",
+        validator = Regex(".*")
+    ),
 
-    INTEGER("Integer"),
+    INTEGER(
+        displayName = "Integer",
+        validator = Regex("-?\\d+")
+    ),
 
-    FLOAT("Float"),
+    FLOAT(
+        displayName = "Float",
+        validator = Regex("-?(?:\\d+\\.?\\d*|\\.\\d+)")
+    ),
 
-    DOUBLE("Double"),
+    DOUBLE(
+        displayName = "Double",
+        validator = Regex("-?(?:\\d+\\.?\\d*|\\.\\d+)(?:[eE][+-]?\\d+)?")
+    ),
 
-    JSON("Json"),
+    JSON(
+        displayName = "Json",
+        validator = Regex(".*", RegexOption.DOT_MATCHES_ALL)
+    ),
 
-    ANY("Any")
-
+    ANY(
+        displayName = "Any",
+        validator = Regex(".*", RegexOption.DOT_MATCHES_ALL)
+    )
 }

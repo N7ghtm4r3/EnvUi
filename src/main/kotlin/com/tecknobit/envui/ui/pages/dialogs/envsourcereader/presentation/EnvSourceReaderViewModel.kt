@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.intellij.openapi.application.runWriteAction
 import com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFile
 import com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFile.Companion.ENV_TEMPLATE_FILENAME
-import com.tecknobit.envui.enums.EnvFieldType
+import com.tecknobit.envui.ide.services.useEnvSourcePreferencesManager
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.data.EnvSourceTemplate
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.data.EnvTemplateField
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.states.EnvSourceReaderState
@@ -39,13 +39,22 @@ class EnvSourceReaderViewModel(
 
         val properties = template.properties()
         val mappedProperties = mutableListOf<EnvTemplateField>()
-        properties.forEach { property ->
-            mappedProperties.add(
-                EnvTemplateField(
-                    key = property.keyEntry.text,
-                    type = EnvFieldType.STRING
+
+        envSource.useEnvSourcePreferencesManager {
+            properties.forEach { property ->
+                val key = property.keyEntry.text
+                val type = retrievePropertyType(
+                    source = envSource.source,
+                    key = key
                 )
-            )
+
+                mappedProperties.add(
+                    EnvTemplateField(
+                        key = property.keyEntry.text,
+                        type = type
+                    )
+                )
+            }
         }
 
         _dialogState.update {

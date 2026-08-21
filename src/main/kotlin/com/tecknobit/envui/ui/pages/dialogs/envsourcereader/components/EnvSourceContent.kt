@@ -12,7 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.intellij.ui.JBColor
-import com.tecknobit.envui.generated.resources.*
+import com.tecknobit.envui.enums.EnvFieldType
+import com.tecknobit.envui.generated.resources.Res
+import com.tecknobit.envui.generated.resources.manage_template
+import com.tecknobit.envui.generated.resources.mark_as_critical_to_change
+import com.tecknobit.envui.generated.resources.reset_value_on_close
 import com.tecknobit.envui.ide.envfile.Property
 import com.tecknobit.envui.ide.services.EnvSourcePropertyPreferences
 import com.tecknobit.envui.ide.services.useEnvSourcePreferencesManager
@@ -136,6 +140,7 @@ private fun EnvSourceProperty(
             }
 
             EnvSourceInput(
+                envSource = envSource,
                 property = property,
                 onPropertyChange = onPropertyChange
             )
@@ -223,18 +228,24 @@ private fun retrievePropertyPreference(
 
 @Composable
 private fun EnvSourceInput(
+    envSource: EnvSource,
     property: Property,
-    onPropertyChange: (String, String) -> Unit
+    onPropertyChange: (String, String) -> Unit,
 ) {
-    val valueEntry = property.valueEntry
     val key = property.keyEntry.text
+    val type: EnvFieldType = envSource.useEnvSourcePreferencesManager {
+        retrievePropertyType(
+            source = envSource.source,
+            key = key
+        )
+    }
 
-    DebouncedInput(
+    EnvPropertyDebounceInput(
         modifier = Modifier
             .fillMaxWidth(),
         delay = 200.milliseconds,
-        initialValue = valueEntry?.text ?: "",
-        placeholder = Res.string.enter_env_value_placeholder,
+        property = property,
+        type = type,
         onDebounce = { onPropertyChange(key, it) }
     )
 }

@@ -3,10 +3,10 @@ package com.tecknobit.envui.ide.services
 import com.intellij.openapi.components.*
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import com.tecknobit.envui.enums.EnvFieldType
+import com.tecknobit.envui.enums.EnvFieldType.ANY
 import com.tecknobit.envui.ide.envfile.Property
 import com.tecknobit.envui.ide.languages.dEnvFileBase
-import com.tecknobit.envui.ui.enums.EnvFieldType
-import com.tecknobit.envui.ui.enums.EnvFieldType.ANY
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.data.EnvSourceTemplate
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 
