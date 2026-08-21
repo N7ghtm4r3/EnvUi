@@ -2,7 +2,6 @@ package com.tecknobit.envui.ide.services
 
 import com.intellij.openapi.components.*
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.tecknobit.envui.enums.EnvFieldType
 import com.tecknobit.envui.enums.EnvFieldType.ANY
@@ -10,7 +9,6 @@ import com.tecknobit.envui.ide.envfile.Property
 import com.tecknobit.envui.ide.languages.dEnvFileBase
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.data.EnvSourceTemplate
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
-import com.tecknobit.envui.utils.toEnvSource
 
 data class EnvUiState(
     var preferences: Map<String, EnvSourcePreferences> = mapOf()
@@ -79,6 +77,7 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
     fun upsertFromTemplate(
         source: VirtualFile,
         envSourceTemplate: EnvSourceTemplate,
+        onPropertyTypeChange: (String, String) -> Unit,
     ) {
         val properties = mutableMapOf<String, EnvSourcePropertyPreferences>().apply {
             val currentEnvSourcePreferences = retrieveEnvSourcePreferences(
@@ -89,27 +88,16 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
             putAll(currentProperties)
         }
 
-        val envSource = source.toEnvSource(
-            project = ProjectManager.getInstance().defaultProject,
-            resolveModule = false
-        )
-        val psiEnvSource = envSource.psiEnvSource
-
         envSourceTemplate.fields.forEach { field ->
             val key = field.key
             val type = field.type
 
             var propertyPreferences = properties[key]
-            propertyPreferences = syncPropertyPreference(
+            propertyPreferences = syncPropertyPreferenceFromTemplate(
                 key = key,
                 propertyPreferences = propertyPreferences,
                 type = type,
-                onTypeChange = { key, value ->
-                    psiEnvSource.updateValueForKey(
-                        key = key,
-                        value = value
-                    )
-                }
+                onTypeChange = onPropertyTypeChange
             )
 
             properties[key] = propertyPreferences
@@ -124,7 +112,7 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
         )
     }
 
-    private fun syncPropertyPreference(
+    private fun syncPropertyPreferenceFromTemplate(
         key: String,
         propertyPreferences: EnvSourcePropertyPreferences?,
         type: EnvFieldType,

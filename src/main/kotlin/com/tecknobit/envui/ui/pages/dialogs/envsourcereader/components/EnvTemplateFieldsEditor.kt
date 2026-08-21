@@ -115,7 +115,13 @@ fun EnvTemplateFieldsEditor(
                         envSource.useEnvSourcePreferencesManager {
                             upsertFromTemplate(
                                 source = envSource.source,
-                                envSourceTemplate = newEnvSourceTemplate
+                                envSourceTemplate = newEnvSourceTemplate,
+                                onPropertyTypeChange = { key, value ->
+                                    envSource.psiEnvSource.updateValueForKey(
+                                        key = key,
+                                        value = value
+                                    )
+                                }
                             )
                         }
 
