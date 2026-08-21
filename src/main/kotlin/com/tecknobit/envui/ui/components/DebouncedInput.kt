@@ -3,6 +3,7 @@
 package com.tecknobit.envui.ui.components
 
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.*
@@ -116,6 +117,11 @@ private fun AreaDebouncedField(
     TextArea(
         modifier = modifier
             .height(120.dp),
+        decorationBoxModifier = Modifier
+            .padding(
+                horizontal = 8.dp,
+                vertical = 6.dp
+            ),
         value = value.value,
         onValueChange = onValueChange,
         placeholder = placeholder,

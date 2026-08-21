@@ -26,6 +26,7 @@ import com.tecknobit.envui.ui.components.*
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 import com.tecknobit.envui.ui.theme.EnvUiTheme
 import com.tecknobit.envui.ui.utils.toComposeColor
+import com.tecknobit.envui.utils.converters.toColor
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.jewel.ui.component.DefaultButton
 import org.jetbrains.jewel.ui.component.Text
@@ -72,9 +73,18 @@ fun EnvSourceContent(
                 items = properties,
                 key = { property -> property.keyEntry.text }
             ) { property ->
+                val key = property.keyEntry.text
+                val type: EnvFieldType = envSource.useEnvSourcePreferencesManager {
+                    retrievePropertyType(
+                        source = envSource.source,
+                        key = key
+                    )
+                }
+
                 EnvSourceProperty(
                     modifier = Modifier
                         .animateItem(),
+                    type = type,
                     property = property,
                     envSource = envSource,
                     onPropertyChange = { key, value ->
@@ -92,6 +102,7 @@ fun EnvSourceContent(
 @Composable
 private fun EnvSourceProperty(
     modifier: Modifier = Modifier,
+    type: EnvFieldType,
     property: Property,
     envSource: EnvSource,
     onPropertyChange: (String, String) -> Unit
@@ -124,9 +135,19 @@ private fun EnvSourceProperty(
                     modifier = Modifier
                         .weight(3f)
                 ) {
-                    KeyText(
-                        property = property
-                    )
+                    Row (
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        KeyText(
+                            property = property
+                        )
+
+                        Badge(
+                            text = type.displayName,
+                            color = type.toColor()
+                        )
+                    }
                 }
 
                 Column(
@@ -142,7 +163,7 @@ private fun EnvSourceProperty(
             }
 
             EnvSourceInput(
-                envSource = envSource,
+                type = type,
                 property = property,
                 onPropertyChange = onPropertyChange
             )
@@ -230,17 +251,11 @@ private fun retrievePropertyPreference(
 
 @Composable
 private fun EnvSourceInput(
-    envSource: EnvSource,
+    type: EnvFieldType,
     property: Property,
     onPropertyChange: (String, String) -> Unit,
 ) {
     val key = property.keyEntry.text
-    val type: EnvFieldType = envSource.useEnvSourcePreferencesManager {
-        retrievePropertyType(
-            source = envSource.source,
-            key = key
-        )
-    }
 
     EnvPropertyDebounceInput(
         modifier = Modifier

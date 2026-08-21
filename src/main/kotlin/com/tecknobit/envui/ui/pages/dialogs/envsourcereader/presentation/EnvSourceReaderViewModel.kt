@@ -50,7 +50,7 @@ class EnvSourceReaderViewModel(
 
                 mappedProperties.add(
                     EnvTemplateField(
-                        key = property.keyEntry.text,
+                        key = key,
                         type = type
                     )
                 )

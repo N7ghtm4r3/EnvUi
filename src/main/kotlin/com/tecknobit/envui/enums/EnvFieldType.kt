@@ -15,6 +15,11 @@ enum class EnvFieldType(
         validator = Regex("-?\\d+")
     ),
 
+    LONG(
+        displayName = "Long",
+        validator = Regex("-?\\d+")
+    ),
+
     FLOAT(
         displayName = "Float",
         validator = Regex("-?(?:\\d+\\.?\\d*|\\.\\d+)")
