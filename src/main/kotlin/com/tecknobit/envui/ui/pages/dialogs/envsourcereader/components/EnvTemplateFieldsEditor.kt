@@ -19,9 +19,11 @@ import androidx.compose.ui.unit.sp
 import com.intellij.ui.JBColor
 import com.tecknobit.envui.enums.EnvFieldType
 import com.tecknobit.envui.generated.resources.*
+import com.tecknobit.envui.ide.services.useEnvSourcePreferencesManager
 import com.tecknobit.envui.ui.components.LazyListScaffold
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.data.EnvSourceTemplate
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.data.EnvTemplateField
+import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 import com.tecknobit.envui.ui.theme.EnvUiTheme
 import com.tecknobit.envui.ui.utils.toComposeColor
 import org.jetbrains.compose.resources.stringResource
@@ -48,6 +50,7 @@ private data class EnvTemplateEditorField(
 @Composable
 fun EnvTemplateFieldsEditor(
     modifier: Modifier = Modifier,
+    envSource: EnvSource,
     envSourceTemplate: EnvSourceTemplate,
     onSave: (EnvSourceTemplate) -> Unit,
 ) {
@@ -108,6 +111,13 @@ fun EnvTemplateFieldsEditor(
                         val newEnvSourceTemplate = fields.saveAsTemplate(
                             removedFields = removedFields
                         )
+
+                        envSource.useEnvSourcePreferencesManager {
+                            upsertFromTemplate(
+                                source = envSource.source,
+                                envSourceTemplate = newEnvSourceTemplate
+                            )
+                        }
 
                         onSave(newEnvSourceTemplate)
                     }

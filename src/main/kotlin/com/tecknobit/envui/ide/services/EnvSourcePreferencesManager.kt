@@ -5,6 +5,9 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.tecknobit.envui.ide.envfile.Property
 import com.tecknobit.envui.ide.languages.dEnvFileBase
+import com.tecknobit.envui.ui.enums.EnvFieldType
+import com.tecknobit.envui.ui.enums.EnvFieldType.ANY
+import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.data.EnvSourceTemplate
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 
 data class EnvUiState(
@@ -23,6 +26,7 @@ data class EnvSourcePropertyPreferences(
     var initialValue: String = "",
     var currentValue: String = initialValue,
     var lastUpdateAt: Long = -1L,
+    var type: EnvFieldType = ANY,
 )
 
 @Service(Service.Level.PROJECT)
@@ -68,6 +72,59 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
 
         val propertyPreferences = envSourcePreference.properties[key]
         return propertyPreferences ?: defaultPropertyPreferences
+    }
+
+    fun upsertFromTemplate(
+        source: VirtualFile,
+        envSourceTemplate: EnvSourceTemplate,
+    ) {
+        val properties = mutableMapOf<String, EnvSourcePropertyPreferences>().apply {
+            val currentEnvSourcePreferences = retrieveEnvSourcePreferences(
+                source = source
+            )
+            val currentProperties = currentEnvSourcePreferences?.properties ?: emptyMap()
+
+            putAll(currentProperties)
+        }
+
+        envSourceTemplate.fields.forEach { field ->
+            val key = field.key
+            val type = field.type
+
+            var propertyPreferences = properties[key]
+            if (propertyPreferences != null) {
+                propertyPreferences = propertyPreferences.copy(
+                    type = type
+                )
+            } else {
+                propertyPreferences = EnvSourcePropertyPreferences(
+                    key = key,
+                    type = type
+                )
+            }
+
+            properties[key] = propertyPreferences
+        }
+
+        storeEnvSourcePreferences(
+            source = source,
+            envSourcePreferences = EnvSourcePreferences(
+                sourcePath = source.path,
+                properties = properties
+            )
+        )
+    }
+
+    fun retrievePropertyType(
+        source: VirtualFile,
+        key: String,
+    ): EnvFieldType {
+        val envSourcePreferences = retrieveEnvSourcePreferences(
+            source = source
+        )
+        val properties = envSourcePreferences?.properties ?: emptyMap()
+
+        return properties[key]?.type ?: ANY
     }
 
     fun setPropertyValue(
