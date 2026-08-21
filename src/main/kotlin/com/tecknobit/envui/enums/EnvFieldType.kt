@@ -33,5 +33,29 @@ enum class EnvFieldType(
     ANY(
         displayName = "Any",
         validator = Regex(".*", RegexOption.DOT_MATCHES_ALL)
-    )
+    );
+
+    companion object {
+
+        private val SINGLE_LINE_JSON_REGEX = Regex("\\s*\\n\\s*")
+
+        private val MULTI_LINE_JSON_REGEX = Regex("""[{},]""")
+
+        fun String.formatAsSingleLineJson(): String {
+            return replace(SINGLE_LINE_JSON_REGEX, "")
+        }
+
+        fun String.formatAsMultiLineJson(): String {
+            return replace(MULTI_LINE_JSON_REGEX) {
+                when (it.value) {
+                    "{" -> "{\n    "
+                    "," -> ",\n    "
+                    "}" -> "\n}"
+                    else -> it.value
+                }
+            }
+        }
+
+    }
+
 }

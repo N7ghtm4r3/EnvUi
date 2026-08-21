@@ -13,6 +13,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.intellij.ui.JBColor
 import com.tecknobit.envui.enums.EnvFieldType
+import com.tecknobit.envui.enums.EnvFieldType.Companion.formatAsSingleLineJson
+import com.tecknobit.envui.enums.EnvFieldType.JSON
 import com.tecknobit.envui.generated.resources.Res
 import com.tecknobit.envui.generated.resources.manage_template
 import com.tecknobit.envui.generated.resources.mark_as_critical_to_change
@@ -246,6 +248,12 @@ private fun EnvSourceInput(
         delay = 200.milliseconds,
         property = property,
         type = type,
-        onDebounce = { onPropertyChange(key, it) }
+        onDebounce = {
+            var value = it
+            if (type == JSON)
+                value = value.formatAsSingleLineJson()
+
+            onPropertyChange(key, value)
+        }
     )
 }

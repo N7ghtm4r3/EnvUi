@@ -5,12 +5,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import com.tecknobit.envui.enums.EnvFieldType
+import com.tecknobit.envui.enums.EnvFieldType.Companion.formatAsMultiLineJson
 import com.tecknobit.envui.enums.EnvFieldType.JSON
 import com.tecknobit.envui.generated.resources.Res
 import com.tecknobit.envui.generated.resources.enter_env_value_placeholder
 import com.tecknobit.envui.ide.envfile.Property
 import com.tecknobit.envui.utils.converters.toKeyboardType
-import kotlinx.serialization.json.Json
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -24,8 +24,10 @@ fun EnvPropertyDebounceInput(
     type: EnvFieldType,
 ) {
     val valueEntry = property.valueEntry
-    val value = valueEntry?.text ?: ""
+    var value = valueEntry?.text ?: ""
     val isJsonField = type == JSON
+    if (isJsonField)
+        value = value.formatAsMultiLineJson()
 
     DebouncedInput(
         modifier = modifier,
@@ -35,12 +37,7 @@ fun EnvPropertyDebounceInput(
         placeholder = Res.string.enter_env_value_placeholder,
         onDebounce = onDebounce,
         validator = { textFieldValue ->
-            val input = textFieldValue.text
-
-            if (isJsonField)
-                input.validateAsJson()
-            else
-                type.validator.matches(textFieldValue.text)
+            isJsonField || type.validator.matches(textFieldValue.text)
         },
         keyboardOptions = KeyboardOptions(
             keyboardType = type.toKeyboardType()
@@ -50,13 +47,4 @@ fun EnvPropertyDebounceInput(
         else
             1
     )
-}
-
-private fun String.validateAsJson(): Boolean {
-    return isBlank() || try {
-        Json.parseToJsonElement(this)
-        true
-    } catch (_: Exception) {
-        false
-    }
 }

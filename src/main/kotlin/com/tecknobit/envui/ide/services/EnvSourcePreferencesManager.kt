@@ -2,6 +2,7 @@ package com.tecknobit.envui.ide.services
 
 import com.intellij.openapi.components.*
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.tecknobit.envui.enums.EnvFieldType
 import com.tecknobit.envui.enums.EnvFieldType.ANY
@@ -9,6 +10,7 @@ import com.tecknobit.envui.ide.envfile.Property
 import com.tecknobit.envui.ide.languages.dEnvFileBase
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.data.EnvSourceTemplate
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
+import com.tecknobit.envui.utils.toEnvSource
 
 data class EnvUiState(
     var preferences: Map<String, EnvSourcePreferences> = mapOf()
@@ -87,21 +89,28 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
             putAll(currentProperties)
         }
 
+        val envSource = source.toEnvSource(
+            project = ProjectManager.getInstance().defaultProject,
+            resolveModule = false
+        )
+        val psiEnvSource = envSource.psiEnvSource
+
         envSourceTemplate.fields.forEach { field ->
             val key = field.key
             val type = field.type
 
             var propertyPreferences = properties[key]
-            if (propertyPreferences != null) {
-                propertyPreferences = propertyPreferences.copy(
-                    type = type
-                )
-            } else {
-                propertyPreferences = EnvSourcePropertyPreferences(
-                    key = key,
-                    type = type
-                )
-            }
+            propertyPreferences = syncPropertyPreference(
+                key = key,
+                propertyPreferences = propertyPreferences,
+                type = type,
+                onTypeChange = { key, value ->
+                    psiEnvSource.updateValueForKey(
+                        key = key,
+                        value = value
+                    )
+                }
+            )
 
             properties[key] = propertyPreferences
         }
@@ -113,6 +122,38 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
                 properties = properties
             )
         )
+    }
+
+    private fun syncPropertyPreference(
+        key: String,
+        propertyPreferences: EnvSourcePropertyPreferences?,
+        type: EnvFieldType,
+        onTypeChange: (String, String) -> Unit,
+    ): EnvSourcePropertyPreferences {
+        var propertyPreferencesSupport: EnvSourcePropertyPreferences?
+
+        if (propertyPreferences != null) {
+            val previousType = propertyPreferences.type
+            val isTypeChanged = previousType != type && type != ANY
+            val initialValue = if (isTypeChanged) "" else propertyPreferences.initialValue
+            val currentValue = if (isTypeChanged) "" else propertyPreferences.currentValue
+
+            propertyPreferencesSupport = propertyPreferences.copy(
+                type = type,
+                initialValue = initialValue,
+                currentValue = currentValue
+            )
+
+            if (isTypeChanged)
+                onTypeChange(key, currentValue)
+        } else {
+            propertyPreferencesSupport = EnvSourcePropertyPreferences(
+                key = key,
+                type = type
+            )
+        }
+
+        return propertyPreferencesSupport
     }
 
     fun retrievePropertyType(

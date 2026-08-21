@@ -80,9 +80,9 @@ fun DebouncedInput(
         AreaDebouncedField(
             modifier = modifier,
             onValueChange = onValueChange,
+            value = value,
             placeholder = placeholderContent,
             keyboardOptions = keyboardOptions,
-            value = value
         )
     }
 }
