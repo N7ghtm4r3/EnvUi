@@ -27,7 +27,7 @@ enum class EnvFieldType(
 
     JSON(
         displayName = "Json",
-        validator = Regex(".*", RegexOption.DOT_MATCHES_ALL)
+        validator = Regex("""\{.*}""", RegexOption.DOT_MATCHES_ALL)
     ),
 
     ANY(

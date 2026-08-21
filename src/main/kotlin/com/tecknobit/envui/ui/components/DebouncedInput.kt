@@ -2,6 +2,7 @@
 
 package com.tecknobit.envui.ui.components
 
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.*
@@ -15,6 +16,7 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.jewel.foundation.ExperimentalJewelApi
 import org.jetbrains.jewel.ui.component.Text
+import org.jetbrains.jewel.ui.component.TextArea
 import org.jetbrains.jewel.ui.component.TextField
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -33,8 +35,9 @@ fun DebouncedInput(
     initialValue: String,
     placeholder: StringResource? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    maxLines: Int = 1,
 ) {
-    var value by remember {
+    val value = remember {
         mutableStateOf(
             TextFieldValue(
                 text = initialValue
@@ -42,27 +45,81 @@ fun DebouncedInput(
         )
     }
 
-    LaunchedEffect(value.text) {
+    LaunchedEffect(value.value.text) {
         delay(delay)
-        onDebounce(value.text)
+        onDebounce(value.value.text)
     }
 
+    val modifier = modifier
+        .clip(shape)
+
+    val placeholderContent: @Composable () -> Unit = {
+        if (placeholder != null) {
+            Text(
+                text = stringResource(placeholder)
+            )
+        }
+    }
+
+    val onValueChange: (TextFieldValue) -> Unit = { textFieldValue ->
+        val isValid = validator == null || validator.invoke(textFieldValue)
+
+        if (isValid || textFieldValue.text.isBlank())
+            value.value = textFieldValue
+    }
+
+    if (maxLines == 1) {
+        SimpleDebouncedField(
+            modifier = modifier,
+            onValueChange = onValueChange,
+            placeholder = placeholderContent,
+            keyboardOptions = keyboardOptions,
+            value = value
+        )
+    } else {
+        AreaDebouncedField(
+            modifier = modifier,
+            onValueChange = onValueChange,
+            placeholder = placeholderContent,
+            keyboardOptions = keyboardOptions,
+            value = value
+        )
+    }
+}
+
+@Composable
+private fun SimpleDebouncedField(
+    modifier: Modifier = Modifier,
+    onValueChange: (TextFieldValue) -> Unit,
+    value: MutableState<TextFieldValue>,
+    placeholder: (@Composable () -> Unit)?,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+) {
     TextField(
-        modifier = modifier
-            .clip(shape),
-        value = value,
-        onValueChange = { textFieldValue ->
-            val isValid = validator == null || validator.invoke(textFieldValue)
-            if (isValid || textFieldValue.text.isBlank())
-                value = textFieldValue
-        },
-        placeholder = {
-            placeholder?.let {
-                Text(
-                    text = stringResource(placeholder)
-                )
-            }
-        },
+        modifier = modifier,
+        value = value.value,
+        onValueChange = onValueChange,
+        placeholder = placeholder,
         keyboardOptions = keyboardOptions
+    )
+}
+
+@Composable
+private fun AreaDebouncedField(
+    modifier: Modifier = Modifier,
+    onValueChange: (TextFieldValue) -> Unit,
+    value: MutableState<TextFieldValue>,
+    placeholder: (@Composable () -> Unit)?,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    maxLines: Int = Int.MAX_VALUE,
+) {
+    TextArea(
+        modifier = modifier
+            .height(120.dp),
+        value = value.value,
+        onValueChange = onValueChange,
+        placeholder = placeholder,
+        keyboardOptions = keyboardOptions,
+        maxLines = maxLines
     )
 }

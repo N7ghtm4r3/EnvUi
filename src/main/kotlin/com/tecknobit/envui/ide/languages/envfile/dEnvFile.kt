@@ -2,6 +2,7 @@ package com.tecknobit.envui.ide.languages.envfile
 
 import com.intellij.openapi.editor.markup.RangeHighlighter
 import com.intellij.psi.FileViewProvider
+import com.tecknobit.envui.enums.EnvFieldType.JSON
 import com.tecknobit.envui.helpers.EnvSourceHighlightedPropertiesRegistry
 import com.tecknobit.envui.helpers.EnvSourcePreferenceType
 import com.tecknobit.envui.helpers.EnvSourcePreferenceType.CRITICAL
@@ -15,6 +16,7 @@ import com.tecknobit.envui.ide.services.EnvSourcePreferencesManager
 import com.tecknobit.envui.ide.services.EnvSourcePropertyPreferences
 import com.tecknobit.envui.ide.services.useEnvSourcePreferencesManager
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
+import kotlinx.serialization.json.Json
 
 class dEnvFile(
     viewProvider: FileViewProvider,
@@ -38,21 +40,46 @@ class dEnvFile(
     ) {
         val property = findPropertyByKey(
             key = key
-        )!!
+        ) ?: return
+
+        val source = this@dEnvFile.virtualFile
+        val type = project.useEnvSourcePreferencesManager {
+            retrievePropertyType(
+                source = source,
+                key = key
+            )
+        }
+
+        var upsertingValue = value
+        if (type == JSON) {
+            upsertingValue = formatJsonProperty(
+                value = value
+            )
+        }
 
         upsertValue(
             property = property,
-            value = value,
+            value = upsertingValue,
             synchronously = synchronously
         )
 
         project.useEnvSourcePreferencesManager {
             setPropertyValue(
-                source = this@dEnvFile.virtualFile,
+                source = source,
                 property = property,
                 value = value
             )
         }
+    }
+
+    private fun formatJsonProperty(
+        value: String,
+    ): String {
+        val json = Json {
+            prettyPrint = false
+        }
+
+        return json.encodeToString(value)
     }
 
     fun toggleMarkAsCritical(
