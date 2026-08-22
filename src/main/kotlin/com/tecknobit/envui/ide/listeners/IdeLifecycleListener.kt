@@ -7,8 +7,18 @@ import com.tecknobit.envui.ui.pages.dialogs.propertypreferences.criticalenvsourc
 import com.tecknobit.envui.utils.toEnvSource
 import com.tecknobit.envui.utils.toVirtualFile
 
+/**
+ * The `IdeLifecycleListener` class is useful to handle environment property preferences before a project closes
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ */
 class IdeLifecycleListener : ProjectManagerListener {
 
+    /**
+     * Method used to reset configured values and warn about changed critical properties before project closing
+     *
+     * @param project The project being closed
+     */
     override fun projectClosingBeforeSave(
         project: Project
     ) {
@@ -22,6 +32,11 @@ class IdeLifecycleListener : ProjectManagerListener {
         )
     }
 
+    /**
+     * Method used to restore the initial values of changed properties configured for reset on close
+     *
+     * @param project The project whose properties are restored
+     */
     private fun handleResettableOnCloseProperties(
         project: Project
     ) {
@@ -55,6 +70,11 @@ class IdeLifecycleListener : ProjectManagerListener {
         }
     }
 
+    /**
+     * Method used to warn about changed critical properties before the project closes
+     *
+     * @param project The project whose critical properties are checked
+     */
     private fun handleCriticalProperties(
         project: Project
     ) {

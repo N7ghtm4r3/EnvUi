@@ -8,6 +8,11 @@ import com.tecknobit.envui.enums.EnvFieldType
 import com.tecknobit.envui.enums.EnvFieldType.*
 import com.tecknobit.envui.ui.utils.toComposeColor
 
+/**
+ * Method used to resolve the editor color associated with this environment field type
+ *
+ * @return the color associated with the field as [Color]
+ */
 fun EnvFieldType.toColor(): Color {
     val editorColorsManager = EditorColorsManager.getInstance()
     val scheme = editorColorsManager.globalScheme

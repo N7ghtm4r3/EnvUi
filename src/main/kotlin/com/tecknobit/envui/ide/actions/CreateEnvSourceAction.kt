@@ -14,8 +14,18 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+/**
+ * The `CreateEnvSourceAction` class is useful to create an environment source in the selected directory
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ */
 class CreateEnvSourceAction : AnAction() {
 
+    /**
+     * Method used to create and open an environment source in the selected directory
+     *
+     * @param event The action event containing the selected directory and project
+     */
     override fun actionPerformed(
         event: AnActionEvent
     ) {
@@ -42,6 +52,11 @@ class CreateEnvSourceAction : AnAction() {
         }
     }
 
+    /**
+     * Method used to enable the action only for directories without an environment source
+     *
+     * @param event The action event to update
+     */
     override fun update(
         event: AnActionEvent
     ) {
@@ -63,6 +78,11 @@ class CreateEnvSourceAction : AnAction() {
         presentation.isEnabled = true
     }
 
+    /**
+     * Method used to resolve the directory selected by this action event
+     *
+     * @return the selected directory, if available, as [PsiDirectory]
+     */
     private fun AnActionEvent.resolveSelectedDirectory(): PsiDirectory? {
         val selectedFile = getData(LangDataKeys.IDE_VIEW)?.orChooseDirectory
         if(selectedFile == null || !selectedFile.isDirectory)
@@ -71,6 +91,11 @@ class CreateEnvSourceAction : AnAction() {
         return selectedFile
     }
 
+    /**
+     * Method used to retrieve the thread used to update the action
+     *
+     * @return the background update thread as [ActionUpdateThread]
+     */
     override fun getActionUpdateThread(): ActionUpdateThread {
         return ActionUpdateThread.BGT
     }

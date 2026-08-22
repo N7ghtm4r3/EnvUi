@@ -11,6 +11,14 @@ import org.jetbrains.jewel.foundation.OutlineColors
 import org.jetbrains.jewel.foundation.theme.JewelTheme
 import org.jetbrains.jewel.ui.component.DefaultButton
 
+/**
+ * Custom button used to display a destructive action with error colors
+ *
+ * @param onClick The callback invoked when the button is clicked
+ * @param modifier The modifier to apply to the button
+ * @param enabled Whether the button accepts interactions
+ * @param content The content displayed by the button
+ */
 @Composable
 fun DestructiveButton(
     onClick: () -> Unit,

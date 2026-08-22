@@ -7,6 +7,13 @@ import com.intellij.openapi.vfs.VirtualFile
 import org.jetbrains.jewel.ui.icon.IconKey
 import org.jetbrains.jewel.ui.icons.AllIconsKeys
 
+/**
+ * Method used to resolve the representative icon for this virtual file in the project structure
+ *
+ * @param project The project containing the virtual file
+ *
+ * @return the representative icon key as [IconKey]
+ */
 suspend fun VirtualFile.resolveIcon(
     project: Project,
 ): IconKey {

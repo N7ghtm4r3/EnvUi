@@ -17,6 +17,16 @@ import org.jetbrains.jewel.ui.component.Icon
 import org.jetbrains.jewel.ui.component.Text
 import org.jetbrains.jewel.ui.icon.IconKey
 
+/**
+ * Component used to display an empty-state icon, title, and optional action
+ *
+ * @param modifier The modifier to apply to the empty state
+ * @param icon The icon displayed by the empty state
+ * @param iconSize The size of the icon
+ * @param iconColor The color applied to the icon
+ * @param title The localized empty-state title
+ * @param action The optional action content displayed below the title
+ */
 @Composable
 fun EmptyState(
     modifier: Modifier = Modifier,

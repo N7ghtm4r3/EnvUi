@@ -7,6 +7,12 @@ import org.jetbrains.compose.resources.JvmResourceReader
 import org.jetbrains.compose.resources.LocalResourceReader
 import kotlin.reflect.KClass
 
+/**
+ * Component used to provide string resources through the class loader of the specified context
+ *
+ * @param context The class whose class loader is used to read the resources
+ * @param content The content rendered with the configured resource reader
+ */
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun StringResourcesProvider(

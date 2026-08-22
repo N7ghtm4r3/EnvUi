@@ -9,6 +9,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
+/**
+ * Component used to alternate between empty-state content and list content
+ *
+ * @param T The item type of the list
+ * @param items The items used to determine whether the list is empty
+ * @param onEmpty The content displayed when no items are available
+ * @param content The content displayed when items are available
+ */
 @Composable
 fun <T> LazyListScaffold(
     items: List<T>,

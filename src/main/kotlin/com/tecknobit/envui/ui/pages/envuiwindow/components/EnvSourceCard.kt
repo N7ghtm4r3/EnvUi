@@ -27,6 +27,14 @@ import org.jetbrains.jewel.ui.component.Text
 import org.jetbrains.jewel.ui.icon.IconKey
 import org.jetbrains.jewel.ui.icons.AllIconsKeys
 
+/**
+ * Component used to display an environment source summary and its navigation actions
+ *
+ * @param modifier The modifier to apply to the card
+ * @param envSource The environment source summarized by the card
+ * @param shape The shape of the card
+ * @param onClick The optional callback invoked when the card is clicked
+ */
 @Composable
 fun EnvSourceCard(
     modifier: Modifier = Modifier,
@@ -53,6 +61,11 @@ fun EnvSourceCard(
     }
 }
 
+/**
+ * Section used to display the source module and dialog preview action
+ *
+ * @param envSource The environment source displayed by the header
+ */
 @Composable
 private fun CardHeader(
     envSource: EnvSource,
@@ -103,6 +116,12 @@ private fun CardHeader(
     }
 }
 
+/**
+ * Section used to display the source container folder and latest edit time
+ *
+ * @param modifier The modifier to apply to the content
+ * @param envSource The environment source displayed by the content
+ */
 @Composable
 private fun CardContent(
     modifier: Modifier = Modifier,
@@ -128,6 +147,12 @@ private fun CardContent(
     }
 }
 
+/**
+ * Badge used to display and reveal the container folder of an environment source
+ *
+ * @param modifier The modifier to apply to the folder badge
+ * @param envSource The environment source whose container is displayed
+ */
 @Composable
 private fun ParentFolder(
     modifier: Modifier = Modifier,
@@ -171,6 +196,11 @@ private fun ParentFolder(
     }
 }
 
+/**
+ * Section used to display the latest edit time of an environment source
+ *
+ * @param envSource The environment source whose timestamp is displayed
+ */
 @Composable
 private fun LastEdit(
     envSource: EnvSource,

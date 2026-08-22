@@ -14,10 +14,21 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.tecknobit.envui.ui.theme.EnvUiTheme
 
+/**
+ * `CardShape` the default rounded shape applied to cards
+ */
 val CardShape = RoundedCornerShape(
     size = 12.dp
 )
 
+/**
+ * Component used to display bordered column content with an optional click action
+ *
+ * @param modifier The modifier to apply to the card
+ * @param shape The shape of the card
+ * @param onClick The optional callback invoked when the card is clicked
+ * @param content The column content displayed by the card
+ */
 @Composable
 fun Card(
     modifier: Modifier = Modifier,

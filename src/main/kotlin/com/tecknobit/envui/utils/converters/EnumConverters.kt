@@ -4,6 +4,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import com.tecknobit.envui.enums.EnvFieldType
 import com.tecknobit.envui.enums.EnvFieldType.*
 
+/**
+ * Method used to convert this environment field type into its keyboard type
+ *
+ * @return the keyboard type associated with the field as [KeyboardType]
+ */
 fun EnvFieldType.toKeyboardType(): KeyboardType {
     return when(this) {
         STRING -> KeyboardType.Text

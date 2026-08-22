@@ -7,8 +7,18 @@ import com.tecknobit.envui.ide.services.useEnvSourcePreferencesManager
 import com.tecknobit.envui.utils.isEnvFile
 import com.tecknobit.envui.utils.resolveProject
 
+/**
+ * The `VirtualFileSystemListener` class is useful to delete persisted preferences when environment sources are deleted
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ */
 class VirtualFileSystemListener : BulkFileListener {
 
+    /**
+     * Method used to process environment source deletion events after virtual file changes
+     *
+     * @param events The completed virtual file events
+     */
     override fun after(
         events: List<VFileEvent>
     ) {

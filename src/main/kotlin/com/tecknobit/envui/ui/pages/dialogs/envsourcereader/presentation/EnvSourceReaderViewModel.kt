@@ -16,13 +16,26 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
+/**
+ * The **EnvSourceReaderViewModel** class is the support class used to map, create, and save environment templates
+ *
+ * @property envSource The environment source managed by the reader
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ */
 class EnvSourceReaderViewModel(
     private val envSource: EnvSource,
 ) : ViewModel() {
 
+    /**
+     * `_dialogState` the mutable state used to manage the environment source template
+     */
     private val _dialogState = MutableStateFlow(
         value = EnvSourceReaderState()
     )
+    /**
+     * `dialogState` the read-only state exposed to the environment source reader dialog
+     */
     val dialogState = _dialogState.asStateFlow()
 
     init {
@@ -30,6 +43,9 @@ class EnvSourceReaderViewModel(
             mapSourceTemplate()
     }
 
+    /**
+     * Method used to create or read the source template and map its fields into the dialog state
+     */
     fun mapSourceTemplate() {
         var template = envSource.psiEnvTemplateSource
         if (template == null) {
@@ -66,6 +82,11 @@ class EnvSourceReaderViewModel(
         }
     }
 
+    /**
+     * Method used to retrieve or create the template file associated with the environment source
+     *
+     * @return the associated environment template `PSI` file as [dEnvTemplateFile]
+     */
     private fun createTemplateFile(): dEnvTemplateFile {
         val envSource = envSource.psiEnvSource
         val directory = requireNotNull(envSource.containingDirectory)
@@ -81,6 +102,11 @@ class EnvSourceReaderViewModel(
         }
     }
 
+    /**
+     * Method used to save a new template and apply its structure to the environment source
+     *
+     * @param template The environment template to save
+     */
     fun saveNewTemplate(
         template: EnvSourceTemplate,
     ) {

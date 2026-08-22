@@ -21,10 +21,25 @@ import androidx.compose.ui.unit.sp
 import org.jetbrains.jewel.foundation.theme.LocalTextStyle
 import org.jetbrains.jewel.ui.component.Text
 
+/**
+ * `DefaultBadgeShape` the default rounded shape applied to badges
+ */
 val DefaultBadgeShape = RoundedCornerShape(
     size = 6.dp
 )
 
+/**
+ * Badge used to display optional icon content and a short text label
+ *
+ * @param modifier The modifier to apply to the badge
+ * @param icon The optional icon content displayed before the text
+ * @param text The text displayed by the badge
+ * @param textSize The size applied to the text
+ * @param shape The shape of the badge
+ * @param textStyle The style applied to the text
+ * @param color The foreground and translucent background color
+ * @param onClick The optional callback invoked when the badge is clicked
+ */
 @Composable
 fun Badge(
     modifier: Modifier = Modifier,

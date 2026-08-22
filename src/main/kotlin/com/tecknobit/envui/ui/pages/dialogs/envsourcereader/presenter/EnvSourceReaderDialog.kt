@@ -22,6 +22,13 @@ import org.jetbrains.jewel.ui.component.SegmentedControl
 import org.jetbrains.jewel.ui.component.SegmentedControlButtonData
 import org.jetbrains.jewel.ui.component.Text
 
+/**
+ * The [EnvSourceReaderDialog] displays an environment source and allows its values and template to be edited
+ *
+ * @property envSource The environment source displayed by the dialog
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ */
 class EnvSourceReaderDialog(
     private val envSource: EnvSource,
 ) : EnvUiDialog<EnvSourceReaderViewModel>(
@@ -34,6 +41,9 @@ class EnvSourceReaderDialog(
     )
 ) {
 
+    /**
+     * The custom content displaying the source and template editor tabs
+     */
     @Composable
     override fun DialogContent() {
         val dialogState by viewModel.dialogState.collectAsStateWithLifecycle()
@@ -67,6 +77,11 @@ class EnvSourceReaderDialog(
         }
     }
 
+    /**
+     * Component used to select whether the source or template editor is displayed
+     *
+     * @param workingOnSource The state indicating whether the source editor is selected
+     */
     @Composable
     private fun TabControls(
         workingOnSource: MutableState<Boolean>,
@@ -99,6 +114,11 @@ class EnvSourceReaderDialog(
         )
     }
 
+    /**
+     * Section used to display and edit the environment source properties
+     *
+     * @param workingOnSource The state updated when the template editor must be opened
+     */
     @Composable
     private fun SourceContent(
         workingOnSource: MutableState<Boolean>
@@ -118,6 +138,11 @@ class EnvSourceReaderDialog(
         }
     }
 
+    /**
+     * Section used to display and edit the environment source template
+     *
+     * @param dialogState The state containing the current template
+     */
     @Composable
     private fun TemplateContent(
         dialogState: EnvSourceReaderState

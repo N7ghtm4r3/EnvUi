@@ -22,10 +22,26 @@ import org.jetbrains.jewel.ui.component.TextField
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
+/**
+ * `DefaultDebounceInputShape` the default rounded shape applied to debounced inputs
+ */
 val DefaultDebounceInputShape = RoundedCornerShape(
     size = 4.dp
 )
 
+/**
+ * Component used to collect validated text and emit it after a debounce delay
+ *
+ * @param modifier The modifier to apply to the input
+ * @param shape The shape of the input
+ * @param delay The delay before emitting the current value
+ * @param onDebounce The callback invoked with the debounced text
+ * @param validator The optional condition used to accept text changes
+ * @param initialValue The initial text displayed by the input
+ * @param placeholder The optional localized placeholder
+ * @param keyboardOptions The keyboard configuration of the input
+ * @param maxLines The maximum number of lines supported by the input
+ */
 @Composable
 fun DebouncedInput(
     modifier: Modifier = Modifier,
@@ -88,6 +104,15 @@ fun DebouncedInput(
     }
 }
 
+/**
+ * Component used to display a single-line debounced text field
+ *
+ * @param modifier The modifier to apply to the field
+ * @param onValueChange The callback invoked when the text changes
+ * @param value The mutable text field value
+ * @param placeholder The optional placeholder content
+ * @param keyboardOptions The keyboard configuration of the field
+ */
 @Composable
 private fun SimpleDebouncedField(
     modifier: Modifier = Modifier,
@@ -105,6 +130,16 @@ private fun SimpleDebouncedField(
     )
 }
 
+/**
+ * Component used to display a multiline debounced text area
+ *
+ * @param modifier The modifier to apply to the area
+ * @param onValueChange The callback invoked when the text changes
+ * @param value The mutable text field value
+ * @param placeholder The optional placeholder content
+ * @param keyboardOptions The keyboard configuration of the area
+ * @param maxLines The maximum number of displayed lines
+ */
 @Composable
 private fun AreaDebouncedField(
     modifier: Modifier = Modifier,

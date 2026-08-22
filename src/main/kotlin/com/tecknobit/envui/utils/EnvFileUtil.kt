@@ -16,6 +16,9 @@ import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.data.EnvSourceTempla
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.data.EnvTemplateField
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 
+/**
+ * Method used to rewrite this environment file with its current keys and empty values
+ */
 fun dEnvFileBase.writeKeys() {
     val keys = keys()
     val formattedKeys = keys.joinToString(
@@ -28,6 +31,11 @@ fun dEnvFileBase.writeKeys() {
     )
 }
 
+/**
+ * Method used to replace the keys of this environment template with the specified fields
+ *
+ * @param templateKeys The template fields containing the keys to write
+ */
 fun dEnvTemplateFile.updateKeysFromTemplate(
     templateKeys: Collection<EnvTemplateField>
 ) {
@@ -41,6 +49,13 @@ fun dEnvTemplateFile.updateKeysFromTemplate(
     )
 }
 
+/**
+ * Method used to update this environment source from the specified template
+ *
+ * Existing values are retained for preserved fields and preferences for removed fields are deleted
+ *
+ * @param template The template to apply to the environment source
+ */
 fun dEnvFile.updateSourceFromTemplate(
     template: EnvSourceTemplate
 ) {
@@ -94,6 +109,15 @@ fun dEnvFile.updateSourceFromTemplate(
     }
 }
 
+/**
+ * Method used to convert this virtual environment file into its source model
+ *
+ * @param project The project containing the virtual file
+ * @param template The optional template associated with the source
+ * @param resolveModule Whether the containing module must be resolved
+ *
+ * @return the resolved environment source as [EnvSource]
+ */
 fun VirtualFile.toEnvSource(
     project: Project,
     template: VirtualFile? = null,
@@ -123,6 +147,16 @@ fun VirtualFile.toEnvSource(
     }
 }
 
+/**
+ * Method used to resolve this environment file as a source model
+ *
+ * @param project The project containing the source
+ * @param psiManager The manager used to resolve the `PSI` files
+ * @param template The optional template associated with the source
+ * @param module The optional module containing the source
+ *
+ * @return the resolved environment source as [EnvSource]
+ */
 private fun VirtualFile.resolveFromSource(
     project: Project,
     psiManager: PsiManager,
@@ -148,6 +182,15 @@ private fun VirtualFile.resolveFromSource(
 }
 
 
+/**
+ * Method used to resolve this environment template as a source model
+ *
+ * @param project The project containing the template
+ * @param psiManager The manager used to resolve the `PSI` files
+ * @param module The optional module containing the template
+ *
+ * @return the resolved environment source as [EnvSource]
+ */
 private fun VirtualFile.resolveFromTemplate(
     project: Project,
     psiManager: PsiManager,
@@ -167,6 +210,13 @@ private fun VirtualFile.resolveFromTemplate(
     )
 }
 
+/**
+ * Method used to resolve the environment source related to this virtual file
+ *
+ * @param project The project containing the virtual file
+ *
+ * @return the related environment source `PSI` file, if available, as [PsiFile]
+ */
 private fun VirtualFile.resolveEnvSource(
     project: Project,
 ): PsiFile? {
@@ -176,6 +226,13 @@ private fun VirtualFile.resolveEnvSource(
     )
 }
 
+/**
+ * Method used to resolve the environment template related to this virtual file
+ *
+ * @param project The project containing the virtual file
+ *
+ * @return the related environment template `PSI` file, if available, as [PsiFile]
+ */
 private fun VirtualFile.resolveEnvSourceTemplate(
     project: Project,
 ): PsiFile? {
@@ -185,6 +242,14 @@ private fun VirtualFile.resolveEnvSourceTemplate(
     )
 }
 
+/**
+ * Method used to resolve a sibling environment file by name
+ *
+ * @param project The project containing the virtual file
+ * @param fileName The name of the sibling file to resolve
+ *
+ * @return the related `PSI` file, if available, as [PsiFile]
+ */
 private fun VirtualFile.resolveEnvSourceFile(
     project: Project,
     fileName: String,

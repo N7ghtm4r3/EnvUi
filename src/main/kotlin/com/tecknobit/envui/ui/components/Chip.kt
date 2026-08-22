@@ -31,10 +31,26 @@ import org.jetbrains.jewel.ui.component.Text
 import org.jetbrains.jewel.ui.component.Tooltip
 import org.jetbrains.jewel.ui.icon.IconKey
 
+/**
+ * `DefaultChipShape` the default rounded shape applied to chips
+ */
 val DefaultChipShape = RoundedCornerShape(
     size = 6.dp
 )
 
+/**
+ * Component used to display a selectable icon chip with a localized tooltip
+ *
+ * @param modifier The modifier to apply to the chip
+ * @param icon The icon displayed by the chip
+ * @param iconSize The size of the icon
+ * @param text The localized tooltip and content description
+ * @param shape The shape of the chip
+ * @param color The accent color of the chip
+ * @param width The width of the chip
+ * @param isClicked Whether the chip is currently selected
+ * @param onClick The callback invoked with the toggled selection state
+ */
 @Composable
 fun Chip(
     modifier: Modifier = Modifier,

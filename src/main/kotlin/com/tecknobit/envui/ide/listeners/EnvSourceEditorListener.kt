@@ -15,8 +15,19 @@ import com.tecknobit.envui.utils.isNotEnvFile
 import com.tecknobit.envui.utils.isNotEnvSourceFile
 import com.tecknobit.envui.utils.toEnvSource
 
+/**
+ * The `EnvSourceEditorListener` class is useful to configure opened environment source editors and their markers
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ */
 class EnvSourceEditorListener : FileEditorManagerListener {
 
+    /**
+     * Method used to make an opened environment file read-only and restore its property markers
+     *
+     * @param source The file editor manager opening the file
+     * @param file The opened virtual file
+     */
     override fun fileOpened(
         source: FileEditorManager,
         file: VirtualFile
@@ -44,6 +55,12 @@ class EnvSourceEditorListener : FileEditorManagerListener {
         )
     }
 
+    /**
+     * Method used to configure every text editor of a virtual file as a viewer
+     *
+     * @param source The file editor manager containing the editors
+     * @param file The virtual file whose editors are configured
+     */
     private fun disableEditing(
         source: FileEditorManager,
         file: VirtualFile,
@@ -60,6 +77,12 @@ class EnvSourceEditorListener : FileEditorManagerListener {
         }
     }
 
+    /**
+     * Method used to restore the persisted preference markers of an environment source
+     *
+     * @param project The project containing the source
+     * @param envSource The environment source to highlight
+     */
     private fun highlightProperties(
         project: Project,
         envSource: EnvSource,

@@ -16,6 +16,13 @@ import com.tecknobit.envui.ide.services.EnvSourcePropertyPreferences
 import com.tecknobit.envui.ide.services.useEnvSourcePreferencesManager
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 
+/**
+ * The `dEnvFile` class is useful to represent and edit an environment source as a `PSI` file
+ *
+ * @param viewProvider The view provider of the `PSI` file
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ */
 class dEnvFile(
     viewProvider: FileViewProvider,
 ) : dEnvFileBase(
@@ -23,14 +30,34 @@ class dEnvFile(
     dEnvLanguage
 ) {
 
+    /**
+     * The companion object allows to access the standard environment source filename
+     *
+     * @author N7ghtm4r3 - Tecknobit
+     */
     companion object {
 
+        /**
+         * `ENV_FILENAME` the standard environment source filename
+         */
         const val ENV_FILENAME = ".env"
 
     }
 
+    /**
+     * Method used to retrieve the environment source file type
+     *
+     * @return the environment source file type as [dEnvFileType]
+     */
     override fun getFileType() = dEnvFileType
 
+    /**
+     * Method used to update and persist the value associated with an environment property key
+     *
+     * @param key The key of the property to update
+     * @param value The value to assign to the property
+     * @param synchronously Whether the document update must run synchronously
+     */
     fun updateValueForKey(
         key: String,
         value: String,
@@ -55,6 +82,12 @@ class dEnvFile(
         }
     }
 
+    /**
+     * Method used to toggle the critical marker of an environment property
+     *
+     * @param key The key of the property
+     * @param envSource The environment source containing the property
+     */
     fun toggleMarkAsCritical(
         key: String,
         envSource: EnvSource
@@ -73,6 +106,12 @@ class dEnvFile(
         )
     }
 
+    /**
+     * Method used to toggle the reset-on-close marker of an environment property
+     *
+     * @param key The key of the property
+     * @param envSource The environment source containing the property
+     */
     fun toggleResetOnClose(
         key: String,
         envSource: EnvSource
@@ -91,6 +130,14 @@ class dEnvFile(
         )
     }
 
+    /**
+     * Method used to toggle a visual preference and persist its state for an environment property
+     *
+     * @param key The key of the property
+     * @param envSource The environment source containing the property
+     * @param preferenceType The preference type to toggle
+     * @param onPersistPref The optional operation used to persist the toggled preference
+     */
     private fun toggleEnvPref(
         key: String,
         envSource: EnvSource,
@@ -146,6 +193,13 @@ class dEnvFile(
         }
     }
 
+    /**
+     * Method used to disable active preferences that conflict with a new preference
+     *
+     * @param key The key of the property
+     * @param envSource The environment source containing the property
+     * @param newPreference The preference that must become active
+     */
     private fun resolveConflictualPreferences(
         key: String,
         envSource: EnvSource,
@@ -198,6 +252,15 @@ class dEnvFile(
         }
     }
 
+    /**
+     * Method used to retrieve the active preferences that conflict with a new preference
+     *
+     * @param newPreference The preference to compare with the active preferences
+     * @param envSource The environment source containing the property
+     * @param key The key of the property
+     *
+     * @return the active conflicting preferences as [List] of [EnvSourcePreferenceType]
+     */
     private fun getConflictualPreferences(
         newPreference: EnvSourcePreferenceType,
         envSource: EnvSource,
@@ -218,6 +281,14 @@ class dEnvFile(
         return conflictualPreferences
     }
 
+    /**
+     * Method used to retrieve the active preferences of an environment property
+     *
+     * @param envSource The environment source containing the property
+     * @param key The key of the property
+     *
+     * @return the active preferences as [HashSet] of [EnvSourcePreferenceType]
+     */
     private fun getCurrentActivePreferences(
         envSource: EnvSource,
         key: String
@@ -238,6 +309,13 @@ class dEnvFile(
         return activePreferences
     }
 
+    /**
+     * Method used to insert or replace the value of an environment property in this file
+     *
+     * @param property The property whose value is updated
+     * @param value The value to write
+     * @param synchronously Whether the document update must run synchronously
+     */
     private fun dEnvFile.upsertValue(
         property: Property,
         value: String,

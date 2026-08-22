@@ -10,6 +10,11 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.openapi.vfs.VirtualFile
 
+/**
+ * Method used to open this virtual file in the editor of the specified project
+ *
+ * @param project The project where the file is opened
+ */
 fun VirtualFile.openInEditor(
     project: Project,
 ) {
@@ -18,6 +23,12 @@ fun VirtualFile.openInEditor(
     fileEditorManager.openFile(this)
 }
 
+/**
+ * Method used to reveal the first content root of this module in the project view
+ *
+ * @param onReveal The optional callback to invoke when the content root is revealed
+ * @param project The project containing the module
+ */
 fun Module.revealInProjectView(
     onReveal: (() -> Any)? = null,
     project: Project,
@@ -32,6 +43,12 @@ fun Module.revealInProjectView(
     )
 }
 
+/**
+ * Method used to reveal this virtual file in the project view
+ *
+ * @param onReveal The optional callback to invoke when the file is revealed
+ * @param project The project containing the file
+ */
 fun VirtualFile.revealInProjectView(
     onReveal: (() -> Any)? = null,
     project: Project,
@@ -52,6 +69,12 @@ fun VirtualFile.revealInProjectView(
     )
 }
 
+/**
+ * Method used to execute an operation with a temporary editor for this document
+ *
+ * @param project The project owning the document
+ * @param usage The operation to execute with the temporary editor
+ */
 inline fun Document.useInVirtualEditor(
     project: Project,
     usage: (Editor) -> Unit

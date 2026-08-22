@@ -7,6 +7,12 @@ import com.tecknobit.envui.generated.resources.no_entry_available
 import com.tecknobit.envui.ui.components.EmptyState
 import org.jetbrains.jewel.ui.icons.AllIconsKeys
 
+/**
+ * Component used to display the empty state of an environment source or template
+ *
+ * @param modifier The modifier to apply to the empty state
+ * @param action The optional action displayed below the empty-state message
+ */
 @Composable
 fun NoEnvEntryAvailable(
     modifier: Modifier = Modifier,

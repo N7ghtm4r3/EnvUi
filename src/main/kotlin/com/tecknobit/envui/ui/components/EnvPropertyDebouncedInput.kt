@@ -14,6 +14,16 @@ import com.tecknobit.envui.utils.converters.toKeyboardType
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
+/**
+ * Component used to edit an environment property value according to its declared field type
+ *
+ * @param modifier The modifier to apply to the input
+ * @param shape The shape of the input
+ * @param delay The delay before emitting the current value
+ * @param onDebounce The callback invoked with the validated debounced value
+ * @param property The environment property edited by the input
+ * @param type The expected value type of the property
+ */
 @Composable
 fun EnvPropertyDebounceInput(
     modifier: Modifier = Modifier,

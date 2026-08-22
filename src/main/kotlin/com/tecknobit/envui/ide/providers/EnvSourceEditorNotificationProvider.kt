@@ -12,8 +12,21 @@ import com.tecknobit.envui.utils.toEnvSource
 import java.util.function.Function
 import javax.swing.JComponent
 
+/**
+ * The `EnvSourceEditorNotificationProvider` class is useful to offer the dialog editor for environment source files
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ */
 class EnvSourceEditorNotificationProvider : EditorNotificationProvider {
 
+    /**
+     * Method used to create notification content for environment source editors
+     *
+     * @param project The project containing the file
+     * @param file The virtual file displayed by the editor
+     *
+     * @return the notification component provider, if the file is an environment source, as [Function]
+     */
     override fun collectNotificationData(
         project: Project,
         file: VirtualFile,
@@ -29,6 +42,14 @@ class EnvSourceEditorNotificationProvider : EditorNotificationProvider {
         }
     }
 
+    /**
+     * Method used to create the panel that opens an environment source in its dialog editor
+     *
+     * @param project The project containing the file
+     * @param file The environment source or template file
+     *
+     * @return the configured notification panel as [EditorNotificationPanel]
+     */
     private fun warningPanel(
         project: Project,
         file: VirtualFile,

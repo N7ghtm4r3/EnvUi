@@ -11,6 +11,15 @@ import com.tecknobit.envui.helpers.EnvSourcePreferenceType.RESET_ON_CLOSE
 import com.tecknobit.envui.ide.highlighters.icons.CriticalEnvGutterIcon
 import com.tecknobit.envui.ide.highlighters.icons.ResetOnCloseGutterIcon
 
+/**
+ * Method used to add a critical marker to an environment property line
+ *
+ * @param document The document containing the property
+ * @param project The project owning the document
+ * @param line The zero-based line to mark
+ *
+ * @return the range highlighter representing the marker as [RangeHighlighter]
+ */
 fun addCriticalEnvMark(
     document: Document,
     project: Project,
@@ -24,6 +33,15 @@ fun addCriticalEnvMark(
     )
 }
 
+/**
+ * Method used to add a reset-on-close marker to an environment property line
+ *
+ * @param document The document containing the property
+ * @param project The project owning the document
+ * @param line The zero-based line to mark
+ *
+ * @return the range highlighter representing the marker as [RangeHighlighter]
+ */
 fun addResetOnCloseMark(
     document: Document,
     project: Project,
@@ -37,6 +55,16 @@ fun addResetOnCloseMark(
     )
 }
 
+/**
+ * Method used to add or reuse a preference marker on an environment property line
+ *
+ * @param document The document containing the property
+ * @param project The project owning the document
+ * @param line The zero-based line to mark
+ * @param preferencesType The preference represented by the marker
+ *
+ * @return the range highlighter representing the marker as [RangeHighlighter]
+ */
 fun addEnvMark(
     document: Document,
     project: Project,
@@ -72,6 +100,11 @@ fun addEnvMark(
     return highlighter
 }
 
+/**
+ * Method used to dispose an active environment property marker
+ *
+ * @param highlighter The range highlighter to dispose
+ */
 fun removeEnvMark(
     highlighter: RangeHighlighter
 ) {

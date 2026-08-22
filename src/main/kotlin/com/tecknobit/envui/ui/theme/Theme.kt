@@ -14,28 +14,58 @@ import org.jetbrains.jewel.ui.component.styling.ButtonStyle
 import org.jetbrains.jewel.ui.theme.defaultButtonStyle
 import javax.swing.UIManager
 
+/**
+ * The `EnvUiTheme` object allows to resolve plugin colors and component styles from the active JetBrains IDE theme
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ */
 object EnvUiTheme {
 
+    /**
+     * `primary` the primary accent color resolved from the active theme
+     */
     val primary: Color
         get() = nativeColorFromUi("Component.focusColor")
 
+    /**
+     * `background` the application background color
+     */
     val background: Color
         get() = JBColor.background().toComposeColor()
 
+    /**
+     * `surface` the editor surface color resolved from the active theme
+     */
     val surface: Color
         get() = nativeColorFromUi("EditorPane.background")
 
+    /**
+     * `border` the component border color resolved from the active theme
+     */
     val border: Color
         get() = nativeColorFromUi("Component.borderColor")
 
+    /**
+     * `error` the error accent color resolved from the active theme
+     */
     val error: Color
         get() = nativeColorFromUi("Component.errorFocusColor")
 
+    /**
+     * `mutedColor` the subdued label color resolved from the active theme
+     */
     val mutedColor: Color
         get() = UIUtil
             .getLabelInfoForeground()
             .toComposeColor()
 
+    /**
+     * Method used to resolve a native UI color as a Compose color
+     *
+     * @param colorKey The UI defaults key of the color
+     *
+     * @return the resolved Compose color as [Color]
+     */
     private fun nativeColorFromUi(
         colorKey: String
     ): Color {
@@ -44,6 +74,9 @@ object EnvUiTheme {
             .toComposeColor()
     }
 
+    /**
+     * `destructiveButtonStyle` the button style using the active error palette
+     */
     val destructiveButtonStyle: ButtonStyle
         @Composable
         get() {

@@ -20,6 +20,12 @@ import org.jetbrains.jewel.ui.component.CircularProgressIndicatorBig
 import org.jetbrains.jewel.ui.component.Text
 import org.jetbrains.jewel.ui.icons.AllIconsKeys
 
+/**
+ * Component used to display loading, empty, or populated environment source content
+ *
+ * @param modifier The modifier to apply to the source list
+ * @param sources The environment sources to display, or `null` while loading
+ */
 @Composable
 fun EnvSourcesList(
     modifier: Modifier = Modifier,
@@ -64,6 +70,11 @@ fun EnvSourcesList(
     }
 }
 
+/**
+ * Component used to display the environment source loading indicator
+ *
+ * @param modifier The modifier to apply to the indicator container
+ */
 @Composable
 private fun LoadingSourcesIndicator(
     modifier: Modifier,
@@ -86,6 +97,11 @@ private fun LoadingSourcesIndicator(
     }
 }
 
+/**
+ * Component used to display the empty state of the environment source list
+ *
+ * @param modifier The modifier to apply to the empty state
+ */
 @Composable
 private fun NoSourcesAvailable(
     modifier: Modifier = Modifier

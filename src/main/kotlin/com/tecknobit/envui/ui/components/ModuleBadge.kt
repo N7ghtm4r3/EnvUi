@@ -11,6 +11,13 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.jewel.ui.component.Icon
 import org.jetbrains.jewel.ui.icons.AllIconsKeys
 
+/**
+ * Badge used to display the name of a project module
+ *
+ * @param modifier The modifier to apply to the badge
+ * @param module The module whose name is displayed
+ * @param onClick The optional callback invoked when the badge is clicked
+ */
 @Composable
 fun ModuleBadge(
     modifier: Modifier = Modifier,
@@ -24,6 +31,13 @@ fun ModuleBadge(
     )
 }
 
+/**
+ * Badge used to display a module name
+ *
+ * @param modifier The modifier to apply to the badge
+ * @param module The module name to display
+ * @param onClick The optional callback invoked when the badge is clicked
+ */
 @Composable
 fun ModuleBadge(
     modifier: Modifier = Modifier,

@@ -33,6 +33,13 @@ import org.jetbrains.jewel.ui.component.Text
 import org.jetbrains.jewel.ui.icons.AllIconsKeys
 import kotlin.time.Duration.Companion.milliseconds
 
+/**
+ * Component used to display and edit the properties of an environment source
+ *
+ * @param modifier The modifier to apply to the property list
+ * @param envSource The environment source whose properties are displayed
+ * @param onEmptyAction The callback invoked when template management is requested from the empty state
+ */
 @Composable
 fun EnvSourceContent(
     modifier: Modifier = Modifier,
@@ -99,6 +106,15 @@ fun EnvSourceContent(
     }
 }
 
+/**
+ * Component used to display one editable environment source property and its preferences
+ *
+ * @param modifier The modifier to apply to the property card
+ * @param type The expected value type of the property
+ * @param property The environment property displayed by the card
+ * @param envSource The environment source containing the property
+ * @param onPropertyChange The callback invoked with the key and updated value after editing
+ */
 @Composable
 private fun EnvSourceProperty(
     modifier: Modifier = Modifier,
@@ -171,6 +187,12 @@ private fun EnvSourceProperty(
     }
 }
 
+/**
+ * Section used to display and toggle the preferences of an environment property
+ *
+ * @param envSource The environment source containing the property
+ * @param property The environment property whose preferences are displayed
+ */
 @Composable
 private fun Actions(
     envSource: EnvSource,
@@ -237,6 +259,14 @@ private fun Actions(
     }
 }
 
+/**
+ * Method used to retrieve the stored preferences of an environment property
+ *
+ * @param envSource The environment source containing the property
+ * @param property The environment property whose preferences are retrieved
+ *
+ * @return the stored or default property preferences as [EnvSourcePropertyPreferences]
+ */
 private fun retrievePropertyPreference(
     envSource: EnvSource,
     property: Property
@@ -249,6 +279,13 @@ private fun retrievePropertyPreference(
     }
 }
 
+/**
+ * Component used to edit an environment property value and normalize `JSON` before emission
+ *
+ * @param type The expected value type of the property
+ * @param property The environment property edited by the input
+ * @param onPropertyChange The callback invoked with the key and normalized value
+ */
 @Composable
 private fun EnvSourceInput(
     type: EnvFieldType,

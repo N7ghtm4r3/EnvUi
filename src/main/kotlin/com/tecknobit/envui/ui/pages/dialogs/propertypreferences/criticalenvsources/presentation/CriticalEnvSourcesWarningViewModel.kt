@@ -16,18 +16,39 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
+/**
+ * The **CriticalEnvSourcesWarningViewModel** class is the support class used to resolve changed critical properties
+ *
+ * @property project The project containing the critical environment sources
+ * @param criticalEnvSources The source preferences containing the critical property changes to resolve
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ */
 class CriticalEnvSourcesWarningViewModel(
     private val project: Project,
     criticalEnvSources: List<EnvSourcePreferences>
 ) : ViewModel() {
 
+    /**
+     * `_uiState` the mutable state used to manage unresolved critical environment sources
+     */
     private val _uiState = MutableStateFlow(
         value = CriticalEnvSourcesWarningState(
             criticalEnvSources = criticalEnvSources
         )
     )
+    /**
+     * `uiState` the read-only state exposed to the critical source warning dialog
+     */
     val uiState = _uiState.asStateFlow()
 
+    /**
+     * Method used to accept the current value of a critical property and remove its source from the warning state
+     *
+     * @param sourcePath The path of the environment source
+     * @param envSourcePreferences The preferences of the environment source
+     * @param propertyPreferences The preferences of the critical property
+     */
     fun acceptNewPropertyValue(
         sourcePath: String,
         envSourcePreferences: EnvSourcePreferences,
@@ -47,6 +68,13 @@ class CriticalEnvSourcesWarningViewModel(
         }
     }
 
+    /**
+     * Method used to restore the initial value of a critical property and remove its source from the warning state
+     *
+     * @param sourcePath The path of the environment source
+     * @param envSourcePreferences The preferences of the environment source
+     * @param propertyPreferences The preferences of the critical property
+     */
     fun revertPropertyValue(
         sourcePath: String,
         envSourcePreferences: EnvSourcePreferences,
@@ -61,6 +89,14 @@ class CriticalEnvSourcesWarningViewModel(
         }
     }
 
+    /**
+     * Method used to resolve a critical property difference and update the warning state
+     *
+     * @param sourcePath The path of the environment source
+     * @param envSourcePreferences The preferences of the environment source
+     * @param propertyPreferences The preferences of the critical property
+     * @param resolution The operation returning the value to write for the resolution
+     */
     private inline fun resolvePropertyDiff(
         sourcePath: String,
         envSourcePreferences: EnvSourcePreferences,

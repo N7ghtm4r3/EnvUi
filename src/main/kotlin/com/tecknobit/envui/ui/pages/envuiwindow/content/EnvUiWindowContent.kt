@@ -17,6 +17,12 @@ import com.tecknobit.envui.ui.pages.envuiwindow.components.EnvSourcesList
 import com.tecknobit.envui.ui.pages.envuiwindow.presentation.EnvUiWindowViewModel
 import com.tecknobit.envui.ui.pages.envuiwindow.presenter.EnvUiWindow
 
+/**
+ * Screen content used to display, search, and refresh the project environment sources
+ *
+ * @param viewModel The support viewmodel used to manage the source list and search query
+ * @param project The project whose environment sources are displayed
+ */
 @Composable
 fun EnvUiWindowContent(
     viewModel: EnvUiWindowViewModel,
