@@ -7,6 +7,7 @@ import com.intellij.ui.EditorNotificationPanel
 import com.intellij.ui.EditorNotificationProvider
 import com.tecknobit.envui.I18nMessageBundle
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.presenter.EnvSourceReaderDialog
+import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 import com.tecknobit.envui.utils.isNotEnvSourceFile
 import com.tecknobit.envui.utils.toEnvSource
 import java.util.function.Function
@@ -34,10 +35,13 @@ class EnvSourceEditorNotificationProvider : EditorNotificationProvider {
         if (file.isNotEnvSourceFile())
             return null
 
+        val envSource = file.toEnvSource(
+            project = project
+        )
+
         return Function {
             warningPanel(
-                project = project,
-                file = file
+                envSource = envSource
             )
         }
     }
@@ -45,20 +49,13 @@ class EnvSourceEditorNotificationProvider : EditorNotificationProvider {
     /**
      * Method used to create the panel that opens an environment source in its dialog editor
      *
-     * @param project The project containing the file
-     * @param file The environment source or template file
+     * @param envSource The environment source containing the properties
      *
      * @return the configured notification panel as [EditorNotificationPanel]
      */
     private fun warningPanel(
-        project: Project,
-        file: VirtualFile,
+        envSource: EnvSource
     ): EditorNotificationPanel {
-        val envSource = file.toEnvSource(
-            project = project,
-            resolveModule = false
-        )
-
         return EditorNotificationPanel().apply {
             text = I18nMessageBundle.message(
                 key = "edit.env.in.dialog"
