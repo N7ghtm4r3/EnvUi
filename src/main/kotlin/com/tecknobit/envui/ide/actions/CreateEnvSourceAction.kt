@@ -1,12 +1,12 @@
 package com.tecknobit.envui.ide.actions
 
-import com.intellij.icons.AllIcons
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.LangDataKeys
 import com.intellij.openapi.application.invokeLater
 import com.intellij.psi.PsiDirectory
+import com.tecknobit.envui.ide.theme.EnvUiIcons
 import com.tecknobit.envui.ide.languages.envfile.dEnvFileType
 import com.tecknobit.envui.repositories.EnvSourceRepository
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.presenter.EnvSourceReaderDialog
@@ -47,8 +47,7 @@ class CreateEnvSourceAction : AnAction() {
     ) {
         val selectedDirectory = event.resolveSelectedDirectory()
         val presentation = event.presentation
-        //TODO: TO CHANGE WITH LOGO
-        presentation.icon = AllIcons.Actions.AddFile
+        presentation.icon = EnvUiIcons.CreateEnvSource
 
         if(selectedDirectory == null) {
             presentation.isEnabled = false
