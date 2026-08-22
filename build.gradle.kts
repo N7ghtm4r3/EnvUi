@@ -1,4 +1,5 @@
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+import org.gradle.api.tasks.testing.Test
 
 plugins {
     alias(libs.plugins.changelog)
@@ -44,6 +45,13 @@ sourceSets {
 }
 
 tasks {
+    withType<Test>().configureEach {
+        systemProperty(
+            "idea.load.plugins.id",
+            "com.tecknobit.envui.EnvUi,com.intellij.properties"
+        )
+    }
+
     generateParser {
         sourceFile.set(file("src/main/grammar/dEnv.bnf"))
         targetRootOutputDir.set(file("src/main/gen"))
