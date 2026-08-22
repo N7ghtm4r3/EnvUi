@@ -13,19 +13,25 @@ Separate discovery, agreement, and implementation. Before changing pipeline file
 
 If the user has already supplied a decision, do not ask for it again. Resolve low-impact details from repository conventions and state those assumptions. When a requested implementation already has an agreed design, confirm that the available evidence still supports it and continue without restarting the discussion.
 
-## EnvUi release version convention
+## Release identity and promotion
 
-When designing or modifying the release pipeline for this repository, preserve the following version policy:
+Treat release identity as an architectural decision rather than an incidental string transformation. Before designing publication or promotion, establish:
 
-- keep the repository version in stable SemVer `X.Y.Z` format on every branch, for example `1.0.0`;
-- publish `main` with that exact stable version;
-- derive release candidates for `develop` without modifying the repository version, using canonical SemVer `X.Y.Z-rc.N`, for example `1.0.0-rc.1`;
-- calculate `N` from the highest existing Git tag matching the same base version and increment it by one; do not use a global workflow run number;
-- do not zero-pad the numeric prerelease identifier: use `rc.1`, not `rc.01`;
-- use the non-empty `[Unreleased]` changelog section for release-candidate notes and the exact `[X.Y.Z]` section for stable notes;
-- require Git tags to match the effective published version exactly, such as `v1.0.0-rc.1` or `v1.0.0`.
+- the authoritative version source and how that value reaches the built artifact;
+- the accepted stable and prerelease grammar, including tag prefixes and ordering semantics;
+- whether release intent is represented by a branch update, immutable tag, release event, explicit dispatch, or another repository-native signal;
+- whether promotion rebuilds from source or advances the exact same immutable artifact;
+- which external system is authoritative when the same release is published to multiple destinations.
 
-Treat this as a repository-local release policy, not a universal versioning convention for unrelated repositories.
+Explain that a branch-triggered workflow run is created before job-level conditions are evaluated. A no-op condition can prevent build or publication work, but it cannot prevent the run itself. If the user requires no run until release intent exists, recommend an event that encodes release intent directly, such as a tag, release event, or explicit dispatch, when supported by the chosen provider.
+
+When versions are derived in CI, derive them from durable release state scoped to the relevant version line and channel, such as immutable tags or registry records. Do not use a global workflow run number unless gaps, cross-version continuation, and failed-run consumption are explicitly acceptable. Define concurrency, retry, and reset behavior before implementation. Deleting a workflow run must not be assumed to reset release state.
+
+Design publication to be idempotent. Specify how the pipeline detects an existing release, resumes a draft or partial attempt, avoids duplicate uploads, and recovers when one destination succeeds while another fails. Deleting or hiding a release in one destination must not be assumed to affect tags, artifacts, counters, or releases in another destination.
+
+Use one agreed source for release notes. Define how the pipeline selects the relevant entry, how generated package metadata receives it, and whether prerelease notes are cumulative or incremental. Fail before publication when required notes are missing or empty. Preserve published version history rather than rewriting it merely to prepare the next release.
+
+If the desired flow requires CI to persist a derived version or other release metadata back to the repository, treat that as a separate write operation. Discuss the extra commit or pull request, recursive-trigger suppression, protected-branch rules, token permissions, and recovery from a successful publication followed by a failed repository write. Do not add repository mutation merely to make a version appear synchronized.
 
 ## Non-negotiable editing boundary
 
