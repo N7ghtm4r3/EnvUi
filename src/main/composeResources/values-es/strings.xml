@@ -1,0 +1,31 @@
+<resources>
+    <string name="envui_window_title">Configuraciones de entorno</string>
+    <string name="envui_no_sources_message">No se encontraron configuraciones de entorno</string>
+    <string name="envui_no_sources_action_message">Crear configuración</string>
+    <string name="envui_dialog_title">Administrar</string>
+    <string name="envui_card_module_root">Raíz del módulo</string>
+    <string name="envui_card_open_source">Abrir configuración</string>
+    <string name="env_source_module">Módulo de la configuración</string>
+    <string name="env_source_parent_folder">Carpeta de la configuración</string>
+    <string name="last_edit">Última edición</string>
+    <string name="search_by_folder_or_module">Buscar por carpeta o módulo</string>
+    <string name="loading_sources">Cargando configuraciones</string>
+    <string name="source">Valores</string>
+    <string name="template">Esquema</string>
+    <string name="manage_template">Configurar esquema</string>
+    <string name="delete_template_field">Quitar campo del esquema</string>
+    <string name="add">Añadir</string>
+    <string name="warning_deleting_template_field">El campo ya se utiliza en el archivo .env asociado. Esta acción es permanente</string>
+    <string name="confirm">Confirmar</string>
+    <string name="dismiss">Descartar</string>
+    <string name="save">Guardar</string>
+    <string name="manage_source">Administrar variables</string>
+    <string name="no_entry_available">No hay variables configuradas</string>
+    <string name="enter_env_value_placeholder">Introducir valor</string>
+    <string name="mark_as_critical_to_change">Supervisar cambios y avisar al cerrar la sesión</string>
+    <string name="reset_value_on_close">Restaurar el valor inicial al cerrar la sesión</string>
+    <string name="all_diff_solved">Todos los cambios están resueltos</string>
+    <string name="critical_env_property_changed_description">Cambio detectado el %1$s</string>
+    <string name="accept">Conservar cambio</string>
+    <string name="revert">Restaurar original</string>
+</resources>

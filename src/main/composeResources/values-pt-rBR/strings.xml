@@ -1,0 +1,31 @@
+<resources>
+    <string name="envui_window_title">Configurações de ambiente</string>
+    <string name="envui_no_sources_message">Nenhuma configuração de ambiente encontrada</string>
+    <string name="envui_no_sources_action_message">Criar configuração</string>
+    <string name="envui_dialog_title">Gerenciar</string>
+    <string name="envui_card_module_root">Raiz do módulo</string>
+    <string name="envui_card_open_source">Abrir configuração</string>
+    <string name="env_source_module">Módulo da configuração</string>
+    <string name="env_source_parent_folder">Pasta da configuração</string>
+    <string name="last_edit">Última alteração</string>
+    <string name="search_by_folder_or_module">Pesquisar por pasta ou módulo</string>
+    <string name="loading_sources">Carregando configurações</string>
+    <string name="source">Valores</string>
+    <string name="template">Esquema</string>
+    <string name="manage_template">Configurar esquema</string>
+    <string name="delete_template_field">Remover campo do esquema</string>
+    <string name="add">Adicionar</string>
+    <string name="warning_deleting_template_field">O campo já é usado no arquivo .env associado. Esta ação é permanente</string>
+    <string name="confirm">Confirmar</string>
+    <string name="dismiss">Cancelar</string>
+    <string name="save">Salvar</string>
+    <string name="manage_source">Gerenciar variáveis</string>
+    <string name="no_entry_available">Nenhuma variável configurada</string>
+    <string name="enter_env_value_placeholder">Inserir valor</string>
+    <string name="mark_as_critical_to_change">Monitorar alterações e avisar ao encerrar a sessão</string>
+    <string name="reset_value_on_close">Restaurar o valor inicial ao encerrar a sessão</string>
+    <string name="all_diff_solved">Todas as alterações foram tratadas</string>
+    <string name="critical_env_property_changed_description">Alteração detectada em %1$s</string>
+    <string name="accept">Manter alteração</string>
+    <string name="revert">Restaurar original</string>
+</resources>

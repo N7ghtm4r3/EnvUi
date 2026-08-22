@@ -1,0 +1,31 @@
+<resources>
+    <string name="envui_window_title">環境設定</string>
+    <string name="envui_no_sources_message">環境設定が見つかりません</string>
+    <string name="envui_no_sources_action_message">設定を作成</string>
+    <string name="envui_dialog_title">管理</string>
+    <string name="envui_card_module_root">モジュールルート</string>
+    <string name="envui_card_open_source">設定を開く</string>
+    <string name="env_source_module">設定のモジュール</string>
+    <string name="env_source_parent_folder">設定のフォルダー</string>
+    <string name="last_edit">最終更新</string>
+    <string name="search_by_folder_or_module">フォルダーまたはモジュールで検索</string>
+    <string name="loading_sources">設定を読み込んでいます</string>
+    <string name="source">値</string>
+    <string name="template">スキーマ</string>
+    <string name="manage_template">スキーマを設定</string>
+    <string name="delete_template_field">スキーマからフィールドを削除</string>
+    <string name="add">追加</string>
+    <string name="warning_deleting_template_field">このフィールドは関連する .env ファイルで使用されています。この操作は取り消せません</string>
+    <string name="confirm">確認</string>
+    <string name="dismiss">キャンセル</string>
+    <string name="save">保存</string>
+    <string name="manage_source">変数を管理</string>
+    <string name="no_entry_available">変数が設定されていません</string>
+    <string name="enter_env_value_placeholder">値を入力</string>
+    <string name="mark_as_critical_to_change">変更を監視し、セッション終了時に警告</string>
+    <string name="reset_value_on_close">セッション終了時に初期値を復元</string>
+    <string name="all_diff_solved">すべての変更を処理しました</string>
+    <string name="critical_env_property_changed_description">変更を検出：%1$s</string>
+    <string name="accept">変更を保持</string>
+    <string name="revert">元の値に戻す</string>
+</resources>

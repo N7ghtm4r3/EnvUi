@@ -1,0 +1,31 @@
+<resources>
+    <string name="envui_window_title">Конфигурации окружения</string>
+    <string name="envui_no_sources_message">Конфигурации окружения не найдены</string>
+    <string name="envui_no_sources_action_message">Создать конфигурацию</string>
+    <string name="envui_dialog_title">Управление</string>
+    <string name="envui_card_module_root">Корень модуля</string>
+    <string name="envui_card_open_source">Открыть конфигурацию</string>
+    <string name="env_source_module">Модуль конфигурации</string>
+    <string name="env_source_parent_folder">Папка конфигурации</string>
+    <string name="last_edit">Последнее изменение</string>
+    <string name="search_by_folder_or_module">Поиск по папке или модулю</string>
+    <string name="loading_sources">Загрузка конфигураций</string>
+    <string name="source">Значения</string>
+    <string name="template">Схема</string>
+    <string name="manage_template">Настроить схему</string>
+    <string name="delete_template_field">Удалить поле из схемы</string>
+    <string name="add">Добавить</string>
+    <string name="warning_deleting_template_field">Поле уже используется в связанном файле .env. Это действие нельзя отменить</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="dismiss">Отмена</string>
+    <string name="save">Сохранить</string>
+    <string name="manage_source">Управление переменными</string>
+    <string name="no_entry_available">Переменные не настроены</string>
+    <string name="enter_env_value_placeholder">Введите значение</string>
+    <string name="mark_as_critical_to_change">Отслеживать изменения и предупреждать при завершении сеанса</string>
+    <string name="reset_value_on_close">Восстановить исходное значение при завершении сеанса</string>
+    <string name="all_diff_solved">Все изменения обработаны</string>
+    <string name="critical_env_property_changed_description">Изменение обнаружено: %1$s</string>
+    <string name="accept">Сохранить изменение</string>
+    <string name="revert">Восстановить исходное значение</string>
+</resources>

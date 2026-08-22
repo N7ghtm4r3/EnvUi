@@ -1,0 +1,31 @@
+<resources>
+    <string name="envui_window_title">Configurations d'environnement</string>
+    <string name="envui_no_sources_message">Aucune configuration d'environnement trouvée</string>
+    <string name="envui_no_sources_action_message">Créer une configuration</string>
+    <string name="envui_dialog_title">Gérer</string>
+    <string name="envui_card_module_root">Racine du module</string>
+    <string name="envui_card_open_source">Ouvrir la configuration</string>
+    <string name="env_source_module">Module de la configuration</string>
+    <string name="env_source_parent_folder">Dossier de la configuration</string>
+    <string name="last_edit">Dernière modification</string>
+    <string name="search_by_folder_or_module">Rechercher par dossier ou module</string>
+    <string name="loading_sources">Chargement des configurations</string>
+    <string name="source">Valeurs</string>
+    <string name="template">Schéma</string>
+    <string name="manage_template">Configurer le schéma</string>
+    <string name="delete_template_field">Retirer le champ du schéma</string>
+    <string name="add">Ajouter</string>
+    <string name="warning_deleting_template_field">Ce champ est déjà utilisé dans le fichier .env associé. Cette action est définitive</string>
+    <string name="confirm">Confirmer</string>
+    <string name="dismiss">Ignorer</string>
+    <string name="save">Enregistrer</string>
+    <string name="manage_source">Gérer les variables</string>
+    <string name="no_entry_available">Aucune variable configurée</string>
+    <string name="enter_env_value_placeholder">Saisir une valeur</string>
+    <string name="mark_as_critical_to_change">Surveiller les modifications et avertir à la fermeture de la session</string>
+    <string name="reset_value_on_close">Restaurer la valeur initiale à la fermeture de la session</string>
+    <string name="all_diff_solved">Toutes les modifications sont traitées</string>
+    <string name="critical_env_property_changed_description">Modification détectée le %1$s</string>
+    <string name="accept">Conserver la modification</string>
+    <string name="revert">Restaurer l'original</string>
+</resources>
