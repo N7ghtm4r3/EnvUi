@@ -15,13 +15,15 @@ If the user has already supplied a decision, do not ask for it again. Resolve lo
 
 ## EnvUi release version convention
 
-When designing or modifying the release pipeline for this repository, preserve the following version grammar:
+When designing or modifying the release pipeline for this repository, preserve the following version policy:
 
-- stable releases use `X.Y.Z`, for example `1.0.0`;
-- prereleases use `X.Y.Z-<phase><NN>`, where `<phase>` is `alpha`, `beta`, or `rc` and `<NN>` is an exactly two-digit, zero-padded sequence, for example `1.0.0-beta01`;
-- do not insert a separator between the prerelease phase and its sequence;
-- reject alternatives such as `1.0.0-beta.1`, `1.0.0-beta1`, and `1.0.0-SNAPSHOT` at the release boundary;
-- require the `CHANGELOG.md` version heading and generated release tag to use the identical version string.
+- keep the repository version in stable SemVer `X.Y.Z` format on every branch, for example `1.0.0`;
+- publish `main` with that exact stable version;
+- derive release candidates for `develop` without modifying the repository version, using canonical SemVer `X.Y.Z-rc.N`, for example `1.0.0-rc.1`;
+- calculate `N` from the highest existing Git tag matching the same base version and increment it by one; do not use a global workflow run number;
+- do not zero-pad the numeric prerelease identifier: use `rc.1`, not `rc.01`;
+- use the non-empty `[Unreleased]` changelog section for release-candidate notes and the exact `[X.Y.Z]` section for stable notes;
+- require Git tags to match the effective published version exactly, such as `v1.0.0-rc.1` or `v1.0.0`.
 
 Treat this as a repository-local release policy, not a universal versioning convention for unrelated repositories.
 

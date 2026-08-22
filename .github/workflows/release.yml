@@ -18,6 +18,7 @@ jobs:
       contents: read
     outputs:
       channel: ${{ steps.release.outputs.channel }}
+      notes_heading: ${{ steps.release.outputs.notes_heading }}
       prerelease: ${{ steps.release.outputs.prerelease }}
       should_release: ${{ steps.release.outputs.should_release }}
       tag: ${{ steps.release.outputs.tag }}
@@ -37,37 +38,49 @@ jobs:
         run: |
           set -euo pipefail
 
-          version="$(sed -n 's/^version=//p' gradle.properties)"
-          if [[ -z "${version}" ]]; then
+          base_version="$(sed -n 's/^version=//p' gradle.properties)"
+          if [[ -z "${base_version}" ]]; then
             echo "gradle.properties does not define a version." >&2
             exit 1
           fi
-          tag="v${version}"
+
+          stable_version='^[0-9]+\.[0-9]+\.[0-9]+$'
+          if [[ ! "${base_version}" =~ ${stable_version} ]]; then
+            echo "Version ${base_version} is not a stable SemVer base version." >&2
+            echo "Keep gradle.properties in X.Y.Z format (for example, 1.0.0)." >&2
+            exit 1
+          fi
 
           if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
             target_branch="main"
             channel="default"
+            notes_heading="${base_version}"
             prerelease="false"
-            expected_version='^[0-9]+\.[0-9]+\.[0-9]+$'
+            version="${base_version}"
           elif [[ "${GITHUB_REF_NAME}" == "develop" ]]; then
             target_branch="develop"
             channel="staging"
+            notes_heading="Unreleased"
             prerelease="true"
-            expected_version='^[0-9]+\.[0-9]+\.[0-9]+-(alpha|beta|rc)[0-9]{2}$'
+
+            git fetch --force --tags origin
+
+            latest_rc=0
+            while IFS= read -r existing_tag; do
+              rc_number="${existing_tag#v${base_version}-rc.}"
+              if [[ "${rc_number}" =~ ^(0|[1-9][0-9]*)$ ]] \
+                && (( rc_number > latest_rc )); then
+                latest_rc="${rc_number}"
+              fi
+            done < <(git tag --list "v${base_version}-rc.*")
+
+            version="${base_version}-rc.$((latest_rc + 1))"
           else
             echo "Unsupported release branch: ${GITHUB_REF_NAME}" >&2
             exit 1
           fi
 
-          if [[ ! "${version}" =~ ${expected_version} ]]; then
-            echo "Version ${version} is not valid for ${target_branch}." >&2
-            if [[ "${target_branch}" == "develop" ]]; then
-              echo "Use X.Y.Z-alphaNN, X.Y.Z-betaNN, or X.Y.Z-rcNN (for example, 1.0.0-beta01)." >&2
-            else
-              echo "Use the stable X.Y.Z format (for example, 1.0.0)." >&2
-            fi
-            exit 1
-          fi
+          tag="v${version}"
 
           should_release="true"
           if gh release view "${tag}" --json isDraft --jq '.isDraft' \
@@ -83,6 +96,7 @@ jobs:
             echo "tag=${tag}"
             echo "target_branch=${target_branch}"
             echo "channel=${channel}"
+            echo "notes_heading=${notes_heading}"
             echo "prerelease=${prerelease}"
             echo "should_release=${should_release}"
           } >> "${GITHUB_OUTPUT}"
@@ -90,13 +104,13 @@ jobs:
       - name: Validate changelog entry
         if: steps.release.outputs.should_release == 'true'
         env:
-          VERSION: ${{ steps.release.outputs.version }}
+          NOTES_HEADING: ${{ steps.release.outputs.notes_heading }}
         shell: bash
         run: |
           set -euo pipefail
 
           notes_file="${RUNNER_TEMP}/release-notes.md"
-          awk -v heading="## [${VERSION}]" '
+          awk -v heading="## [${NOTES_HEADING}]" '
             index($0, heading) == 1 {
               suffix = substr($0, length(heading) + 1)
               if (suffix == "" || suffix ~ /^ - /) {
@@ -109,12 +123,12 @@ jobs:
             capture { print }
             END { if (!found) exit 42 }
           ' CHANGELOG.md > "${notes_file}" || {
-            echo "CHANGELOG.md has no section for ${VERSION}." >&2
+            echo "CHANGELOG.md has no section for ${NOTES_HEADING}." >&2
             exit 1
           }
 
           if ! grep -q '[^[:space:]]' "${notes_file}"; then
-            echo "The CHANGELOG.md section for ${VERSION} is empty." >&2
+            echo "The CHANGELOG.md section for ${NOTES_HEADING} is empty." >&2
             exit 1
           fi
 
@@ -127,6 +141,7 @@ jobs:
       contents: write
     env:
       VERSION: ${{ needs.prepare.outputs.version }}
+      NOTES_HEADING: ${{ needs.prepare.outputs.notes_heading }}
       PUBLISH_CHANNEL: ${{ needs.prepare.outputs.channel }}
       PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
       CERTIFICATE_CHAIN: ${{ secrets.CERTIFICATE_CHAIN }}
@@ -153,7 +168,7 @@ jobs:
           set -euo pipefail
 
           notes_file="${RUNNER_TEMP}/release-notes.md"
-          awk -v heading="## [${VERSION}]" '
+          awk -v heading="## [${NOTES_HEADING}]" '
             index($0, heading) == 1 {
               suffix = substr($0, length(heading) + 1)
               if (suffix == "" || suffix ~ /^ - /) {

@@ -4,8 +4,6 @@
 
 ## [Unreleased]
 
-## [1.0.0-beta01] - 2026-08-22
-
 ### Added
 
 - Custom action for creating `.env` files directly from the IDE.
