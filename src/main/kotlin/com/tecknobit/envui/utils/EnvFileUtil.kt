@@ -1,8 +1,8 @@
 package com.tecknobit.envui.utils
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.module.Module
-import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
@@ -125,9 +125,11 @@ fun VirtualFile.toEnvSource(
 ): EnvSource {
     return runReadAction {
         val psiManager = PsiManager.getInstance(project)
-        val module = if (resolveModule)
-            ModuleUtilCore.findModuleForFile(this, project)
-        else
+        val module = if (resolveModule) {
+            val projectRootManager = ProjectRootManager.getInstance(project)
+
+            projectRootManager.fileIndex.getModuleForFile(this)
+        } else
             null
 
         if (isEnvFile()) {
