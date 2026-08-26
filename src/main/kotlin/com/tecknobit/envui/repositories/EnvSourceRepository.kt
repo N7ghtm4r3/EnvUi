@@ -1,0 +1,149 @@
+package com.tecknobit.envui.repositories
+
+import com.intellij.openapi.application.readAction
+import com.intellij.openapi.application.writeAction
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.PsiDirectory
+import com.intellij.psi.search.FileTypeIndex
+import com.intellij.psi.search.GlobalSearchScope
+import com.tecknobit.envui.ide.languages.envfile.dEnvFileType
+import com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFileType
+import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
+import com.tecknobit.envui.utils.toEnvSource
+
+/**
+ * The `EnvSourceRepository` class is useful to retrieve and create the environment sources of a project
+ *
+ * @property project The project where the environment sources are managed
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ */
+class EnvSourceRepository(
+    private val project: Project,
+) {
+
+    /**
+     * Method used to retrieve the environment sources matching the specified filter, ordered by latest update
+     *
+     * @param filters The filter to apply to container folder and module names
+     *
+     * @return the matching environment sources as [List] of [EnvSource]
+     */
+    suspend fun retrieveEnvs(
+        filters: String,
+    ): List<EnvSource> {
+        val virtualFilesEnvTemplates = retrieveEnvTemplates()
+
+        return readAction {
+            val globalSearchScope = GlobalSearchScope.projectScope(project)
+            val virtualFilesEnv = FileTypeIndex.getFiles(
+                dEnvFileType,
+                globalSearchScope
+            )
+
+            virtualFilesEnv.toEnvSourcesWithFilters(
+                project = project,
+                filters = filters,
+                templates = virtualFilesEnvTemplates
+            )
+        }
+    }
+
+    /**
+     * Method used to retrieve the environment template files of the project
+     *
+     * @return the environment template files as [Collection] of [VirtualFile]
+     */
+    suspend fun retrieveEnvTemplates(): Collection<VirtualFile> {
+        return readAction {
+            val globalSearchScope = GlobalSearchScope.projectScope(project)
+            FileTypeIndex.getFiles(
+                dEnvTemplateFileType,
+                globalSearchScope
+            )
+        }
+    }
+
+    /**
+     * Method used to convert the virtual files into filtered and ordered environment sources
+     *
+     * @receiver The virtual files to convert
+     * @param project The project containing the virtual files
+     * @param filters The filter to apply to container folder and module names
+     * @param templates The environment template files used to resolve the sources
+     *
+     * @return the matching environment sources as [List] of [EnvSource]
+     */
+    private fun Collection<VirtualFile?>.toEnvSourcesWithFilters(
+        project: Project,
+        filters: String,
+        templates: Collection<VirtualFile?>,
+    ): List<EnvSource> {
+        val sources = toEnvSources(
+            project = project,
+            templates = templates
+        )
+
+        return sources.filter { source ->
+            val containerFolder = source.containerFolder!!
+            val module = source.module
+            val containerFolderMatches = containerFolder.name.contains(filters)
+            val moduleMatches = module?.name?.contains(filters) == true
+
+            containerFolderMatches || moduleMatches
+        }.sortedByDescending { source ->
+            source.source.timeStamp
+        }
+    }
+
+    /**
+     * Method used to convert the virtual files into environment sources with their matching templates
+     *
+     * @receiver The virtual files to convert
+     * @param project The project containing the virtual files
+     * @param templates The environment template files used to resolve the sources
+     *
+     * @return the environment sources as [List] of [EnvSource]
+     */
+    private fun Collection<VirtualFile?>.toEnvSources(
+        project: Project,
+        templates: Collection<VirtualFile?>,
+    ): List<EnvSource> {
+        return this.map { file ->
+            val template = templates.firstOrNull { template ->
+                template?.parent?.path == file!!.parent.path
+            }
+
+            file!!.toEnvSource(
+                project = project,
+                template = template
+            )
+        }
+    }
+
+    /**
+     * Method used to create a new environment source and its template in the specified directory
+     *
+     * @param project The project where the environment source is created
+     * @param containerDirectory The directory where the environment source and its template are created
+     *
+     * @return the created environment source as [EnvSource]
+     */
+    suspend fun createNewEnvSource(
+        project: Project,
+        containerDirectory: PsiDirectory
+    ): EnvSource {
+        val dEnvExtension = ".${dEnvFileType.defaultExtension}"
+
+        val source = writeAction {
+            containerDirectory.createFile("$dEnvExtension.${dEnvTemplateFileType.defaultExtension}")
+            containerDirectory.createFile(dEnvExtension)
+        }
+
+        return source.virtualFile.toEnvSource(
+            project = project
+        )
+    }
+
+}

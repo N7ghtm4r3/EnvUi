@@ -1,0 +1,30 @@
+{
+  parserClass="com.tecknobit.envui.ide.envfile.EnvParser"
+  parserUtilClass="com.intellij.lang.parser.GeneratedParserUtilBase"
+  psiPackage="com.tecknobit.envui.ide.envfile"
+  psiImplPackage="com.tecknobit.envui.ide.envfile.impl"
+  elementTypeHolderClass="com.tecknobit.envui.ide.envfile.EnvGeneratedTypes"
+  elementTypeClass="com.tecknobit.envui.ide.languages.envfile.dEnvElementType"
+  tokenTypeClass="com.tecknobit.envui.ide.languages.envfile.dEnvTokenType"
+
+  tokens = [
+    EQUALS='='
+    EXPORT='export'
+  ]
+}
+
+file ::= statement*
+
+statement ::= property NEW_LINE?
+            | comment_entry NEW_LINE?
+            | empty_line
+
+empty_line ::= NEW_LINE
+
+property ::= EXPORT? key_entry EQUALS value_entry? comment_entry?
+
+key_entry ::= KEY
+
+value_entry ::= VALUE | QUOTED_VALUE
+
+comment_entry ::= COMMENT

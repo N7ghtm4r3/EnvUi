@@ -8,7 +8,7 @@
     <name>EnvUi</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-    <vendor url="https://github.com/N7ghtm4r3">N7ghtm4r3</vendor>
+    <vendor email="infotecknobitcompany@gmail.com" url="https://github.com/N7ghtm4r3">N7ghtm4r3 - Tecknobit</vendor>
 
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-description -->
@@ -25,12 +25,122 @@
     <!-- Extensions defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
+        <postStartupActivity
+                implementation="com.tecknobit.envui.ide.activities.GitignoreInitializationActivity"/>
+
         <toolWindow
                 id="EnvUi"
-                factoryClass="com.tecknobit.envui.EnvUiWindow"
+                factoryClass="com.tecknobit.envui.ui.pages.envuiwindow.presenter.EnvUiWindow"
                 icon="icons/pluginIcon.svg"
                 anchor="right"
         />
+
+        <lang.parserDefinition
+                language="dEnv"
+                implementationClass="com.tecknobit.envui.ide.languages.envfile.dEnvParserDefinition"/>
+
+        <lang.syntaxHighlighterFactory
+                language="dEnv"
+                implementationClass="com.tecknobit.envui.ide.languages.syntax.dEnvSyntaxHighlighterFactory"/>
+
+        <fileType
+                name="dEnv"
+                language="dEnv"
+                implementationClass="com.tecknobit.envui.ide.languages.envfile.dEnvFileType"
+                fieldName="INSTANCE"
+                patterns="*.env;.env"/>
+
+        <lang.parserDefinition
+                language="dEnvTemplate"
+                implementationClass="com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateParserDefinition"/>
+
+        <lang.syntaxHighlighterFactory
+                language="dEnvTemplate"
+                implementationClass="com.tecknobit.envui.ide.languages.syntax.dEnvSyntaxHighlighterFactory"/>
+
+        <fileType
+                name="dEnvTemplate"
+                language="dEnvTemplate"
+                implementationClass="com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFileType"
+                fieldName="INSTANCE"
+                patterns=".env.template"/>
+
+        <editorNotificationProvider
+                implementation="com.tecknobit.envui.ide.providers.EnvSourceEditorNotificationProvider"/>
+
+        <fileDocumentManagerListener
+                implementation="com.tecknobit.envui.ide.listeners.document.EnvSourceDocumentListener"/>
     </extensions>
 
+    <actions>
+        <action
+                id="com.tecknobit.envui.ide.actions.OpenEnvSourceAction"
+                class="com.tecknobit.envui.ide.actions.OpenEnvSourceAction"
+                text="Open Env Source"
+                description="Open the env source in dedicated dialog">
+
+            <add-to-group
+                    group-id="ProjectViewPopupMenu"
+                    anchor="last"/>
+
+            <keyboard-shortcut
+                    keymap="$default"
+                    first-keystroke="control PERIOD"
+                    second-keystroke="E"/>
+        </action>
+
+        <action
+                id="com.tecknobit.envui.ide.actions.CopyEnvEntryAction"
+                class="com.tecknobit.envui.ide.actions.CopyEnvEntryAction"
+                text="Copy Env Entry Value"
+                description="Click on key to copy value of the env entry">
+
+            <add-to-group
+                    group-id="EditorPopupMenu"
+                    anchor="last"/>
+
+            <keyboard-shortcut
+                    keymap="$default"
+                    first-keystroke="shift PERIOD"
+                    second-keystroke="E"/>
+        </action>
+
+        <action
+                id="com.tecknobit.envui.ide.actions.CreateEnvSourceAction"
+                class="com.tecknobit.envui.ide.actions.CreateEnvSourceAction"
+                text="Env Source"
+                description="Create a new env source">
+
+            <add-to-group
+                    group-id="NewGroup"
+                    anchor="last"/>
+        </action>
+    </actions>
+
+    <dependencies>
+        <plugin id="com.intellij.modules.platform"/>
+        <plugin id="com.intellij.properties"/>
+
+        <module name="intellij.platform.compose"/>
+        <module name="intellij.libraries.skiko"/>
+        <module name="intellij.libraries.compose.foundation.desktop"/>
+
+        <module name="intellij.platform.jewel.foundation"/>
+        <module name="intellij.platform.jewel.ui"/>
+        <module name="intellij.platform.jewel.ideLafBridge"/>
+    </dependencies>
+
+    <projectListeners>
+        <listener
+                class="com.tecknobit.envui.ide.listeners.EnvSourceEditorListener"
+                topic="com.intellij.openapi.fileEditor.FileEditorManagerListener"/>
+
+        <listener
+                class="com.tecknobit.envui.ide.listeners.IdeLifecycleListener"
+                topic="com.intellij.openapi.project.ProjectManagerListener"/>
+
+        <listener
+                class="com.tecknobit.envui.ide.listeners.VirtualFileSystemListener"
+                topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>
+    </projectListeners>
 </idea-plugin>

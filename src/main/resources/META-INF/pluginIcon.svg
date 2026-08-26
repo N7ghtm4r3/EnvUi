@@ -1,12 +1,9 @@
-<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M32.0845 7.94025V4H24.0203V7.9896H16.029V4H7.91553V7.94025H4V36H16.0044V32.0045C16.0058 30.9457 16.4274 29.9308 17.1766 29.1826C17.9258 28.4345 18.9412 28.0143 20 28.0143C21.0588 28.0143 22.0743 28.4345 22.8234 29.1826C23.5726 29.9308 23.9942 30.9457 23.9956 32.0045V36H36V7.94025H32.0845Z"
-          fill="url(#paint0_linear)"/>
-    <defs>
-        <linearGradient id="paint0_linear" x1="2.94192" y1="4.89955" x2="37.7772" y2="39.7345"
-                        gradientUnits="userSpaceOnUse">
-            <stop offset="0.15937" stop-color="#3BEA62"/>
-            <stop offset="0.5404" stop-color="#3C99CC"/>
-            <stop offset="0.93739" stop-color="#6B57FF"/>
-        </linearGradient>
-    </defs>
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+    <rect x="3" y="4" width="34" height="32" rx="3" fill="#285E3C"/>
+    <path fill="#5A986A" d="M6 4h28a3 3 0 0 1 3 3v4H3V7a3 3 0 0 1 3-3Z"/>
+    <circle cx="7" cy="7.5" r="1.25" fill="#7157A3"/>
+    <circle cx="10.5" cy="7.5" r="1.12" fill="#DCE7DD"/>
+    <circle cx="14" cy="7.5" r="1.12" fill="#DCE7DD"/>
+    <path fill="#478D5C" d="m20 13.2 9 3.3v6.3c0 5-3.2 8.4-9 10.8-5.8-2.4-9-5.8-9-10.8v-6.3l9-3.3Z"/>
+    <path fill="#F2F4EF" fill-rule="evenodd" transform="translate(7.35 10.5) scale(1.6)" d="M9.4 4.5c-2.1 0-3.9 1.4-4.6 3.4l-.4 1.2c-.5 1.5.5 2.5 2.3 2.5 1.2 0 2.3-.4 3.2-1.1l-.7-.9c-.6.5-1.3.7-2 .7-.8 0-1.1-.3-.9-.9 2.7.1 4.7-.8 5.1-2.4.4-1.5-.4-2.5-2-2.5Zm.3 2.4c-.2.7-1.2 1.1-2.9 1.2.5-1.4 1.3-2.2 2.3-2.2.6 0 .8.3.6 1Z"/>
 </svg>

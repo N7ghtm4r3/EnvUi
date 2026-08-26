@@ -1,5 +1,17 @@
 [versions]
+changelog = "2.5.0"
+compose = "1.11.1"
+grammarKit = "2023.3.0.3"
 junit = "4.13.2"
+kotlin = "2.4.10"
 
 [libraries]
 junit = { module = "junit:junit", version.ref = "junit" }
+
+[plugins]
+changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
+composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose" }
+grammarKit = { id = "org.jetbrains.grammarkit", version.ref = "grammarKit" }
+intellijPlatform = { id = "org.jetbrains.intellij.platform" }
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
