@@ -48,7 +48,7 @@
                 language="dEnv"
                 implementationClass="com.tecknobit.envui.ide.languages.envfile.dEnvFileType"
                 fieldName="INSTANCE"
-                patterns="*.env;.env"/>
+                patterns=".env;.env.*;!.env.template;!.env.*.template"/>
 
         <lang.parserDefinition
                 language="dEnvTemplate"
@@ -63,7 +63,7 @@
                 language="dEnvTemplate"
                 implementationClass="com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFileType"
                 fieldName="INSTANCE"
-                patterns=".env.template"/>
+                patterns=".env.template;.env.*.template"/>
 
         <editorNotificationProvider
                 implementation="com.tecknobit.envui.ide.providers.EnvSourceEditorNotificationProvider"/>
