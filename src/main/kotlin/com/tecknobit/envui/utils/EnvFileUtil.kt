@@ -1,10 +1,12 @@
 package com.tecknobit.envui.utils
 
 import com.intellij.openapi.application.runReadAction
+import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.vfs.findOrCreateFile
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.tecknobit.envui.ide.languages.dEnvFileBase
@@ -200,13 +202,12 @@ private fun VirtualFile.resolveFromTemplate(
     module: Module?,
 ): EnvSource {
     val sourcePsiFile = resolveEnvSource(
-        project = project,
-        isRequired = true
-    )
+        project = project
+    ) ?: throw IllegalAccessException("Could not resolve source from template")
 
     return EnvSource(
         project = project,
-        source = sourcePsiFile?.virtualFile!!,
+        source = sourcePsiFile.virtualFile,
         module = module,
         _psiSource = sourcePsiFile,
         _templateSource = psiManager.findFile(this)!!,
@@ -218,18 +219,15 @@ private fun VirtualFile.resolveFromTemplate(
  * Method used to resolve the environment source related to this virtual file
  *
  * @param project The project containing the virtual file
- * @param isRequired Whether the resource must exist, so if missing will be created
  *
  * @return the related environment source `PSI` file, if available, as [PsiFile]
  */
 private fun VirtualFile.resolveEnvSource(
-    project: Project,
-    isRequired: Boolean = false,
+    project: Project
 ): PsiFile? {
     return resolveEnvSourceFile(
         project = project,
-        fileName = ENV_FILENAME,
-        isRequired = isRequired
+        fileName = ENV_FILENAME
     )
 }
 
@@ -237,18 +235,15 @@ private fun VirtualFile.resolveEnvSource(
  * Method used to resolve the environment template related to this virtual file
  *
  * @param project The project containing the virtual file
- * @param isRequired Whether the resource must exist, so if missing will be created
  *
  * @return the related environment template `PSI` file, if available, as [PsiFile]
  */
 private fun VirtualFile.resolveEnvSourceTemplate(
-    project: Project,
-    isRequired: Boolean = false,
+    project: Project
 ): PsiFile? {
     return resolveEnvSourceFile(
         project = project,
-        fileName = ENV_TEMPLATE_FILENAME,
-        isRequired = isRequired
+        fileName = ENV_TEMPLATE_FILENAME
     )
 }
 
@@ -257,33 +252,15 @@ private fun VirtualFile.resolveEnvSourceTemplate(
  *
  * @param project The project containing the virtual file
  * @param fileName The name of the sibling file to resolve
- * @param isRequired Whether the resource must exist, so if missing will be created
  *
  * @return the related `PSI` file, if available, as [PsiFile]
  */
 private fun VirtualFile.resolveEnvSourceFile(
     project: Project,
-    fileName: String,
-    isRequired: Boolean = false,
+    fileName: String
 ): PsiFile? {
     val psiManager = PsiManager.getInstance(project)
-    var virtualFile = parent.findChild(fileName)
-    if (!isRequired && virtualFile == null)
-        return null
-
-    if (virtualFile == null) {
-        virtualFile = psiManager.forceEnvFileCreation(
-            otherSourceFile = this,
-            fileName = fileName
-        )
-    }
+    val virtualFile = parent.findChild(fileName)
 
     return psiManager.findFile(virtualFile)
-}
-
-private fun PsiManager.forceEnvFileCreation(
-    otherSourceFile: VirtualFile,
-    fileName: String,
-): VirtualFile {
-
 }
