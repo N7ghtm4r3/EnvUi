@@ -267,3 +267,14 @@ fun Collection<KeyEntry>.formatAsString(): String {
         transform = { key -> "${key.text}=" }
     )
 }
+
+fun VirtualFile.containsEnvSource(): Boolean {
+    if (!isDirectory)
+        return false
+
+    val a = Regex("""\.env(?:\.(?!.*\.template$).+)?$""")
+
+    return parent.children.firstOrNull {
+        a.matches(it.name)
+    } != null
+}

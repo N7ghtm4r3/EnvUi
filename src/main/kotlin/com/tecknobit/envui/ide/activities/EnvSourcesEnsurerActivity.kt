@@ -4,8 +4,8 @@ import com.intellij.openapi.application.readAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.ProjectActivity
 import com.intellij.openapi.vfs.VirtualFile
-import com.tecknobit.envui.ide.languages.envfile.dEnvFile.Companion.ENV_FILENAME
 import com.tecknobit.envui.repositories.EnvSourceRepository
+import com.tecknobit.envui.utils.containsEnvSource
 
 class EnvSourcesEnsurerActivity : ProjectActivity {
 
@@ -31,7 +31,7 @@ class EnvSourcesEnsurerActivity : ProjectActivity {
     ) {
         val containerDirectory = envTemplate.parent
         val sourceFileExists = readAction {
-            containerDirectory.findChild(ENV_FILENAME) != null
+            containerDirectory.containsEnvSource()
         }
         if (sourceFileExists)
             return
