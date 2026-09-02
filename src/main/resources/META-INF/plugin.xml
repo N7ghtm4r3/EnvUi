@@ -26,7 +26,10 @@
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
         <postStartupActivity
-                implementation="com.tecknobit.envui.ide.activities.GitignoreInitializationActivity"/>
+                implementation="com.tecknobit.envui.ide.activities.GitIgnoreInitializationActivity"/>
+
+        <postStartupActivity
+                implementation="com.tecknobit.envui.ide.activities.EnvSourcesEnsurerActivity"/>
 
         <toolWindow
                 id="EnvUi"

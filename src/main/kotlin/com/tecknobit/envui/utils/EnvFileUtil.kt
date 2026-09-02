@@ -1,14 +1,13 @@
 package com.tecknobit.envui.utils
 
 import com.intellij.openapi.application.runReadAction
-import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.openapi.vfs.findOrCreateFile
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
+import com.tecknobit.envui.ide.envfile.KeyEntry
 import com.tecknobit.envui.ide.languages.dEnvFileBase
 import com.tecknobit.envui.ide.languages.envfile.dEnvFile
 import com.tecknobit.envui.ide.languages.envfile.dEnvFile.Companion.ENV_FILENAME
@@ -24,10 +23,7 @@ import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
  */
 fun dEnvFileBase.writeKeys() {
     val keys = keys()
-    val formattedKeys = keys.joinToString(
-        separator = "\n",
-        transform = { key -> "${key.text}=" }
-    )
+    val formattedKeys = keys.formatAsString()
 
     writeContent(
         content = formattedKeys
@@ -260,7 +256,14 @@ private fun VirtualFile.resolveEnvSourceFile(
     fileName: String
 ): PsiFile? {
     val psiManager = PsiManager.getInstance(project)
-    val virtualFile = parent.findChild(fileName)
+    val virtualFile = parent.findChild(fileName) ?: return null
 
     return psiManager.findFile(virtualFile)
+}
+
+fun Collection<KeyEntry>.formatAsString(): String {
+    return this.joinToString(
+        separator = "\n",
+        transform = { key -> "${key.text}=" }
+    )
 }
