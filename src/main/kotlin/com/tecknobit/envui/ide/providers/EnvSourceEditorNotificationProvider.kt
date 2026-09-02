@@ -8,10 +8,10 @@ import com.intellij.ui.EditorNotificationPanel.Status.Info
 import com.intellij.ui.EditorNotificationPanel.Status.Warning
 import com.intellij.ui.EditorNotificationProvider
 import com.tecknobit.envui.I18nMessageBundle
-import com.tecknobit.envui.ide.languages.envfile.dEnvFile
 import com.tecknobit.envui.repositories.EnvSourceRepository
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.presenter.EnvSourceReaderDialog
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
+import com.tecknobit.envui.utils.containsEnvSource
 import com.tecknobit.envui.utils.isEnvFile
 import com.tecknobit.envui.utils.isNotEnvSourceFile
 import com.tecknobit.envui.utils.toEnvSource
@@ -43,7 +43,7 @@ class EnvSourceEditorNotificationProvider : EditorNotificationProvider {
         if (file.isNotEnvSourceFile())
             return null
 
-        val envSourceIsExists = file.parent.findChild(dEnvFile.ENV_FILENAME) != null
+        val envSourceIsExists = file.parent.containsEnvSource()
         val showInfoPanel = file.isEnvFile() || envSourceIsExists
         return Function {
             if (showInfoPanel) {
