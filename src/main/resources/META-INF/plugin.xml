@@ -31,6 +31,9 @@
         <postStartupActivity
                 implementation="com.tecknobit.envui.ide.activities.EnvSourcesEnsurerActivity"/>
 
+        <postStartupActivity
+                implementation="com.tecknobit.envui.ide.activities.EnvSourcesMapperActivity"/>
+
         <toolWindow
                 id="EnvUi"
                 factoryClass="com.tecknobit.envui.ui.pages.envuiwindow.presenter.EnvUiWindow"

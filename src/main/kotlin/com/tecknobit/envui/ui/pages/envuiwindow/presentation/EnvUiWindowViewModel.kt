@@ -63,20 +63,22 @@ class EnvUiWindowViewModel(
      * Method used to refresh the environment sources after virtual file system changes
      */
     fun monitorFileTreeChanges() {
-        project.messageBus.connect().subscribe(
-            VirtualFileManager.VFS_CHANGES,
-            object : BulkFileListener {
-                /**
-                 * Method used to refresh the environment sources after virtual file events complete
-                 *
-                 * @param events The completed virtual file events
-                 */
-                override fun after(events: List<VFileEvent>) {
-                    super.after(events)
+        project.messageBus
+            .connect()
+            .subscribe(
+                topic = VirtualFileManager.VFS_CHANGES,
+                handler = object : BulkFileListener {
+                    /**
+                     * Method used to refresh the environment sources after virtual file events complete
+                     *
+                     * @param events The completed virtual file events
+                     */
+                    override fun after(events: List<VFileEvent>) {
+                        super.after(events)
 
-                    retrieveSources()
+                        retrieveSources()
+                    }
                 }
-            }
         )
     }
 
