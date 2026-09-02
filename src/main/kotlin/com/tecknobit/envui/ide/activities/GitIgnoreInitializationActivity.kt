@@ -13,7 +13,7 @@ import com.intellij.openapi.vfs.writeText
  *
  * @author N7ghtm4r3 - Tecknobit
  */
-class GitignoreInitializationActivity : ProjectActivity {
+class GitIgnoreInitializationActivity : ProjectActivity {
 
     /**
      * The companion object allows to access the standard ignore filename
@@ -68,7 +68,7 @@ class GitignoreInitializationActivity : ProjectActivity {
             project = project
         )
 
-        guaranteeToIgnoreEntryVersioning(
+        ensureToIgnoreEntryVersioning(
             gitignoreFile = gitignoreRoot
         )
     }
@@ -99,8 +99,8 @@ class GitignoreInitializationActivity : ProjectActivity {
      *
      * @param gitignoreFile The ignore file to update
      */
-    private suspend fun guaranteeToIgnoreEntryVersioning(
-        gitignoreFile: VirtualFile
+    private suspend fun ensureToIgnoreEntryVersioning(
+        gitignoreFile: VirtualFile,
     ) {
         val currentContent = gitignoreFile.readText()
 

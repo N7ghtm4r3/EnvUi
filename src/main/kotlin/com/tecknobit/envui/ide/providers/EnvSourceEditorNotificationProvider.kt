@@ -4,12 +4,20 @@ import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.EditorNotificationPanel
+import com.intellij.ui.EditorNotificationPanel.Status.Info
+import com.intellij.ui.EditorNotificationPanel.Status.Warning
 import com.intellij.ui.EditorNotificationProvider
 import com.tecknobit.envui.I18nMessageBundle
+import com.tecknobit.envui.ide.languages.envfile.dEnvFile
+import com.tecknobit.envui.repositories.EnvSourceRepository
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.presenter.EnvSourceReaderDialog
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
+import com.tecknobit.envui.utils.isEnvFile
 import com.tecknobit.envui.utils.isNotEnvSourceFile
 import com.tecknobit.envui.utils.toEnvSource
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.function.Function
 import javax.swing.JComponent
 
@@ -35,28 +43,30 @@ class EnvSourceEditorNotificationProvider : EditorNotificationProvider {
         if (file.isNotEnvSourceFile())
             return null
 
-        val envSource = file.toEnvSource(
-            project = project
-        )
-
+        val envSourceIsExists = file.parent.findChild(dEnvFile.ENV_FILENAME) != null
+        val showInfoPanel = file.isEnvFile() || envSourceIsExists
         return Function {
-            warningPanel(
-                envSource = envSource
-            )
+            if (showInfoPanel) {
+                val envSource = file.toEnvSource(
+                    project = project
+                )
+
+                infoPanel(
+                    envSource = envSource
+                )
+            } else {
+                warningPanel(
+                    project = project,
+                    envTemplateFile = file
+                )
+            }
         }
     }
 
-    /**
-     * Method used to create the panel that opens an environment source in its dialog editor
-     *
-     * @param envSource The environment source containing the properties
-     *
-     * @return the configured notification panel as [EditorNotificationPanel]
-     */
-    private fun warningPanel(
-        envSource: EnvSource
+    private fun infoPanel(
+        envSource: EnvSource,
     ): EditorNotificationPanel {
-        return EditorNotificationPanel().apply {
+        return EditorNotificationPanel(Info).apply {
             text = I18nMessageBundle.message(
                 key = "edit.env.in.dialog"
             )
@@ -71,6 +81,33 @@ class EnvSourceEditorNotificationProvider : EditorNotificationProvider {
                 )
 
                 dialog.show()
+            }
+        }
+    }
+
+
+    private fun warningPanel(
+        project: Project,
+        envTemplateFile: VirtualFile,
+    ): EditorNotificationPanel {
+        val envSourceRepository = EnvSourceRepository(project)
+        val scope = CoroutineScope(Dispatchers.Main)
+
+        return EditorNotificationPanel(Warning).apply {
+            text = I18nMessageBundle.message(
+                key = "create.missing.env.source.warning"
+            )
+
+            createActionLabel(
+                I18nMessageBundle.message(
+                    key = "create"
+                )
+            ) {
+                scope.launch {
+                    envSourceRepository.createNewEnvSourceFromTemplate(
+                        envTemplate = envTemplateFile
+                    )
+                }
             }
         }
     }
