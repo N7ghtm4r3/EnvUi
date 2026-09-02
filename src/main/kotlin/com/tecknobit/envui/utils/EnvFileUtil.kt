@@ -268,13 +268,17 @@ fun Collection<KeyEntry>.formatAsString(): String {
     )
 }
 
+//TODO: TO USE WHEN SUPPORTS MULTI ENVIROMENT
+private val ENV_FILENAME_REGEX = Regex("""\.env(?:\.(?!.*\.template$).+)?$""")
+
+//TODO: TO INSERT INTO DOCU THAT MUST BE THE CONTAINER DIRECTORY THE RECEIVER
 fun VirtualFile.containsEnvSource(): Boolean {
     if (!isDirectory)
         return false
 
-    val a = Regex("""\.env(?:\.(?!.*\.template$).+)?$""")
+    val containedEnvSources = children.firstOrNull {
+        it.name == ENV_FILENAME // TODO: TO USE THE REGEX
+    }
 
-    return parent.children.firstOrNull {
-        a.matches(it.name)
-    } != null
+    return containedEnvSources != null
 }
