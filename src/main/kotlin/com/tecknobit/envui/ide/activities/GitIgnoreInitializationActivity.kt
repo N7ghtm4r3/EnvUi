@@ -1,12 +1,17 @@
 package com.tecknobit.envui.ide.activities
 
+import com.intellij.openapi.application.readAction
 import com.intellij.openapi.application.writeAction
+import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.ProjectActivity
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.openapi.vfs.readText
-import com.intellij.openapi.vfs.writeText
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiFileFactory
+import com.intellij.psi.PsiManager
+import kotlin.math.abs
 
 /**
  * The `GitignoreInitializationActivity` class is useful to ensure sensitive environment and workspace files are ignored
@@ -40,6 +45,10 @@ class GitIgnoreInitializationActivity : ProjectActivity {
         val fileName: String
     ) {
 
+        TAG_LINE(
+            fileName = "# From EnvUi"
+        ),
+
         /**
          * The environment source ignore entry
          */
@@ -64,11 +73,12 @@ class GitIgnoreInitializationActivity : ProjectActivity {
     override suspend fun execute(
         project: Project
     ) {
-        val gitignoreRoot = createGitignoreRootFile(
+        val gitignoreRoot = ensureGitignoreRootFile(
             project = project
         )
 
         ensureToIgnoreEntryVersioning(
+            project = project,
             gitignoreFile = gitignoreRoot
         )
     }
@@ -80,8 +90,8 @@ class GitIgnoreInitializationActivity : ProjectActivity {
      *
      * @return the root ignore file as [VirtualFile]
      */
-    private suspend fun createGitignoreRootFile(
-        project: Project
+    private suspend fun ensureGitignoreRootFile(
+        project: Project,
     ): VirtualFile {
         val localFileSystem = LocalFileSystem.getInstance()
         val containerDirectory = localFileSystem.findFileByPath(project.basePath!!)!!
@@ -97,33 +107,70 @@ class GitIgnoreInitializationActivity : ProjectActivity {
     /**
      * Method used to append missing required entries to a project ignore file
      *
+     * @param project The project whose ignore file is resolved
      * @param gitignoreFile The ignore file to update
      */
     private suspend fun ensureToIgnoreEntryVersioning(
+        project: Project,
         gitignoreFile: VirtualFile,
     ) {
-        val currentContent = gitignoreFile.readText()
+        val psiManager = PsiManager.getInstance(project)
+        val psiFile = readAction {
+            psiManager.findFile(gitignoreFile)
+        } ?: throw IllegalStateException("Could not retrieve gitignore file")
 
-        val content = buildString {
-            append(currentContent)
-            if(currentContent.isNotBlank())
-                append("\n")
+        val gitIgnoreEntries = GitignoreFileEntry.entries
+            .map { it.fileName }
+            .toHashSet()
+        val insertedEntries = hashSetOf<String>()
 
-            GitignoreFileEntry.entries.forEach { gitignoreFileEntry ->
-                val filename = gitignoreFileEntry.fileName
-                if(currentContent.contains(filename + "\n"))
+        readAction {
+            psiFile.children.forEach {
+                val text = it.text
+                if (!gitIgnoreEntries.contains(text))
                     return@forEach
 
-                append(filename)
-                append("\n")
+                insertedEntries.add(text)
             }
         }
 
-        writeAction {
-            gitignoreFile.writeText(
-                content = content
-            )
+        val diff = abs(insertedEntries.size - gitIgnoreEntries.size)
+
+        WriteCommandAction.runWriteCommandAction(project) {
+            var lineStarter = if (psiFile.text.isNotBlank() || diff == 1)
+                "\n"
+            else
+                ""
+
+            GitignoreFileEntry.entries.forEach { entry ->
+                val fileName = entry.fileName
+                if (insertedEntries.contains(fileName))
+                    return@forEach
+
+                val entryChild = psiFile.createGitIgnoreEntry(
+                    content = "$lineStarter$fileName\n"
+                )
+
+                psiFile.addAfter(
+                    entryChild,
+                    psiFile.lastChild
+                )
+
+                lineStarter = ""
+            }
         }
+    }
+
+    private fun PsiFile.createGitIgnoreEntry(
+        content: String,
+    ): PsiElement {
+        val psiFileFactory = PsiFileFactory.getInstance(project)
+
+        return psiFileFactory.createFileFromText(
+            this.name,
+            this.fileType,
+            content
+        )
     }
 
 }
