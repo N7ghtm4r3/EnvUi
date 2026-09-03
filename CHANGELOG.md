@@ -6,7 +6,6 @@
 
 ### Added
 
-* Support for additional `.env` source and template naming conventions
 * Environment variable type detection with `Any` fallback support
 
 ### Fixed
