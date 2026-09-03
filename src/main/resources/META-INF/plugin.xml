@@ -74,6 +74,9 @@
         <editorNotificationProvider
                 implementation="com.tecknobit.envui.ide.providers.envsource.EnvSourceEditorNotificationProvider"/>
 
+        <editorNotificationProvider
+                implementation="com.tecknobit.envui.ide.providers.envsource.EnvSourceTemplateEditorNotificationProvider"/>
+
         <fileDocumentManagerListener
                 implementation="com.tecknobit.envui.ide.listeners.document.EnvSourceDocumentListener"/>
     </extensions>

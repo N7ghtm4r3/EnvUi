@@ -25,11 +25,15 @@ abstract class EnvEditorNotificationProviderFactory : EditorNotificationProvider
         project: Project,
         file: VirtualFile,
     ): Function<in FileEditor, out JComponent?>? {
-        if (file.a())
+        if (file.isTargetFile())
             return null
 
         return Function {
-            if (file.parent.exi()) {
+            val canShowInfoPanel = canShowInfoPanel(
+                containerDirectory = file.parent
+            )
+
+            if (canShowInfoPanel) {
                 val envSource = file.toEnvSource(
                     project = project
                 )
@@ -46,9 +50,11 @@ abstract class EnvEditorNotificationProviderFactory : EditorNotificationProvider
         }
     }
 
-    protected abstract fun VirtualFile.a(): Boolean
+    protected abstract fun VirtualFile.isTargetFile(): Boolean
 
-    protected abstract fun VirtualFile.exi(): Boolean
+    protected abstract fun canShowInfoPanel(
+        containerDirectory: VirtualFile
+    ): Boolean
 
     private fun infoPanel(
         envSource: EnvSource,
@@ -74,14 +80,13 @@ abstract class EnvEditorNotificationProviderFactory : EditorNotificationProvider
 
     private fun warningPanel(
         project: Project,
+        file: VirtualFile,
     ): EditorNotificationPanel {
         val envSourceRepository = EnvSourceRepository(project)
         val scope = CoroutineScope(Dispatchers.Main)
 
         return EditorNotificationPanel(Warning).apply {
-            text = I18nMessageBundle.message(
-                key = warningPanelMessage()
-            )
+            text = warningPanelMessage()
 
             createActionLabel(
                 I18nMessageBundle.message(
@@ -90,7 +95,9 @@ abstract class EnvEditorNotificationProviderFactory : EditorNotificationProvider
             ) {
                 scope.launch {
                     warningPanelAction(
-                        repository = envSourceRepository
+                        project = project,
+                        repository = envSourceRepository,
+                        file = file,
                     )
                 }
             }
@@ -99,6 +106,10 @@ abstract class EnvEditorNotificationProviderFactory : EditorNotificationProvider
 
     protected abstract fun warningPanelMessage(): @NlsSafe String
 
-    protected abstract suspend fun warningPanelAction(repository: EnvSourceRepository): EnvSource
+    protected abstract suspend fun warningPanelAction(
+        project: Project,
+        repository: EnvSourceRepository,
+        file: VirtualFile,
+    ): EnvSource
 
 }
