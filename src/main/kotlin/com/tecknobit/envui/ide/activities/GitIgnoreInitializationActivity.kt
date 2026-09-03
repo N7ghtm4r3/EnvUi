@@ -11,7 +11,6 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.PsiManager
-import kotlin.math.abs
 
 /**
  * The `GitignoreInitializationActivity` class is useful to ensure sensitive environment and workspace files are ignored
@@ -134,10 +133,8 @@ class GitIgnoreInitializationActivity : ProjectActivity {
             }
         }
 
-        val diff = abs(insertedEntries.size - gitIgnoreEntries.size)
-
         WriteCommandAction.runWriteCommandAction(project) {
-            var lineStarter = if (psiFile.text.isNotBlank() || diff == 1)
+            var lineStarter = if (psiFile.text.isNotBlank())
                 "\n"
             else
                 ""
