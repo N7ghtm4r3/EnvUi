@@ -273,11 +273,28 @@ private val ENV_FILENAME_REGEX = Regex("""\.env(?:\.(?!.*\.template$).+)?$""")
 
 //TODO: TO INSERT INTO DOCU THAT MUST BE THE CONTAINER DIRECTORY THE RECEIVER
 fun VirtualFile.containsEnvSource(): Boolean {
+    return containsEnvSource(
+        // TODO: TO USE A DEDICATED REGEX WHEN SUPPORTS MULTI ENVIROMENT
+        fileName = ENV_FILENAME
+    )
+}
+
+//TODO: TO INSERT INTO DOCU THAT MUST BE THE CONTAINER DIRECTORY THE RECEIVER
+fun VirtualFile.containsEnvTemplate(): Boolean {
+    return containsEnvSource(
+        // TODO: TO USE A DEDICATED REGEX WHEN SUPPORTS MULTI ENVIROMENT
+        fileName = ENV_TEMPLATE_FILENAME
+    )
+}
+
+private fun VirtualFile.containsEnvSource(
+    fileName: String,
+): Boolean {
     if (!isDirectory)
         return false
 
     val containedEnvSources = children.firstOrNull {
-        it.name == ENV_FILENAME // TODO: TO USE THE REGEX
+        it.name == fileName // TODO: TO USE A DEDICATEDREGEX WHEN SUPPORTS MULTI ENVIROMENT
     }
 
     return containedEnvSources != null
