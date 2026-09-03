@@ -2,6 +2,7 @@ package com.tecknobit.envui.utils
 
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.psi.PsiDocumentManager
+import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 
 /**
@@ -21,4 +22,21 @@ fun PsiFile.writeContent(
             documentManager.commitDocument(document)
         }
     }
+}
+
+fun PsiFile.containsEntry(
+    psiElement: PsiElement,
+): Boolean {
+    return children.firstOrNull {
+        it.text == psiElement.text
+    } != null
+}
+
+fun PsiFile.addLast(
+    psiElement: PsiElement,
+) {
+    psiElement.addAfter(
+        this.lastChild,
+        psiElement
+    )
 }
