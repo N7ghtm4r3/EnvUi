@@ -51,9 +51,6 @@ data class EnvSource(
     /**
      * `psiEnvTemplateSource` the optional typed `PSI` representation of the associated template
      */
-    var psiEnvTemplateSource = if (_templateSource is dEnvTemplateFile?)
-        _templateSource as dEnvTemplateFile
-    else
-        null
+    var psiEnvTemplateSource = _templateSource as? dEnvTemplateFile?
 
 }

@@ -72,7 +72,7 @@
                 patterns=".env.template"/>
 
         <editorNotificationProvider
-                implementation="com.tecknobit.envui.ide.providers.EnvSourceEditorNotificationProvider"/>
+                implementation="com.tecknobit.envui.ide.providers.envsource.EnvSourceEditorNotificationProvider"/>
 
         <fileDocumentManagerListener
                 implementation="com.tecknobit.envui.ide.listeners.document.EnvSourceDocumentListener"/>

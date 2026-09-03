@@ -151,6 +151,47 @@ class EnvSourceRepository(
         )
     }
 
+    suspend fun createNewEnvTemplateFromSource(
+        project: Project = this.project,
+        envSource: VirtualFile,
+    ): EnvSource {
+        val dEnvExtension = ".${dEnvFileType.defaultExtension}.${dEnvTemplateFileType.defaultExtension}"
+        val psiManager = PsiManager.getInstance(project)
+
+        val source = writeAction {
+            val containerDirectory = envSource.parent
+            val directory = psiManager.findDirectory(containerDirectory)
+
+            directory?.createFile(dEnvExtension)
+        } ?: throw IllegalStateException("Could not create env template file from source")
+
+        val envTemplatePsiSource = readAction {
+            psiManager.findFile(envSource)
+        }
+        syncTemplateFromSource(
+            source = source as dEnvFile,
+            template = envTemplatePsiSource as dEnvTemplateFile,
+        )
+
+        return source.virtualFile.toEnvSource(
+            project = project
+        )
+    }
+
+    private suspend fun syncTemplateFromSource(
+        source: dEnvFile,
+        template: dEnvTemplateFile,
+    ) {
+        writeAction {
+            val templateKeys = source.keys()
+            val formattedKeys = templateKeys.formatAsString()
+
+            source.writeContent(
+                content = formattedKeys
+            )
+        }
+    }
+
     suspend fun createNewEnvSourceFromTemplate(
         project: Project = this.project,
         envTemplate: VirtualFile,

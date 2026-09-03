@@ -1,7 +1,8 @@
-package com.tecknobit.envui.ide.providers
+package com.tecknobit.envui.ide.providers.envsource
 
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.NlsSafe
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.EditorNotificationPanel
 import com.intellij.ui.EditorNotificationPanel.Status.Info
@@ -11,9 +12,6 @@ import com.tecknobit.envui.I18nMessageBundle
 import com.tecknobit.envui.repositories.EnvSourceRepository
 import com.tecknobit.envui.ui.pages.dialogs.envsourcereader.presenter.EnvSourceReaderDialog
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
-import com.tecknobit.envui.utils.containsEnvSource
-import com.tecknobit.envui.utils.isEnvFile
-import com.tecknobit.envui.utils.isNotEnvSourceFile
 import com.tecknobit.envui.utils.toEnvSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,32 +19,17 @@ import kotlinx.coroutines.launch
 import java.util.function.Function
 import javax.swing.JComponent
 
-/**
- * The `EnvSourceEditorNotificationProvider` class is useful to offer the dialog editor for environment source files
- *
- * @author N7ghtm4r3 - Tecknobit
- */
-class EnvSourceEditorNotificationProvider : EditorNotificationProvider {
+abstract class EnvEditorNotificationProviderFactory : EditorNotificationProvider {
 
-    /**
-     * Method used to create notification content for environment source editors
-     *
-     * @param project The project containing the file
-     * @param file The virtual file displayed by the editor
-     *
-     * @return the notification component provider, if the file is an environment source, as [Function]
-     */
     override fun collectNotificationData(
         project: Project,
         file: VirtualFile,
     ): Function<in FileEditor, out JComponent?>? {
-        if (file.isNotEnvSourceFile())
+        if (file.a())
             return null
 
-        val envSourceIsExists = file.parent.containsEnvSource()
-        val showInfoPanel = file.isEnvFile() || envSourceIsExists
         return Function {
-            if (showInfoPanel) {
+            if (file.parent.exi()) {
                 val envSource = file.toEnvSource(
                     project = project
                 )
@@ -57,11 +40,15 @@ class EnvSourceEditorNotificationProvider : EditorNotificationProvider {
             } else {
                 warningPanel(
                     project = project,
-                    envTemplateFile = file
+                    file = file
                 )
             }
         }
     }
+
+    protected abstract fun VirtualFile.a(): Boolean
+
+    protected abstract fun VirtualFile.exi(): Boolean
 
     private fun infoPanel(
         envSource: EnvSource,
@@ -85,17 +72,15 @@ class EnvSourceEditorNotificationProvider : EditorNotificationProvider {
         }
     }
 
-
     private fun warningPanel(
         project: Project,
-        envTemplateFile: VirtualFile,
     ): EditorNotificationPanel {
         val envSourceRepository = EnvSourceRepository(project)
         val scope = CoroutineScope(Dispatchers.Main)
 
         return EditorNotificationPanel(Warning).apply {
             text = I18nMessageBundle.message(
-                key = "create.missing.env.source.warning"
+                key = warningPanelMessage()
             )
 
             createActionLabel(
@@ -104,12 +89,16 @@ class EnvSourceEditorNotificationProvider : EditorNotificationProvider {
                 )
             ) {
                 scope.launch {
-                    envSourceRepository.createNewEnvSourceFromTemplate(
-                        envTemplate = envTemplateFile
+                    warningPanelAction(
+                        repository = envSourceRepository
                     )
                 }
             }
         }
     }
+
+    protected abstract fun warningPanelMessage(): @NlsSafe String
+
+    protected abstract suspend fun warningPanelAction(repository: EnvSourceRepository): EnvSource
 
 }
