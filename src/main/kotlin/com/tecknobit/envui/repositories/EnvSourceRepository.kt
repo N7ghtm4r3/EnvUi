@@ -5,6 +5,7 @@ import com.intellij.openapi.application.writeAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDirectory
+import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
@@ -155,38 +156,28 @@ class EnvSourceRepository(
         project: Project = this.project,
         envSource: VirtualFile,
     ): EnvSource {
-        val dEnvExtension = ".${dEnvFileType.defaultExtension}.${dEnvTemplateFileType.defaultExtension}"
-        val psiManager = PsiManager.getInstance(project)
-
-        val source = writeAction {
-            val containerDirectory = envSource.parent
-            val directory = psiManager.findDirectory(containerDirectory)
-
-            directory?.createFile(dEnvExtension)
-        } ?: throw IllegalStateException("Could not create env template file from source")
-
-        val envTemplatePsiSource = readAction {
-            psiManager.findFile(envSource)
-        }
-        syncTemplateFromSource(
-            source = source as dEnvFile,
-            template = envTemplatePsiSource as dEnvTemplateFile,
-        )
-
-        return source.virtualFile.toEnvSource(
-            project = project
+        return createMissingSource(
+            project = project,
+            fileName = ".${dEnvFileType.defaultExtension}.${dEnvTemplateFileType.defaultExtension}",
+            file = envSource,
+            syncSources = { existing, newSource ->
+                syncTemplateFromSource(
+                    source = existing,
+                    template = newSource
+                )
+            }
         )
     }
 
     private suspend fun syncTemplateFromSource(
-        source: dEnvFile,
-        template: dEnvTemplateFile,
+        source: PsiFile,
+        template: PsiFile,
     ) {
         writeAction {
-            val templateKeys = source.keys()
+            val templateKeys = (source as dEnvFile).keys()
             val formattedKeys = templateKeys.formatAsString()
 
-            source.writeContent(
+            (template as dEnvTemplateFile).writeContent(
                 content = formattedKeys
             )
         }
@@ -196,41 +187,60 @@ class EnvSourceRepository(
         project: Project = this.project,
         envTemplate: VirtualFile,
     ): EnvSource {
-        val dEnvExtension = ".${dEnvFileType.defaultExtension}"
+        return createMissingSource(
+            project = project,
+            fileName = ".${dEnvFileType.defaultExtension}",
+            file = envTemplate,
+            syncSources = { existing, newSource ->
+                syncSourceWithTemplate(
+                    template = existing,
+                    source = newSource
+                )
+            }
+        )
+    }
+
+    private suspend fun syncSourceWithTemplate(
+        template: PsiFile,
+        source: PsiFile,
+    ) {
+        writeAction {
+            val templateKeys = (template as dEnvTemplateFile).keys()
+            val formattedKeys = templateKeys.formatAsString()
+
+            (source as dEnvFile).writeContent(
+                content = formattedKeys
+            )
+        }
+    }
+
+    private suspend fun createMissingSource(
+        project: Project = this.project,
+        fileName: String,
+        file: VirtualFile,
+        syncSources: suspend (existing : PsiFile, newSource: PsiFile) -> Unit
+    ): EnvSource {
         val psiManager = PsiManager.getInstance(project)
 
         val source = writeAction {
-            val containerDirectory = envTemplate.parent
+            val containerDirectory = file.parent
             val directory = psiManager.findDirectory(containerDirectory)
 
-            directory?.createFile(dEnvExtension)
-        } ?: throw IllegalStateException("Could not create env file from template")
+            directory?.createFile(fileName)
+        } ?: throw IllegalStateException("Could not create $file")
 
-        val envTemplatePsiSource = readAction {
-            psiManager.findFile(envTemplate)
+        val psiSource = readAction {
+            psiManager.findFile(file)!!
         }
-        syncSourceWithTemplate(
-            template = envTemplatePsiSource as dEnvTemplateFile,
-            source = source as dEnvFile
+
+        syncSources(
+            psiSource,
+            source
         )
 
         return source.virtualFile.toEnvSource(
             project = project
         )
-    }
-
-    private suspend fun syncSourceWithTemplate(
-        template: dEnvTemplateFile,
-        source: dEnvFile,
-    ) {
-        writeAction {
-            val templateKeys = template.keys()
-            val formattedKeys = templateKeys.formatAsString()
-
-            source.writeContent(
-                content = formattedKeys
-            )
-        }
     }
 
 }
