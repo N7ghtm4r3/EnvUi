@@ -39,7 +39,7 @@ enum class EnvFieldType(
 
     BOOLEAN(
         displayName = "Boolean",
-        validator = Regex("^(?:true|false)$"),
+        validator = Regex("^(?:t(?:r(?:ue?)?)?|f(?:a(?:l(?:se?)?)?)?)$"),
         parser = { it.toString().toBooleanStrictOrNull() != null }
     ),
 
