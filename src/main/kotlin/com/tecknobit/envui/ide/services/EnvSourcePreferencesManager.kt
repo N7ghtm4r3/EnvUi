@@ -238,6 +238,31 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
         return properties[key]?.type ?: ANY
     }
 
+    fun saveBatchPropertyTypes(
+        source: VirtualFile,
+        propertyTypes: Map<String, EnvFieldType>,
+    ) {
+        var envSourcePreferences = ensureEnvSourcePreferences(
+            source = source
+        )
+
+        propertyTypes.forEach { (key, type) ->
+            envSourcePreferences = upsertPropertyPreferences(
+                envSourcePreferences = envSourcePreferences,
+                propertyKey = key,
+                propertyPreferences = EnvSourcePropertyPreferences(
+                    key = key,
+                    type = type
+                )
+            )
+        }
+
+        storeEnvSourcePreferences(
+            source = source,
+            envSourcePreferences = envSourcePreferences
+        )
+    }
+
     /**
      * Method used to store the current value and change timestamp of an environment property
      *
@@ -411,9 +436,21 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
         property: Property,
         propertyPreferences: EnvSourcePropertyPreferences
     ): EnvSourcePreferences {
+        return upsertPropertyPreferences(
+            envSourcePreferences = envSourcePreferences,
+            propertyKey = property.keyEntry.text,
+            propertyPreferences = propertyPreferences
+        )
+    }
+
+    private fun upsertPropertyPreferences(
+        envSourcePreferences: EnvSourcePreferences,
+        propertyKey: String,
+        propertyPreferences: EnvSourcePropertyPreferences,
+    ): EnvSourcePreferences {
         return envSourcePreferences.copy(
             properties = envSourcePreferences.properties.plus(
-                pair = property.keyEntry.text to propertyPreferences
+                pair = propertyKey to propertyPreferences
             )
         )
     }
