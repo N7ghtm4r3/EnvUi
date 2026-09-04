@@ -1,9 +1,9 @@
 package com.tecknobit.envui.ui.utils
 
-import com.intellij.openapi.application.readAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.openapi.vfs.VirtualFile
+import com.tecknobit.envui.utils.readOnBgt
 import org.jetbrains.jewel.ui.icon.IconKey
 import org.jetbrains.jewel.ui.icons.AllIconsKeys
 
@@ -19,7 +19,7 @@ suspend fun VirtualFile.resolveIcon(
 ): IconKey {
     val projectIndex = ProjectFileIndex.getInstance(project)
 
-    return readAction {
+    return readOnBgt {
         when {
             projectIndex.isExcluded(this) -> AllIconsKeys.Modules.ExcludeRoot
             projectIndex.isInGeneratedSources(this) -> AllIconsKeys.Modules.GeneratedFolder

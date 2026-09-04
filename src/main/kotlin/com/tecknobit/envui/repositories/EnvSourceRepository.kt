@@ -1,7 +1,5 @@
 package com.tecknobit.envui.repositories
 
-import com.intellij.openapi.application.readAction
-import com.intellij.openapi.application.writeAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDirectory
@@ -17,9 +15,7 @@ import com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFile
 import com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFileType
 import com.tecknobit.envui.ide.services.useEnvSourcePreferencesManager
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
-import com.tecknobit.envui.utils.formatAsString
-import com.tecknobit.envui.utils.toEnvSource
-import com.tecknobit.envui.utils.writeContent
+import com.tecknobit.envui.utils.*
 
 /**
  * The `EnvSourceRepository` class is useful to retrieve and create the environment sources and templates of a project
@@ -44,7 +40,7 @@ class EnvSourceRepository(
     ): List<EnvSource> {
         val virtualFilesEnvTemplates = retrieveEnvTemplates()
 
-        return readAction {
+        return readOnBgt {
             val globalSearchScope = GlobalSearchScope.projectScope(project)
             val virtualFilesEnv = FileTypeIndex.getFiles(
                 dEnvFileType,
@@ -65,7 +61,7 @@ class EnvSourceRepository(
      * @return the environment template files as [Collection] of [VirtualFile]
      */
     suspend fun retrieveEnvTemplates(): Collection<VirtualFile> {
-        return readAction {
+        return readOnBgt {
             val globalSearchScope = GlobalSearchScope.projectScope(project)
             FileTypeIndex.getFiles(
                 dEnvTemplateFileType,
@@ -145,7 +141,7 @@ class EnvSourceRepository(
     ): EnvSource {
         val dEnvExtension = ".${dEnvFileType.defaultExtension}"
 
-        val source = writeAction {
+        val source = writeOnEdt {
             containerDirectory.createFile("$dEnvExtension.${dEnvTemplateFileType.defaultExtension}")
             containerDirectory.createFile(dEnvExtension)
         }
@@ -193,13 +189,13 @@ class EnvSourceRepository(
         template: PsiFile,
     ) {
         val sourcePsiFile = (source as dEnvFile)
+        val templateKeys = readOnBgt {
+            sourcePsiFile.keys().formatAsString()
+        }
 
-        writeAction {
-            val templateKeys = sourcePsiFile.keys()
-            val formattedKeys = templateKeys.formatAsString()
-
+        writeOnEdt {
             (template as dEnvTemplateFile).writeContent(
-                content = formattedKeys
+                content = templateKeys
             )
         }
 
@@ -288,12 +284,15 @@ class EnvSourceRepository(
         template: PsiFile,
         source: PsiFile,
     ) {
-        writeAction {
+        val templateKeys = readOnBgt {
             val templateKeys = (template as dEnvTemplateFile).keys()
-            val formattedKeys = templateKeys.formatAsString()
 
+            templateKeys.formatAsString()
+        }
+
+        writeOnEdt {
             (source as dEnvFile).writeContent(
-                content = formattedKeys
+                content = templateKeys
             )
         }
     }
@@ -315,15 +314,17 @@ class EnvSourceRepository(
         syncSources: suspend (existing : PsiFile, newSource: PsiFile) -> Unit
     ): EnvSource {
         val psiManager = PsiManager.getInstance(project)
-
-        val source = writeAction {
+        val directory = readOnBgt {
             val containerDirectory = file.parent
-            val directory = psiManager.findDirectory(containerDirectory)
 
+            psiManager.findDirectory(containerDirectory)
+        }
+
+        val source = writeOnEdt {
             directory?.createFile(fileName)
         } ?: throw IllegalStateException("Could not create $file")
 
-        val psiSource = readAction {
+        val psiSource = readOnBgt {
             psiManager.findFile(file)!!
         }
 
