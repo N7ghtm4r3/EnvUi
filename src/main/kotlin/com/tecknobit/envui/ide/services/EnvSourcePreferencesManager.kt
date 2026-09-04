@@ -238,6 +238,14 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
         return properties[key]?.type ?: ANY
     }
 
+    /**
+     * Method used to store the detected types of multiple environment properties
+     *
+     * @param source The environment source file
+     * @param propertyTypes The property types indexed by key
+     *
+     * @since 1.0.1
+     */
     fun saveBatchPropertyTypes(
         source: VirtualFile,
         propertyTypes: Map<String, EnvFieldType>,
@@ -438,6 +446,15 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
         )
     }
 
+    /**
+     * Method used to insert or replace property preferences by key in source preferences
+     *
+     * @param envSourcePreferences The source preferences to update
+     * @param propertyKey The environment property key used as map key
+     * @param propertyPreferences The preferences to store
+     *
+     * @return the updated source preferences as [EnvSourcePreferences]
+     */
     private fun upsertPropertyPreferences(
         envSourcePreferences: EnvSourcePreferences,
         propertyKey: String,
