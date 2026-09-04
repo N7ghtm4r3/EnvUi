@@ -331,7 +331,7 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
         property: Property,
         isCritical: Boolean
     ) {
-         setPropertyPreference(
+        setPropertyPreference(
             source = source,
             property = property
         ) { propertyPreferences ->
@@ -395,14 +395,9 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
         property: Property,
         onWork: (EnvSourcePropertyPreferences) -> EnvSourcePropertyPreferences
     ) {
-        var envSourcePreferences = retrieveEnvSourcePreferences(
+        var envSourcePreferences = ensureEnvSourcePreferences(
             source = source
         )
-        if(envSourcePreferences == null) {
-            envSourcePreferences = storeNewEnvSourcePreferences(
-                source = source
-            )
-        }
 
         val propertyPreferences = retrievePropertyPreferences(
             source = source,
