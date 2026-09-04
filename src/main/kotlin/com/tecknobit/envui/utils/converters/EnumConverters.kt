@@ -11,7 +11,7 @@ import com.tecknobit.envui.enums.EnvFieldType.*
  */
 fun EnvFieldType.toKeyboardType(): KeyboardType {
     return when(this) {
-        STRING -> KeyboardType.Text
+        STRING, BOOLEAN -> KeyboardType.Text
         INTEGER, LONG -> KeyboardType.Number
         FLOAT, DOUBLE -> KeyboardType.Decimal
         JSON -> KeyboardType.Text

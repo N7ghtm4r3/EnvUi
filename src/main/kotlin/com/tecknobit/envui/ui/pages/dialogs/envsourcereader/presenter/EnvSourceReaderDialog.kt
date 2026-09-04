@@ -37,7 +37,7 @@ class EnvSourceReaderDialog(
     ),
     title = I18nMessageBundle.message(
         key = "envui.dialog.read.env",
-        envSource.module!!.name
+        envSource.module?.name ?: I18nMessageBundle.message("global.space")
     )
 ) {
 

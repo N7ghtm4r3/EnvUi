@@ -9,6 +9,8 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
+import com.tecknobit.envui.enums.EnvFieldType
+import com.tecknobit.envui.enums.EnvFieldType.ANY
 import com.tecknobit.envui.ide.languages.envfile.dEnvFile
 import com.tecknobit.envui.ide.languages.envfile.dEnvFileType
 import com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFile
@@ -173,14 +175,50 @@ class EnvSourceRepository(
         source: PsiFile,
         template: PsiFile,
     ) {
+        val sourcePsiFile = (source as dEnvFile)
+        val envTypes = mapEnvTypes(
+            source = sourcePsiFile
+        )
+
+        println(envTypes)
+
         writeAction {
-            val templateKeys = (source as dEnvFile).keys()
+            val templateKeys = sourcePsiFile.keys()
             val formattedKeys = templateKeys.formatAsString()
 
             (template as dEnvTemplateFile).writeContent(
                 content = formattedKeys
             )
         }
+    }
+
+    private fun mapEnvTypes(
+        source: dEnvFile,
+    ): Map<String, EnvFieldType> {
+        val entryTypes = mutableMapOf<String, EnvFieldType>()
+        val propertyEntries = source.properties()
+
+        propertyEntries.forEach { propertyEntry ->
+            val key = propertyEntry.keyEntry.text
+            val value = propertyEntry.valueEntry?.text
+            if (value.isNullOrBlank()) {
+                entryTypes[key] = ANY
+
+                return@forEach
+            }
+
+            EnvFieldType.prioritizedEntries.forEach typeLoop@{ type ->
+                val parser = type.parser
+
+                if (parser(value)) {
+                    entryTypes[key] = type
+
+                    return@forEach
+                }
+            }
+        }
+
+        return entryTypes
     }
 
     suspend fun createNewEnvSourceFromTemplate(
