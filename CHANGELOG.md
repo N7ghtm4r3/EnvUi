@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-09-05
+
 ### Added
 
 * Environment variable type detection with `Any` fallback support
