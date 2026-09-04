@@ -190,7 +190,7 @@ private fun CriticalEnvSourceCard(
 
                 Column (
                     modifier = Modifier
-                        .weight(1f),
+                        .weight(1.5f),
                     horizontalAlignment = Alignment.End
                 ) {
                     Actions(
