@@ -22,7 +22,7 @@ import com.tecknobit.envui.utils.toEnvSource
 import com.tecknobit.envui.utils.writeContent
 
 /**
- * The `EnvSourceRepository` class is useful to retrieve and create the environment sources of a project
+ * The `EnvSourceRepository` class is useful to retrieve and create the environment sources and templates of a project
  *
  * @property project The project where the environment sources are managed
  *
@@ -155,6 +155,16 @@ class EnvSourceRepository(
         )
     }
 
+    /**
+     * Method used to create and synchronize the environment template missing for a source
+     *
+     * @param project The project where the environment template is created
+     * @param envSource The environment source used to create the template
+     *
+     * @return the environment source associated with the created template as [EnvSource]
+     *
+     * @since 1.0.1
+     */
     suspend fun createNewEnvTemplateFromSource(
         project: Project = this.project,
         envSource: VirtualFile,
@@ -172,6 +182,12 @@ class EnvSourceRepository(
         )
     }
 
+    /**
+     * Method used to synchronize an environment template and stored property types from a source
+     *
+     * @param source The environment source used for synchronization
+     * @param template The environment template to update
+     */
     private suspend fun syncTemplateFromSource(
         source: PsiFile,
         template: PsiFile,
@@ -199,6 +215,13 @@ class EnvSourceRepository(
         }
     }
 
+    /**
+     * Method used to detect the types of the properties declared by an environment source
+     *
+     * @param source The environment source whose property types are detected
+     *
+     * @return the detected property types indexed by key as [Map]
+     */
     private fun mapEnvTypes(
         source: dEnvFile,
     ): Map<String, EnvFieldType> {
@@ -228,6 +251,16 @@ class EnvSourceRepository(
         return entryTypes
     }
 
+    /**
+     * Method used to create and synchronize the environment source missing for a template
+     *
+     * @param project The project where the environment source is created
+     * @param envTemplate The environment template used to create the source
+     *
+     * @return the environment source created from the template as [EnvSource]
+     *
+     * @since 1.0.1
+     */
     suspend fun createNewEnvSourceFromTemplate(
         project: Project = this.project,
         envTemplate: VirtualFile,
@@ -245,6 +278,12 @@ class EnvSourceRepository(
         )
     }
 
+    /**
+     * Method used to synchronize an environment source with the keys declared by a template
+     *
+     * @param template The environment template used for synchronization
+     * @param source The environment source to update
+     */
     private suspend fun syncSourceWithTemplate(
         template: PsiFile,
         source: PsiFile,
@@ -259,6 +298,16 @@ class EnvSourceRepository(
         }
     }
 
+    /**
+     * Method used to create a missing related environment file and synchronize it with the existing file
+     *
+     * @param project The project where the missing file is created
+     * @param fileName The name of the file to create
+     * @param file The existing environment file used for synchronization
+     * @param syncSources The operation used to synchronize the existing and created files
+     *
+     * @return the environment source resolved after synchronization as [EnvSource]
+     */
     private suspend fun createMissingSource(
         project: Project = this.project,
         fileName: String,

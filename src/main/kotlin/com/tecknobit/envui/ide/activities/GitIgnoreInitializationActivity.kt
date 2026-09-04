@@ -13,7 +13,7 @@ import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.PsiManager
 
 /**
- * The `GitignoreInitializationActivity` class is useful to ensure sensitive environment and workspace files are ignored
+ * The `GitIgnoreInitializationActivity` class is useful to ensure sensitive environment and workspace files are ignored
  *
  * @author N7ghtm4r3 - Tecknobit
  */
@@ -44,6 +44,11 @@ class GitIgnoreInitializationActivity : ProjectActivity {
         val fileName: String
     ) {
 
+        /**
+         * The marker introducing the entries managed by EnvUi
+         *
+         * @since 1.0.1
+         */
         TAG_LINE(
             fileName = "# From EnvUi"
         ),
@@ -158,6 +163,14 @@ class GitIgnoreInitializationActivity : ProjectActivity {
         }
     }
 
+    /**
+     * Method used to create a `PSI` element containing an ignore file entry
+     *
+     * @receiver The ignore file used to create the entry element
+     * @param content The content of the ignore file entry
+     *
+     * @return the created ignore file entry as [PsiElement]
+     */
     private fun PsiFile.createGitIgnoreEntry(
         content: String,
     ): PsiElement {

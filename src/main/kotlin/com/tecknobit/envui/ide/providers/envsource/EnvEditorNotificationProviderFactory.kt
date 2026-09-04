@@ -19,8 +19,25 @@ import kotlinx.coroutines.launch
 import java.util.function.Function
 import javax.swing.JComponent
 
+/**
+ * The `EnvEditorNotificationProviderFactory` class is useful to create editor notifications for environment files
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ *
+ * @see EditorNotificationProvider
+ *
+ * @since 1.0.1
+ */
 abstract class EnvEditorNotificationProviderFactory : EditorNotificationProvider {
 
+    /**
+     * Method used to create the notification component for a supported environment file
+     *
+     * @param project The project containing the file
+     * @param file The file whose notification data must be collected
+     *
+     * @return the notification component factory, if the file is supported, as [Function]
+     */
     override fun collectNotificationData(
         project: Project,
         file: VirtualFile,
@@ -50,12 +67,33 @@ abstract class EnvEditorNotificationProviderFactory : EditorNotificationProvider
         }
     }
 
+    /**
+     * Method used to check whether this virtual file must be excluded from the provider
+     *
+     * @receiver The virtual file to check
+     *
+     * @return whether the file must be excluded as [Boolean]
+     */
     protected abstract fun VirtualFile.isTargetFile(): Boolean
 
+    /**
+     * Method used to check whether the information panel can be displayed for a file container
+     *
+     * @param containerDirectory The directory containing the environment file
+     *
+     * @return whether the information panel can be displayed as [Boolean]
+     */
     protected abstract fun canShowInfoPanel(
         containerDirectory: VirtualFile
     ): Boolean
 
+    /**
+     * Method used to create the panel for opening an environment source in the reader dialog
+     *
+     * @param envSource The environment source opened by the panel action
+     *
+     * @return the information panel as [EditorNotificationPanel]
+     */
     private fun infoPanel(
         envSource: EnvSource,
     ): EditorNotificationPanel {
@@ -78,6 +116,14 @@ abstract class EnvEditorNotificationProviderFactory : EditorNotificationProvider
         }
     }
 
+    /**
+     * Method used to create the panel for creating a missing related environment file
+     *
+     * @param project The project containing the environment file
+     * @param file The environment file whose related file is missing
+     *
+     * @return the warning panel as [EditorNotificationPanel]
+     */
     private fun warningPanel(
         project: Project,
         file: VirtualFile,
@@ -104,8 +150,22 @@ abstract class EnvEditorNotificationProviderFactory : EditorNotificationProvider
         }
     }
 
+    /**
+     * Method used to get the localized warning panel message
+     *
+     * @return the localized warning panel message as [String]
+     */
     protected abstract fun warningPanelMessage(): @NlsSafe String
 
+    /**
+     * Method used to create the related environment file missing from the file container
+     *
+     * @param project The project containing the environment file
+     * @param repository The repository used to create the missing file
+     * @param file The environment file whose related file must be created
+     *
+     * @return the environment source resolved after creating the missing file as [EnvSource]
+     */
     protected abstract suspend fun warningPanelAction(
         project: Project,
         repository: EnvSourceRepository,
