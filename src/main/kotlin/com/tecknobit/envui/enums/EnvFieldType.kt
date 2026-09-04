@@ -1,6 +1,9 @@
 package com.tecknobit.envui.enums
 
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
 
 /**
  * The `EnvFieldType` enum is useful to represent the supported environment field value types
@@ -75,10 +78,10 @@ enum class EnvFieldType(
         validator = Regex("""\{.*}""", RegexOption.DOT_MATCHES_ALL),
         parser = {
             try {
-                Json.parseToJsonElement(it.toString())
+                val jsonElement: JsonElement = Json.decodeFromString(it.toString())
 
-                true
-            } catch (e: Exception) {
+                ((jsonElement is JsonObject) || (jsonElement is JsonArray))
+            } catch (_: Exception) {
                 false
             }
         }
@@ -138,8 +141,8 @@ enum class EnvFieldType(
         val prioritizedEntries: List<EnvFieldType> = mutableListOf<EnvFieldType>().apply {
             add(BOOLEAN)
             add(INTEGER)
-            add(DOUBLE)
             add(LONG)
+            add(DOUBLE)
             add(FLOAT)
             add(JSON)
             add(STRING)
