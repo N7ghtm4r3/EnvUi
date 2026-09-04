@@ -261,6 +261,15 @@ private fun VirtualFile.resolveEnvSourceFile(
     return psiManager.findFile(virtualFile)
 }
 
+/**
+ * Method used to format these environment keys as source content with empty values
+ *
+ * @receiver The environment keys to format
+ *
+ * @return the formatted environment source content as [String]
+ *
+ * @since 1.0.1
+ */
 fun Collection<KeyEntry>.formatAsString(): String {
     return this.joinToString(
         separator = "\n",
@@ -269,9 +278,20 @@ fun Collection<KeyEntry>.formatAsString(): String {
 }
 
 //TODO: TO USE WHEN SUPPORTS MULTI ENVIROMENT
+/**
+ * `ENV_FILENAME_REGEX` the regular expression used to match environment source filenames
+ */
 private val ENV_FILENAME_REGEX = Regex("""\.env(?:\.(?!.*\.template$).+)?$""")
 
-//TODO: TO INSERT INTO DOCU THAT MUST BE THE CONTAINER DIRECTORY THE RECEIVER
+/**
+ * Method used to check whether this container directory includes an environment source
+ *
+ * @receiver The container directory to inspect
+ *
+ * @return whether the directory includes an environment source as [Boolean]
+ *
+ * @since 1.0.1
+ */
 fun VirtualFile.containsEnvSource(): Boolean {
     return containsEnvSource(
         // TODO: TO USE A DEDICATED REGEX WHEN SUPPORTS MULTI ENVIROMENT
@@ -279,7 +299,15 @@ fun VirtualFile.containsEnvSource(): Boolean {
     )
 }
 
-//TODO: TO INSERT INTO DOCU THAT MUST BE THE CONTAINER DIRECTORY THE RECEIVER
+/**
+ * Method used to check whether this container directory includes an environment template
+ *
+ * @receiver The container directory to inspect
+ *
+ * @return whether the directory includes an environment template as [Boolean]
+ *
+ * @since 1.0.1
+ */
 fun VirtualFile.containsEnvTemplate(): Boolean {
     return containsEnvSource(
         // TODO: TO USE A DEDICATED REGEX WHEN SUPPORTS MULTI ENVIROMENT
@@ -287,6 +315,14 @@ fun VirtualFile.containsEnvTemplate(): Boolean {
     )
 }
 
+/**
+ * Method used to check whether this container directory includes a child with the specified filename
+ *
+ * @receiver The container directory to inspect
+ * @param fileName The filename to find in the directory
+ *
+ * @return whether the directory includes the specified child as [Boolean]
+ */
 private fun VirtualFile.containsEnvSource(
     fileName: String,
 ): Boolean {

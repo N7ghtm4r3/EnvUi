@@ -10,6 +10,7 @@ import kotlinx.serialization.json.JsonObject
  *
  * @property displayName The name used to display the field type
  * @property validator The regular expression used to validate values of the field type
+ * @property parser The parser used to check whether a value matches the field type
  *
  * @author N7ghtm4r3 - Tecknobit
  */
@@ -37,6 +38,11 @@ enum class EnvFieldType(
         parser = { it.toString().toIntOrNull() != null }
     ),
 
+    /**
+     * The boolean field type
+     *
+     * @since 1.0.1
+     */
     BOOLEAN(
         displayName = "Boolean",
         validator = Regex("^(?:t(?:r(?:ue?)?)?|f(?:a(?:l(?:se?)?)?)?)$"),
@@ -97,7 +103,7 @@ enum class EnvFieldType(
     );
 
     /**
-     * The companion object allows to format `JSON` environment values
+     * The companion object allows to format `JSON` environment values and access field type detection priorities
      *
      * @author N7ghtm4r3 - Tecknobit
      */
@@ -138,6 +144,11 @@ enum class EnvFieldType(
             }
         }
 
+        /**
+         * `prioritizedEntries` the field types ordered by value detection priority
+         *
+         * @since 1.0.1
+         */
         val prioritizedEntries: List<EnvFieldType> = mutableListOf<EnvFieldType>().apply {
             add(BOOLEAN)
             add(INTEGER)
