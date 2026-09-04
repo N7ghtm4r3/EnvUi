@@ -129,7 +129,7 @@ abstract class EnvEditorNotificationProviderFactory : EditorNotificationProvider
         file: VirtualFile,
     ): EditorNotificationPanel {
         val envSourceRepository = EnvSourceRepository(project)
-        val scope = CoroutineScope(Dispatchers.Main)
+        val scope = CoroutineScope(Dispatchers.Default)
 
         return EditorNotificationPanel(Warning).apply {
             text = warningPanelMessage()
