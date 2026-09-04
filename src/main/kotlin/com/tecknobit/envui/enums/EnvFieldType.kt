@@ -1,16 +1,23 @@
 package com.tecknobit.envui.enums
 
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
+
 /**
  * The `EnvFieldType` enum is useful to represent the supported environment field value types
  *
  * @property displayName The name used to display the field type
  * @property validator The regular expression used to validate values of the field type
+ * @property parser The parser used to check whether a value matches the field type
  *
  * @author N7ghtm4r3 - Tecknobit
  */
 enum class EnvFieldType(
     val displayName: String,
     val validator: Regex,
+    val parser: (Any) -> Boolean,
 ) {
 
     /**
@@ -18,7 +25,8 @@ enum class EnvFieldType(
      */
     STRING(
         displayName = "String",
-        validator = Regex(".*")
+        validator = Regex(".*"),
+        parser = { true }
     ),
 
     /**
@@ -26,7 +34,19 @@ enum class EnvFieldType(
      */
     INTEGER(
         displayName = "Integer",
-        validator = Regex("-?\\d+")
+        validator = Regex("-?\\d+"),
+        parser = { it.toString().toIntOrNull() != null }
+    ),
+
+    /**
+     * The boolean field type
+     *
+     * @since 1.0.1
+     */
+    BOOLEAN(
+        displayName = "Boolean",
+        validator = Regex("^(?:t(?:r(?:ue?)?)?|f(?:a(?:l(?:se?)?)?)?)$"),
+        parser = { it.toString().toBooleanStrictOrNull() != null }
     ),
 
     /**
@@ -34,7 +54,8 @@ enum class EnvFieldType(
      */
     LONG(
         displayName = "Long",
-        validator = Regex("-?\\d+")
+        validator = Regex("-?\\d+"),
+        parser = { it.toString().toLongOrNull() != null }
     ),
 
     /**
@@ -42,7 +63,8 @@ enum class EnvFieldType(
      */
     FLOAT(
         displayName = "Float",
-        validator = Regex("-?(?:\\d+\\.?\\d*|\\.\\d+)")
+        validator = Regex("-?(?:\\d+\\.?\\d*|\\.\\d+)"),
+        parser = { it.toString().toFloatOrNull() != null }
     ),
 
     /**
@@ -50,7 +72,8 @@ enum class EnvFieldType(
      */
     DOUBLE(
         displayName = "Double",
-        validator = Regex("-?(?:\\d+\\.?\\d*|\\.\\d+)(?:[eE][+-]?\\d+)?")
+        validator = Regex("-?(?:\\d+\\.?\\d*|\\.\\d+)(?:[eE][+-]?\\d+)?"),
+        parser = { it.toString().toDoubleOrNull() != null }
     ),
 
     /**
@@ -58,7 +81,16 @@ enum class EnvFieldType(
      */
     JSON(
         displayName = "Json",
-        validator = Regex("""\{.*}""", RegexOption.DOT_MATCHES_ALL)
+        validator = Regex("""\{.*}""", RegexOption.DOT_MATCHES_ALL),
+        parser = {
+            try {
+                val jsonElement: JsonElement = Json.decodeFromString(it.toString())
+
+                ((jsonElement is JsonObject) || (jsonElement is JsonArray))
+            } catch (_: Exception) {
+                false
+            }
+        }
     ),
 
     /**
@@ -66,11 +98,12 @@ enum class EnvFieldType(
      */
     ANY(
         displayName = "Any",
-        validator = Regex(".*", RegexOption.DOT_MATCHES_ALL)
+        validator = Regex(".*", RegexOption.DOT_MATCHES_ALL),
+        parser = { true }
     );
 
     /**
-     * The companion object allows to format `JSON` environment values
+     * The companion object allows to format `JSON` environment values and access field type detection priorities
      *
      * @author N7ghtm4r3 - Tecknobit
      */
@@ -111,6 +144,22 @@ enum class EnvFieldType(
             }
         }
 
+        /**
+         * `prioritizedEntries` the field types ordered by value detection priority
+         *
+         * @since 1.0.1
+         */
+        val prioritizedEntries: List<EnvFieldType> = mutableListOf<EnvFieldType>().apply {
+            add(BOOLEAN)
+            add(INTEGER)
+            add(LONG)
+            add(DOUBLE)
+            add(FLOAT)
+            add(JSON)
+            add(STRING)
+            add(ANY)
+        }
+        
     }
 
 }

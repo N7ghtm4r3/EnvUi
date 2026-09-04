@@ -239,6 +239,39 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
     }
 
     /**
+     * Method used to store the detected types of multiple environment properties
+     *
+     * @param source The environment source file
+     * @param propertyTypes The property types indexed by key
+     *
+     * @since 1.0.1
+     */
+    fun saveBatchPropertyTypes(
+        source: VirtualFile,
+        propertyTypes: Map<String, EnvFieldType>,
+    ) {
+        var envSourcePreferences = ensureEnvSourcePreferences(
+            source = source
+        )
+
+        propertyTypes.forEach { (key, type) ->
+            envSourcePreferences = upsertPropertyPreferences(
+                envSourcePreferences = envSourcePreferences,
+                propertyKey = key,
+                propertyPreferences = EnvSourcePropertyPreferences(
+                    key = key,
+                    type = type
+                )
+            )
+        }
+
+        storeEnvSourcePreferences(
+            source = source,
+            envSourcePreferences = envSourcePreferences
+        )
+    }
+
+    /**
      * Method used to store the current value and change timestamp of an environment property
      *
      * @param source The environment source file
@@ -306,7 +339,7 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
         property: Property,
         isCritical: Boolean
     ) {
-         setPropertyPreference(
+        setPropertyPreference(
             source = source,
             property = property
         ) { propertyPreferences ->
@@ -370,14 +403,9 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
         property: Property,
         onWork: (EnvSourcePropertyPreferences) -> EnvSourcePropertyPreferences
     ) {
-        var envSourcePreferences = retrieveEnvSourcePreferences(
+        var envSourcePreferences = ensureEnvSourcePreferences(
             source = source
         )
-        if(envSourcePreferences == null) {
-            envSourcePreferences = storeNewEnvSourcePreferences(
-                source = source
-            )
-        }
 
         val propertyPreferences = retrievePropertyPreferences(
             source = source,
@@ -411,9 +439,30 @@ class EnvSourcePreferencesManager : SerializablePersistentStateComponent<EnvUiSt
         property: Property,
         propertyPreferences: EnvSourcePropertyPreferences
     ): EnvSourcePreferences {
+        return upsertPropertyPreferences(
+            envSourcePreferences = envSourcePreferences,
+            propertyKey = property.keyEntry.text,
+            propertyPreferences = propertyPreferences
+        )
+    }
+
+    /**
+     * Method used to insert or replace property preferences by key in source preferences
+     *
+     * @param envSourcePreferences The source preferences to update
+     * @param propertyKey The environment property key used as map key
+     * @param propertyPreferences The preferences to store
+     *
+     * @return the updated source preferences as [EnvSourcePreferences]
+     */
+    private fun upsertPropertyPreferences(
+        envSourcePreferences: EnvSourcePreferences,
+        propertyKey: String,
+        propertyPreferences: EnvSourcePropertyPreferences,
+    ): EnvSourcePreferences {
         return envSourcePreferences.copy(
             properties = envSourcePreferences.properties.plus(
-                pair = property.keyEntry.text to propertyPreferences
+                pair = propertyKey to propertyPreferences
             )
         )
     }

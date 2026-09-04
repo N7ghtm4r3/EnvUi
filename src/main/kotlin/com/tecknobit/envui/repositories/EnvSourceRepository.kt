@@ -1,19 +1,24 @@
 package com.tecknobit.envui.repositories
 
-import com.intellij.openapi.application.readAction
-import com.intellij.openapi.application.writeAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDirectory
+import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
+import com.tecknobit.envui.enums.EnvFieldType
+import com.tecknobit.envui.enums.EnvFieldType.ANY
+import com.tecknobit.envui.ide.languages.envfile.dEnvFile
 import com.tecknobit.envui.ide.languages.envfile.dEnvFileType
+import com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFile
 import com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFileType
+import com.tecknobit.envui.ide.services.useEnvSourcePreferencesManager
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
-import com.tecknobit.envui.utils.toEnvSource
+import com.tecknobit.envui.utils.*
 
 /**
- * The `EnvSourceRepository` class is useful to retrieve and create the environment sources of a project
+ * The `EnvSourceRepository` class is useful to retrieve and create the environment sources and templates of a project
  *
  * @property project The project where the environment sources are managed
  *
@@ -35,7 +40,7 @@ class EnvSourceRepository(
     ): List<EnvSource> {
         val virtualFilesEnvTemplates = retrieveEnvTemplates()
 
-        return readAction {
+        return readOnBgt {
             val globalSearchScope = GlobalSearchScope.projectScope(project)
             val virtualFilesEnv = FileTypeIndex.getFiles(
                 dEnvFileType,
@@ -56,7 +61,7 @@ class EnvSourceRepository(
      * @return the environment template files as [Collection] of [VirtualFile]
      */
     suspend fun retrieveEnvTemplates(): Collection<VirtualFile> {
-        return readAction {
+        return readOnBgt {
             val globalSearchScope = GlobalSearchScope.projectScope(project)
             FileTypeIndex.getFiles(
                 dEnvTemplateFileType,
@@ -76,7 +81,7 @@ class EnvSourceRepository(
      * @return the matching environment sources as [List] of [EnvSource]
      */
     private fun Collection<VirtualFile?>.toEnvSourcesWithFilters(
-        project: Project,
+        project: Project = this@EnvSourceRepository.project,
         filters: String,
         templates: Collection<VirtualFile?>,
     ): List<EnvSource> {
@@ -107,7 +112,7 @@ class EnvSourceRepository(
      * @return the environment sources as [List] of [EnvSource]
      */
     private fun Collection<VirtualFile?>.toEnvSources(
-        project: Project,
+        project: Project = this@EnvSourceRepository.project,
         templates: Collection<VirtualFile?>,
     ): List<EnvSource> {
         return this.map { file ->
@@ -131,15 +136,202 @@ class EnvSourceRepository(
      * @return the created environment source as [EnvSource]
      */
     suspend fun createNewEnvSource(
-        project: Project,
-        containerDirectory: PsiDirectory
+        project: Project = this.project,
+        containerDirectory: PsiDirectory,
     ): EnvSource {
         val dEnvExtension = ".${dEnvFileType.defaultExtension}"
 
-        val source = writeAction {
+        val source = writeOnEdt {
             containerDirectory.createFile("$dEnvExtension.${dEnvTemplateFileType.defaultExtension}")
             containerDirectory.createFile(dEnvExtension)
         }
+
+        return source.virtualFile.toEnvSource(
+            project = project
+        )
+    }
+
+    /**
+     * Method used to create and synchronize the environment template missing for a source
+     *
+     * @param project The project where the environment template is created
+     * @param envSource The environment source used to create the template
+     *
+     * @return the environment source associated with the created template as [EnvSource]
+     *
+     * @since 1.0.1
+     */
+    suspend fun createNewEnvTemplateFromSource(
+        project: Project = this.project,
+        envSource: VirtualFile,
+    ): EnvSource {
+        return createMissingSource(
+            project = project,
+            fileName = ".${dEnvFileType.defaultExtension}.${dEnvTemplateFileType.defaultExtension}",
+            file = envSource,
+            syncSources = { existing, newSource ->
+                syncTemplateFromSource(
+                    source = existing,
+                    template = newSource
+                )
+            }
+        )
+    }
+
+    /**
+     * Method used to synchronize an environment template and stored property types from a source
+     *
+     * @param source The environment source used for synchronization
+     * @param template The environment template to update
+     */
+    private suspend fun syncTemplateFromSource(
+        source: PsiFile,
+        template: PsiFile,
+    ) {
+        val sourcePsiFile = (source as dEnvFile)
+        val templateKeys = readOnBgt {
+            sourcePsiFile.keys().formatAsString()
+        }
+
+        writeOnEdt {
+            (template as dEnvTemplateFile).writeContent(
+                content = templateKeys
+            )
+        }
+
+        val envTypes = mapEnvTypes(
+            source = sourcePsiFile
+        )
+
+        project.useEnvSourcePreferencesManager {
+            saveBatchPropertyTypes(
+                source = source.virtualFile,
+                propertyTypes = envTypes
+            )
+        }
+    }
+
+    /**
+     * Method used to detect the types of the properties declared by an environment source
+     *
+     * @param source The environment source whose property types are detected
+     *
+     * @return the detected property types indexed by key as [Map]
+     */
+    private fun mapEnvTypes(
+        source: dEnvFile,
+    ): Map<String, EnvFieldType> {
+        val entryTypes = mutableMapOf<String, EnvFieldType>()
+        val propertyEntries = source.properties()
+
+        propertyEntries.forEach { propertyEntry ->
+            val key = propertyEntry.keyEntry.text
+            val value = propertyEntry.valueEntry?.text
+            if (value.isNullOrBlank()) {
+                entryTypes[key] = ANY
+
+                return@forEach
+            }
+
+            EnvFieldType.prioritizedEntries.forEach typeLoop@{ type ->
+                val parser = type.parser
+
+                if (parser(value)) {
+                    entryTypes[key] = type
+
+                    return@forEach
+                }
+            }
+        }
+
+        return entryTypes
+    }
+
+    /**
+     * Method used to create and synchronize the environment source missing for a template
+     *
+     * @param project The project where the environment source is created
+     * @param envTemplate The environment template used to create the source
+     *
+     * @return the environment source created from the template as [EnvSource]
+     *
+     * @since 1.0.1
+     */
+    suspend fun createNewEnvSourceFromTemplate(
+        project: Project = this.project,
+        envTemplate: VirtualFile,
+    ): EnvSource {
+        return createMissingSource(
+            project = project,
+            fileName = ".${dEnvFileType.defaultExtension}",
+            file = envTemplate,
+            syncSources = { existing, newSource ->
+                syncSourceWithTemplate(
+                    template = existing,
+                    source = newSource
+                )
+            }
+        )
+    }
+
+    /**
+     * Method used to synchronize an environment source with the keys declared by a template
+     *
+     * @param template The environment template used for synchronization
+     * @param source The environment source to update
+     */
+    private suspend fun syncSourceWithTemplate(
+        template: PsiFile,
+        source: PsiFile,
+    ) {
+        val templateKeys = readOnBgt {
+            val templateKeys = (template as dEnvTemplateFile).keys()
+
+            templateKeys.formatAsString()
+        }
+
+        writeOnEdt {
+            (source as dEnvFile).writeContent(
+                content = templateKeys
+            )
+        }
+    }
+
+    /**
+     * Method used to create a missing related environment file and synchronize it with the existing file
+     *
+     * @param project The project where the missing file is created
+     * @param fileName The name of the file to create
+     * @param file The existing environment file used for synchronization
+     * @param syncSources The operation used to synchronize the existing and created files
+     *
+     * @return the environment source resolved after synchronization as [EnvSource]
+     */
+    private suspend fun createMissingSource(
+        project: Project = this.project,
+        fileName: String,
+        file: VirtualFile,
+        syncSources: suspend (existing : PsiFile, newSource: PsiFile) -> Unit
+    ): EnvSource {
+        val psiManager = PsiManager.getInstance(project)
+        val directory = readOnBgt {
+            val containerDirectory = file.parent
+
+            psiManager.findDirectory(containerDirectory)
+        }
+
+        val source = writeOnEdt {
+            directory?.createFile(fileName)
+        } ?: throw IllegalStateException("Could not create $file")
+
+        val psiSource = readOnBgt {
+            psiManager.findFile(file)!!
+        }
+
+        syncSources(
+            psiSource,
+            source
+        )
 
         return source.virtualFile.toEnvSource(
             project = project

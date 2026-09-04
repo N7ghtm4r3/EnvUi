@@ -1,4 +1,5 @@
 package com.tecknobit.envui.utils
+
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
@@ -6,6 +7,7 @@ import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
+import com.tecknobit.envui.ide.envfile.KeyEntry
 import com.tecknobit.envui.ide.languages.dEnvFileBase
 import com.tecknobit.envui.ide.languages.envfile.dEnvFile
 import com.tecknobit.envui.ide.languages.envfile.dEnvFile.Companion.ENV_FILENAME
@@ -21,10 +23,7 @@ import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
  */
 fun dEnvFileBase.writeKeys() {
     val keys = keys()
-    val formattedKeys = keys.joinToString(
-        separator = "\n",
-        transform = { key -> "${key.text}=" }
-    )
+    val formattedKeys = keys.formatAsString()
 
     writeContent(
         content = formattedKeys
@@ -200,11 +199,11 @@ private fun VirtualFile.resolveFromTemplate(
 ): EnvSource {
     val sourcePsiFile = resolveEnvSource(
         project = project
-    )
+    ) ?: throw IllegalAccessException("Could not resolve source from template")
 
     return EnvSource(
         project = project,
-        source = sourcePsiFile?.virtualFile!!,
+        source = sourcePsiFile.virtualFile,
         module = module,
         _psiSource = sourcePsiFile,
         _templateSource = psiManager.findFile(this)!!,
@@ -220,7 +219,7 @@ private fun VirtualFile.resolveFromTemplate(
  * @return the related environment source `PSI` file, if available, as [PsiFile]
  */
 private fun VirtualFile.resolveEnvSource(
-    project: Project,
+    project: Project
 ): PsiFile? {
     return resolveEnvSourceFile(
         project = project,
@@ -236,7 +235,7 @@ private fun VirtualFile.resolveEnvSource(
  * @return the related environment template `PSI` file, if available, as [PsiFile]
  */
 private fun VirtualFile.resolveEnvSourceTemplate(
-    project: Project,
+    project: Project
 ): PsiFile? {
     return resolveEnvSourceFile(
         project = project,
@@ -254,10 +253,85 @@ private fun VirtualFile.resolveEnvSourceTemplate(
  */
 private fun VirtualFile.resolveEnvSourceFile(
     project: Project,
-    fileName: String,
+    fileName: String
 ): PsiFile? {
     val psiManager = PsiManager.getInstance(project)
-    val templateVirtualFile = parent.findChild(fileName) ?: return null
+    val virtualFile = parent.findChild(fileName) ?: return null
 
-    return psiManager.findFile(templateVirtualFile)
+    return psiManager.findFile(virtualFile)
+}
+
+/**
+ * Method used to format these environment keys as source content with empty values
+ *
+ * @receiver The environment keys to format
+ *
+ * @return the formatted environment source content as [String]
+ *
+ * @since 1.0.1
+ */
+fun Collection<KeyEntry>.formatAsString(): String {
+    return this.joinToString(
+        separator = "\n",
+        transform = { key -> "${key.text}=" }
+    )
+}
+
+//TODO: TO USE WHEN SUPPORTS MULTI ENVIROMENT
+/**
+ * `ENV_FILENAME_REGEX` the regular expression used to match environment source filenames
+ */
+private val ENV_FILENAME_REGEX = Regex("""\.env(?:\.(?!.*\.template$).+)?$""")
+
+/**
+ * Method used to check whether this container directory includes an environment source
+ *
+ * @receiver The container directory to inspect
+ *
+ * @return whether the directory includes an environment source as [Boolean]
+ *
+ * @since 1.0.1
+ */
+fun VirtualFile.containsEnvSource(): Boolean {
+    return containsEnvSource(
+        // TODO: TO USE A DEDICATED REGEX WHEN SUPPORTS MULTI ENVIROMENT
+        fileName = ENV_FILENAME
+    )
+}
+
+/**
+ * Method used to check whether this container directory includes an environment template
+ *
+ * @receiver The container directory to inspect
+ *
+ * @return whether the directory includes an environment template as [Boolean]
+ *
+ * @since 1.0.1
+ */
+fun VirtualFile.containsEnvTemplate(): Boolean {
+    return containsEnvSource(
+        // TODO: TO USE A DEDICATED REGEX WHEN SUPPORTS MULTI ENVIROMENT
+        fileName = ENV_TEMPLATE_FILENAME
+    )
+}
+
+/**
+ * Method used to check whether this container directory includes a child with the specified filename
+ *
+ * @receiver The container directory to inspect
+ * @param fileName The filename to find in the directory
+ *
+ * @return whether the directory includes the specified child as [Boolean]
+ */
+private fun VirtualFile.containsEnvSource(
+    fileName: String,
+): Boolean {
+    if (!isDirectory)
+        return false
+
+    val containedEnvSources = children.firstOrNull {
+        it.name == fileName // TODO: TO USE A DEDICATEDREGEX WHEN SUPPORTS MULTI ENVIROMENT
+    }
+
+    return containedEnvSources != null
 }

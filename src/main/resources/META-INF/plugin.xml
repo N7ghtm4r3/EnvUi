@@ -26,7 +26,13 @@
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
         <postStartupActivity
-                implementation="com.tecknobit.envui.ide.activities.GitignoreInitializationActivity"/>
+                implementation="com.tecknobit.envui.ide.activities.GitIgnoreInitializationActivity"/>
+
+        <postStartupActivity
+                implementation="com.tecknobit.envui.ide.activities.EnvSourcesEnsurerActivity"/>
+
+        <postStartupActivity
+                implementation="com.tecknobit.envui.ide.activities.EnvSourcesMapperActivity"/>
 
         <toolWindow
                 id="EnvUi"
@@ -48,7 +54,7 @@
                 language="dEnv"
                 implementationClass="com.tecknobit.envui.ide.languages.envfile.dEnvFileType"
                 fieldName="INSTANCE"
-                patterns="*.env;.env"/>
+                patterns=".env"/>
 
         <lang.parserDefinition
                 language="dEnvTemplate"
@@ -66,7 +72,10 @@
                 patterns=".env.template"/>
 
         <editorNotificationProvider
-                implementation="com.tecknobit.envui.ide.providers.EnvSourceEditorNotificationProvider"/>
+                implementation="com.tecknobit.envui.ide.providers.envsource.EnvSourceEditorNotificationProvider"/>
+
+        <editorNotificationProvider
+                implementation="com.tecknobit.envui.ide.providers.envsource.EnvSourceTemplateEditorNotificationProvider"/>
 
         <fileDocumentManagerListener
                 implementation="com.tecknobit.envui.ide.listeners.document.EnvSourceDocumentListener"/>

@@ -21,7 +21,8 @@ fun EnvFieldType.toColor(): Color {
         STRING -> DefaultLanguageHighlighterColors.STRING
         INTEGER, LONG -> DefaultLanguageHighlighterColors.NUMBER
         FLOAT, DOUBLE -> DefaultLanguageHighlighterColors.CONSTANT
-        JSON -> DefaultLanguageHighlighterColors.KEYWORD
+        BOOLEAN -> DefaultLanguageHighlighterColors.KEYWORD
+        JSON -> DefaultLanguageHighlighterColors.METADATA
         ANY -> HighlighterColors.TEXT
     }
 
