@@ -15,6 +15,7 @@ import com.tecknobit.envui.ide.languages.envfile.dEnvFile
 import com.tecknobit.envui.ide.languages.envfile.dEnvFileType
 import com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFile
 import com.tecknobit.envui.ide.languages.envfiletemplate.dEnvTemplateFileType
+import com.tecknobit.envui.ide.services.useEnvSourcePreferencesManager
 import com.tecknobit.envui.ui.pages.envuiwindow.data.EnvSource
 import com.tecknobit.envui.utils.formatAsString
 import com.tecknobit.envui.utils.toEnvSource
@@ -176,11 +177,6 @@ class EnvSourceRepository(
         template: PsiFile,
     ) {
         val sourcePsiFile = (source as dEnvFile)
-        val envTypes = mapEnvTypes(
-            source = sourcePsiFile
-        )
-
-        println(envTypes)
 
         writeAction {
             val templateKeys = sourcePsiFile.keys()
@@ -188,6 +184,17 @@ class EnvSourceRepository(
 
             (template as dEnvTemplateFile).writeContent(
                 content = formattedKeys
+            )
+        }
+
+        val envTypes = mapEnvTypes(
+            source = sourcePsiFile
+        )
+
+        project.useEnvSourcePreferencesManager {
+            saveBatchPropertyTypes(
+                source = source.virtualFile,
+                propertyTypes = envTypes
             )
         }
     }
