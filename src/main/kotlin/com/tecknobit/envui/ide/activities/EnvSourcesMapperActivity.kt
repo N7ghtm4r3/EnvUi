@@ -9,7 +9,7 @@ import com.intellij.openapi.vfs.newvfs.events.VFileDeleteEvent
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent
 import com.intellij.openapi.vfs.newvfs.events.VFilePropertyChangeEvent
 import com.intellij.ui.EditorNotifications
-import com.tecknobit.envui.utils.isEnvFile
+import com.tecknobit.envui.utils.isEnvSourceFile
 
 /**
  * The `EnvSourcesMapperActivity` class is useful to refresh editor notifications after environment file changes
@@ -61,7 +61,7 @@ class EnvSourcesMapperActivity : ProjectActivity {
          */
         override fun after(events: List<VFileEvent>) {
             val sourceEvents = events.filter { event ->
-                val isEnvFile = event.file.isEnvFile()
+                val isEnvFile = event.file.isEnvSourceFile()
 
                 isEnvFile && event.isTrackedEvent()
             }
